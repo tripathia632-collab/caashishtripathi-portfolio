@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FP&amp;A Variance Analyzer &amp; MIS Showcase | CA Ashish Tripathi</title>
+  <meta name="description" content="Executive FP&A Budget vs Actual variance analyzer, automated board commentary generator, and Power BI interactive showcase by CA Ashish Tripathi.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Header Bar -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-area">
+        <a href="../../index.html" class="brand-badge" title="Return to caashishtripathi.in">← caashishtripathi.in</a>
+        <div>
+          <h1>FP&amp;A Variance Analyzer &amp; MIS Showcase</h1>
+          <p class="subtitle">Budget vs. Actual Variance Engine · Automated Executive Commentary · Power BI Architecture</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-secondary" onclick="FpaApp.loadSampleData()">⚡ 1-Click Sample Data</button>
+        <button class="btn btn-primary" onclick="FpaApp.exportCSV()">📥 Export Variance CSV</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <!-- Executive KPI Summary Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card" id="kpiRevenue">
+        <div class="kpi-label">Total Net Revenue</div>
+        <div class="kpi-value" id="valRevenue">₹0.00 Cr</div>
+        <div class="kpi-sub" id="subRevenue">Loading...</div>
+      </div>
+      <div class="kpi-card" id="kpiGrossMargin">
+        <div class="kpi-label">Gross Margin %</div>
+        <div class="kpi-value" id="valGrossMargin">0.0%</div>
+        <div class="kpi-sub" id="subGrossMargin">Loading...</div>
+      </div>
+      <div class="kpi-card" id="kpiEbitda">
+        <div class="kpi-label">EBITDA</div>
+        <div class="kpi-value" id="valEbitda">₹0.00 Cr</div>
+        <div class="kpi-sub" id="subEbitda">Loading...</div>
+      </div>
+      <div class="kpi-card" id="kpiNetMargin">
+        <div class="kpi-label">PAT / Net Profit</div>
+        <div class="kpi-value" id="valNetIncome">₹0.00 Cr</div>
+        <div class="kpi-sub" id="subNetIncome">Loading...</div>
+      </div>
+    </div>
+
+    <!-- Commentary & Controls Section -->
+    <div class="grid-2col mt-6">
+      <!-- Automated Commentary Generator -->
+      <div class="card">
+        <div class="card-header flex-between">
+          <div class="flex-align">
+            <span class="badge">Rule Engine + AI</span>
+            <h2>Automated Executive Board Commentary</h2>
+          </div>
+          <button class="btn btn-sm btn-outline" onclick="FpaApp.copyCommentary()">📋 Copy Commentary</button>
+        </div>
+        <div class="commentary-box" id="commentaryText">
+          Generating variance narrative...
+        </div>
+        <div class="commentary-footer">
+          <span class="footnote">💡 Generated deterministically from variance thresholds, flagging favorable performance and cost overruns automatically for CFO board review.</span>
+        </div>
+      </div>
+
+      <!-- Variance Threshold Controls -->
+      <div class="card">
+        <div class="card-header">
+          <span class="badge">Settings</span>
+          <h2>Variance Alert Sensitivity</h2>
+        </div>
+        <div class="control-panel">
+          <div class="slider-group">
+            <div class="slider-header">
+              <label>Critical Variance Alert Threshold:</label>
+              <span class="slider-val" id="thresholdDisplay">&plusmn;5.0%</span>
+            </div>
+            <input type="range" id="thresholdSlider" min="1" max="20" step="0.5" value="5" oninput="FpaApp.onThresholdChange(this.value)">
+          </div>
+
+          <div class="entity-selector-wrap">
+            <label>Reporting Entity / Currency View:</label>
+            <select id="entitySelector" onchange="FpaApp.onEntityChange(this.value)" class="form-select">
+              <option value="inr">Global Consolidation (INR - Crores)</option>
+              <option value="uae">Middle East &amp; Dubai Division (AED - Millions)</option>
+              <option value="us">North America Enterprise (USD - Millions)</option>
+            </select>
+          </div>
+
+          <div class="tag-indicator-wrap">
+            <span class="status-pill status-fav">● Favorable (Revenue ↑ or Cost ↓)</span>
+            <span class="status-pill status-unfav">● Unfavorable (Revenue ↓ or Cost ↑)</span>
+            <span class="status-pill status-alert">⚠ Critical Alert (> Threshold)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart & Table Grid -->
+    <div class="card mt-6">
+      <div class="card-header flex-between">
+        <div>
+          <span class="badge">Visuals</span>
+          <h2>Actual vs. Budget Variance Breakdown</h2>
+        </div>
+        <div class="chart-toggles">
+          <button class="btn btn-sm btn-secondary active-toggle" id="btnChartPnl" onclick="FpaApp.switchChart('pnl')">P&amp;L Lines</button>
+          <button class="btn btn-sm btn-secondary" id="btnChartOpex" onclick="FpaApp.switchChart('opex')">Opex Drilldown</button>
+        </div>
+      </div>
+      <div class="chart-container">
+        <canvas id="varianceChart" height="90"></canvas>
+      </div>
+    </div>
+
+    <!-- Interactive P&L Variance Table -->
+    <div class="card mt-6">
+      <div class="card-header flex-between">
+        <div>
+          <span class="badge">Master Ledger</span>
+          <h2>Financial Line Items &amp; Variance Matrix</h2>
+        </div>
+        <div class="helper-text">
+          💡 You can edit values in the table directly to test real-time re-calculation.
+        </div>
+      </div>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Line Item</th>
+              <th>Category</th>
+              <th class="text-right">Actual</th>
+              <th class="text-right">Budget</th>
+              <th class="text-right">Prior Year</th>
+              <th class="text-right">&Delta; vs Budget</th>
+              <th class="text-right">% &Delta; Variance</th>
+              <th class="text-center">Status</th>
+            </tr>
+          </thead>
+          <tbody id="pnlTableBody">
+            <!-- Populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Power BI Showcase Embed Container -->
+    <div class="card mt-6">
+      <div class="card-header flex-between">
+        <div class="flex-align">
+          <span class="badge" style="background:#fef3c7; color:#b45309;">Power BI &amp; DAX</span>
+          <h2>Enterprise Power BI Publish-to-Web Architecture</h2>
+        </div>
+        <span class="badge">Interactive Cloud Dashboard Embed Ready</span>
+      </div>
+      <p class="section-desc">
+        Engineered with star-schema data models, time-intelligence DAX measures (`YTD`, `QoQ`, `Rolling 12M`, `Budget Variance %`), and dynamic row-level security (RLS). Below is the live showcase sandbox:
+      </p>
+
+      <div class="powerbi-mock-container">
+        <div class="powerbi-mock-header">
+          <div class="pbi-title">
+            <span class="pbi-icon">📊</span>
+            <span>Executive CFO Cockpit · Multi-Entity Financial Consolidation</span>
+          </div>
+          <div class="pbi-filters">
+            <span class="pbi-filter-pill">Region: All Markets</span>
+            <span class="pbi-filter-pill">Currency: Functional</span>
+            <span class="pbi-filter-pill">FY 2025-26</span>
+          </div>
+        </div>
+
+        <div class="powerbi-mock-body">
+          <div class="pbi-kpi-row">
+            <div class="pbi-kpi">
+              <span class="pbi-lbl">YTD REVENUE</span>
+              <span class="pbi-num" id="pbiRev">₹142.8 Cr</span>
+              <span class="pbi-tag tag-pos">+8.4% vs Target</span>
+            </div>
+            <div class="pbi-kpi">
+              <span class="pbi-lbl">OPEX RUN RATE</span>
+              <span class="pbi-num">₹28.4 Cr/mo</span>
+              <span class="pbi-tag tag-neg">+2.1% Over Budget</span>
+            </div>
+            <div class="pbi-kpi">
+              <span class="pbi-lbl">EBITDA MARGIN</span>
+              <span class="pbi-num" id="pbiMargin">24.6%</span>
+              <span class="pbi-tag tag-pos">+140 bps vs PY</span>
+            </div>
+            <div class="pbi-kpi">
+              <span class="pbi-lbl">DSO (DAYS SALES)</span>
+              <span class="pbi-num">44 Days</span>
+              <span class="pbi-tag tag-pos">-6 Days Improvement</span>
+            </div>
+          </div>
+
+          <div class="pbi-callout-grid">
+            <div class="pbi-box">
+              <h4>Key DAX Measures Deployed:</h4>
+              <ul class="pbi-list">
+                <li><code>Variance_Abs = [Actual_Revenue] - [Budget_Revenue]</code></li>
+                <li><code>Variance_Pct = DIVIDE([Variance_Abs], [Budget_Revenue], 0)</code></li>
+                <li><code>EBITDA_Margin_bps = ([EBITDA_Margin_Act] - [EBITDA_Margin_Bud]) * 10000</code></li>
+                <li><code>Dynamic_Currency = SWITCH(SELECTEDVALUE(Dim_Entity[Currency]), "AED", [Amt] * [FX_AED], [Amt])</code></li>
+              </ul>
+            </div>
+            <div class="pbi-box">
+              <h4>Data Pipeline &amp; ETL:</h4>
+              <ul class="pbi-list">
+                <li>Automated Power Query M script merging ERP GL extracts and CRM forecasts.</li>
+                <li>Incremental refresh handling 3+ million transactional rows with zero timeout.</li>
+                <li>Star schema with isolated Bridge tables avoiding many-to-many synthetic joins.</li>
+                <li>Role-Level Security (RLS) restricting regional controllers to their entity.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

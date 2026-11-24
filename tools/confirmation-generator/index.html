@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bulk Audit Confirmation Letter Generator (ICAI SA 505) | CA Ashish Tripathi</title>
+  <meta name="description" content="Generate audit-ready positive and negative balance confirmation letters for debtors and creditors as per ICAI SA 505. Built by CA Ashish Tripathi.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Header Bar -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-area">
+        <a href="../../index.html" class="brand-badge" title="Return to caashishtripathi.in">← caashishtripathi.in</a>
+        <div>
+          <h1>Bulk Audit Confirmation Letter Generator</h1>
+          <p class="subtitle">Standard on Auditing (SA 505) External Confirmations · ICAI Audit Automation</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-secondary" onclick="ConfirmationApp.loadSampleData()">⚡ 1-Click Sample Parties</button>
+        <button class="btn btn-primary" onclick="ConfirmationApp.openBulkPrintModal()">📄 Generate &amp; Print Letters</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <!-- Notice Banner -->
+    <div class="notice-card">
+      <div class="notice-icon">🛡️</div>
+      <div class="notice-content">
+        <h3>Statutory Compliance: ICAI SA 505 External Confirmations</h3>
+        <p>This deterministic audit engine automates the generation of balance confirmations for Trade Receivables, Trade Payables, Loans, and Bank Balances. Letters include formal auditor representation, exact rupee amounts in words, client authorization, and a tear-off verification return slip.</p>
+      </div>
+    </div>
+
+    <!-- Configuration & Parameters Grid -->
+    <div class="config-grid">
+      <!-- Audit Engagement Settings -->
+      <div class="card">
+        <div class="card-header">
+          <span class="badge">Step 1</span>
+          <h2>Audit &amp; Company Parameters</h2>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Client / Auditee Company</label>
+            <input type="text" id="companyName" value="Apex Bharat Technologies Ltd." placeholder="e.g. Acme Corp Ltd.">
+          </div>
+          <div class="form-group">
+            <label>Auditing Firm Name</label>
+            <input type="text" id="auditorName" value="Tripathi &amp; Associates, Chartered Accountants" placeholder="e.g. CA Firm">
+          </div>
+          <div class="form-group">
+            <label>Auditor Contact Email for Response</label>
+            <input type="email" id="auditorEmail" value="audit.confirmations@caashishtripathi.in">
+          </div>
+          <div class="form-group">
+            <label>Confirmation As-On Date</label>
+            <input type="date" id="asOnDate" value="2026-03-31">
+          </div>
+          <div class="form-group">
+            <label>Confirmation Type</label>
+            <select id="confirmationType">
+              <option value="positive">Positive Confirmation (Strict response required whether agree or disagree)</option>
+              <option value="negative">Negative Confirmation (Response requested only if in disagreement)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Response Due Date</label>
+            <input type="date" id="dueDate" value="2026-04-20">
+          </div>
+        </div>
+      </div>
+
+      <!-- Letter Template Customization -->
+      <div class="card">
+        <div class="card-header">
+          <span class="badge">Step 2</span>
+          <h2>Custom Letterhead Template</h2>
+        </div>
+        <div class="form-group">
+          <label>Letter Body (Supports variables: <code class="mono-tag">{PartyName}</code>, <code class="mono-tag">{Balance}</code>, <code class="mono-tag">{DrCr}</code>, <code class="mono-tag">{AsOnDate}</code>, <code class="mono-tag">{CompanyName}</code>, <code class="mono-tag">{AuditorName}</code>, <code class="mono-tag">{DueDate}</code>)</label>
+          <textarea id="templateBody" rows="7" class="code-font">In connection with the statutory audit of our financial statements for the period ended {AsOnDate}, our statutory auditors, {AuditorName}, require direct written confirmation of the balance outstanding in your account as per our books of accounts.
+
+According to our records, the balance outstanding as on {AsOnDate} was ₹{Balance} ({DrCr}).
+
+Kindly examine your accounts and confirm directly to our statutory auditors via email ({AuditorEmail}) whether the stated balance agrees with your books of accounts by {DueDate}. In case of any discrepancy or unadjusted credit note/debit note, please furnish the itemized statement of reconciliation.</textarea>
+        </div>
+        <div class="template-footer-actions">
+          <button class="btn btn-sm btn-outline" onclick="ConfirmationApp.resetTemplate()">Restore Default Template</button>
+          <span class="helper-text">Changes update live in generated letters.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Parties Ledger Table -->
+    <div class="card mt-6">
+      <div class="card-header flex-between">
+        <div>
+          <span class="badge">Step 3</span>
+          <h2>Parties Ledger Master (<span id="partyCount">0</span> Parties Loaded)</h2>
+        </div>
+        <div class="table-actions">
+          <button class="btn btn-sm btn-outline" onclick="ConfirmationApp.addNewRow()">+ Add Single Party</button>
+          <button class="btn btn-sm btn-secondary" onclick="ConfirmationApp.exportPartiesCSV()">📥 Export CSV</button>
+          <label class="btn btn-sm btn-secondary file-upload-btn">
+            📤 Import CSV
+            <input type="file" id="csvFileInput" accept=".csv" onchange="ConfirmationApp.handleCSVUpload(event)" style="display:none;">
+          </label>
+          <button class="btn btn-sm btn-danger-outline" onclick="ConfirmationApp.clearAllParties()">Clear All</button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table class="data-table" id="partiesTable">
+          <thead>
+            <tr>
+              <th width="40">#</th>
+              <th>Party / Entity Name</th>
+              <th>Category</th>
+              <th>GSTIN</th>
+              <th>Ledger Balance (₹)</th>
+              <th>Dr / Cr</th>
+              <th>Contact Email</th>
+              <th width="80">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="partiesTableBody">
+            <!-- Populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal for Bulk Printable Letters View -->
+  <div id="printModal" class="modal-overlay hidden">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div>
+          <h2>Audit Confirmation Letters Preview</h2>
+          <p class="subtitle">Ready to print or save as PDF. Formatted strictly per SA 505 guidelines.</p>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-primary" onclick="window.print()">🖨️ Print All Letters (or Save PDF)</button>
+          <button class="btn btn-secondary" onclick="ConfirmationApp.closeModal()">Close</button>
+        </div>
+      </div>
+      <div class="modal-body printable-area" id="printLettersContainer">
+        <!-- Rendered letters go here -->
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

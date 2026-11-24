@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CA Ashish Tripathi | Finance Transformation, FP&amp;A Automation &amp; AI Architect</title>
+  <meta name="description" content="Chartered Accountant (ICAI) specializing in Finance Transformation, Dual-Compliance FAR, GSTR-2B Automation, FP&A Power BI modeling, and Applied AI workflows. Personal portfolio and interactive tool sandbox for CFO and Finance Leadership roles in India & Dubai.">
+  
+  <!-- Canonical & Open Graph -->
+  <link rel="canonical" href="https://caashishtripathi.in">
+  <meta property="og:title" content="CA Ashish Tripathi | Finance Transformation &amp; AI Automation">
+  <meta property="og:description" content="Bridge deep Chartered Accountant domain rigor with software execution. Explore live interactive financial automation tools built by CA Ashish Tripathi.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://caashishtripathi.in">
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Custom Stylesheet (cajob.in synchronized design tokens) -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- ==========================================================================
+       Navigation Bar
+       ========================================================================== -->
+  <header class="navbar">
+    <div class="container navbar-container">
+      <a href="#" class="brand-wrapper">
+        <div class="brand-seal">CA</div>
+        <div class="brand-info">
+          <span class="brand-name">CA Ashish Tripathi</span>
+          <span class="brand-title">Finance Transformation &amp; AI</span>
+        </div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#tools" class="nav-link">Interactive Tools</a>
+        <a href="#matrix" class="nav-link">Domain &amp; Tech Stack</a>
+        <a href="#architecture" class="nav-link">Engineering Architecture</a>
+        <a href="#career" class="nav-link">Career Snapshot</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </nav>
+
+      <div class="nav-cta-group">
+        <button class="btn btn-secondary btn-sm" onclick="Portfolio.openResumeModal()">📄 Resume (PDF)</button>
+        <a href="#tools" class="btn btn-primary btn-sm">⚡ Explore Tools</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       Hero Section (Above the Fold)
+       ========================================================================== -->
+  <section class="hero-section">
+    <div class="container">
+      <!-- Status Badges -->
+      <div class="hero-badge-strip">
+        <span class="badge-icai">
+          <span class="pulse-dot"></span>
+          Chartered Accountant (ICAI) • Cleared CA Final Sept 2025
+        </span>
+        <span class="badge-location">
+          📍 Open to Senior Finance Roles · India &amp; Dubai (UAE)
+        </span>
+      </div>
+
+      <!-- Main Headline -->
+      <h1 class="hero-headline">
+        Bridging Chartered Accountant Rigor with <span>AI &amp; Automation Execution</span>
+      </h1>
+
+      <!-- Subheadline -->
+      <p class="hero-subheadline">
+        I turn manual accounting, tax reconciliations, and FP&amp;A bottlenecks into <strong>automated, audit-ready workflows</strong> using Python, Power Query, Power BI, and deterministic rule engines. Designed for CFOs, Controllers, and Finance Leaders who demand zero-hallucination accuracy.
+      </p>
+
+      <!-- Primary Action Buttons -->
+      <div class="hero-cta-group">
+        <a href="#tools" class="btn btn-primary btn-lg">
+          <span>🚀 Explore Live Tool Sandboxes</span>
+          <span>&darr;</span>
+        </a>
+        <button class="btn btn-secondary btn-lg" onclick="Portfolio.openResumeModal()">
+          <span>📄 Download Resume (PDF)</span>
+        </button>
+        <a href="https://www.linkedin.com/in/caashishtripathi" target="_blank" rel="noopener noreferrer" class="btn btn-navy btn-lg">
+          <span>💼 LinkedIn Profile</span>
+          <span>&nearr;</span>
+        </a>
+      </div>
+
+      <!-- Key Proof Strip (4 Crisp Metrics) -->
+      <div class="proof-strip">
+        <div class="proof-item">
+          <div class="proof-num">15+</div>
+          <div class="proof-title">Finance Tools Built</div>
+          <div class="proof-desc">FAR, GST Reco, SA 505 Confirmations, FP&amp;A Variance, and OCR Pipelines.</div>
+        </div>
+        <div class="proof-item">
+          <div class="proof-num">100%</div>
+          <div class="proof-title">Deterministic Math</div>
+          <div class="proof-desc">Zero mathematical hallucinations; code handles calculation, AI handles unstructured text.</div>
+        </div>
+        <div class="proof-item">
+          <div class="proof-num">500+</div>
+          <div class="proof-title">Corporate Trainees</div>
+          <div class="proof-desc">Trained corporate finance teams on Power BI, Advanced Excel, and AI automation.</div>
+        </div>
+        <div class="proof-item">
+          <div class="proof-num">Sept '25</div>
+          <div class="proof-title">CA Final Qualified</div>
+          <div class="proof-desc">Statutory auditing, Ind AS reporting, corporate law, and direct/indirect taxation.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       Section 2: Interactive Finance & AI Tool Suite (The Core)
+       ========================================================================== -->
+  <section class="section-wrapper" id="tools">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Interactive Portfolio Sandbox</span>
+        <h2 class="section-title">Production Financial Software &amp; Automation Tools</h2>
+        <p class="section-description">
+          Every tool below runs 100% client-side with zero backend dependencies. Click <strong>"Launch Live Sandbox"</strong> to run an interactive demo with pre-loaded enterprise data, test calculations live, and export audit schedules.
+        </p>
+      </div>
+
+      <!-- Category Filter Tabs -->
+      <div class="tools-filter-bar">
+        <button class="filter-tab active" data-filter="all">All Tools (4)</button>
+        <button class="filter-tab" data-filter="accounting">Accounting &amp; Fixed Assets</button>
+        <button class="filter-tab" data-filter="tax">Tax &amp; GST Compliance</button>
+        <button class="filter-tab" data-filter="audit">Audit &amp; Assurance</button>
+        <button class="filter-tab" data-filter="fpa">FP&amp;A &amp; Power BI</button>
+      </div>
+
+      <!-- Tools Grid -->
+      <div class="tools-grid">
+
+        <!-- Tool 1: Fixed Asset Register -->
+        <article class="tool-card" data-category="accounting">
+          <div>
+            <div class="tool-top-badges">
+              <span class="tool-domain-tag">Accounting &amp; Fixed Assets</span>
+              <span class="tool-status-live">
+                <span class="pulse-dot"></span> Live Application
+              </span>
+            </div>
+
+            <h3 class="tool-title">Dual-Compliance Fixed Asset Register (FAR)</h3>
+
+            <div class="tool-bottleneck">
+              <strong>Finance Bottleneck:</strong> Disjointed depreciation workings under Companies Act (Schedule II) vs. Income Tax Act (Sec 32) causing timing errors and audit reconciliations delays.
+            </div>
+
+            <p class="tool-description">
+              Calculates daily pro-rata depreciation simultaneously under Companies Act, 2013 (useful life, 5% residual floor, 1.5x/2.0x shift multipliers) and Income Tax Act (Block of Assets, 180-day rule, Sec 50 STCG), with automated AS 22 / Ind AS 12 Deferred Tax Asset/Liability (DTA/DTL) computation.
+            </p>
+
+            <div class="tool-engine-badge">
+              <span class="engine-label">Engine:</span>
+              <span class="engine-tag">Vanilla JS · Pro-Rata Math · SheetJS · Chart.js</span>
+            </div>
+          </div>
+
+          <div class="tool-card-actions">
+            <button class="btn btn-primary btn-sm" onclick="Portfolio.launchSandbox('fixed-asset-register', 'tools/fixed-asset-register/index.html')">
+              🚀 Launch Live Sandbox
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="Portfolio.openArchitectureModal('fixed-asset-register')">
+              📐 Architecture &amp; Logic
+            </button>
+            <a href="tools/fixed-asset-register/index.html" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+              ↗ Full Tab
+            </a>
+          </div>
+        </article>
+
+        <!-- Tool 2: GSTWise Enterprise Reco -->
+        <article class="tool-card" data-category="tax">
+          <div>
+            <div class="tool-top-badges">
+              <span class="tool-domain-tag">Tax &amp; GST Compliance</span>
+              <span class="tool-status-live">
+                <span class="pulse-dot"></span> Live Application
+              </span>
+            </div>
+
+            <h3 class="tool-title">GSTWise: GSTR-2B vs. Books Reconciler Suite</h3>
+
+            <div class="tool-bottleneck">
+              <strong>Finance Bottleneck:</strong> Missing input tax credit (ITC) and statutory notice risks (Rule 36(4), Form DRC-01C) arising from manual purchase register matching against portal GSTR-2B.
+            </div>
+
+            <p class="tool-description">
+              High-performance reconciliation engine comparing purchase registers against GSTR-2B downloads using exact and configurable tolerance matching. Features Invoice Management System (IMS) marking, Rule 88A tax offset optimizer, and 100% compliant GSTN offline JSON generation.
+            </p>
+
+            <div class="tool-engine-badge">
+              <span class="engine-label">Engine:</span>
+              <span class="engine-tag">React 18 · Vite · Mod-36 Luhn · Multi-Criteria Matcher</span>
+            </div>
+          </div>
+
+          <div class="tool-card-actions">
+            <button class="btn btn-primary btn-sm" onclick="Portfolio.launchSandbox('gst-reco', 'tools/gst-reco/index.html')">
+              🚀 Launch Live Sandbox
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="Portfolio.openArchitectureModal('gst-reco')">
+              📐 Architecture &amp; Logic
+            </button>
+            <a href="tools/gst-reco/index.html" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+              ↗ Full Tab
+            </a>
+          </div>
+        </article>
+
+        <!-- Tool 3: SA 505 Bulk Confirmation Generator -->
+        <article class="tool-card" data-category="audit">
+          <div>
+            <div class="tool-top-badges">
+              <span class="tool-domain-tag">Audit &amp; Assurance</span>
+              <span class="tool-status-live">
+                <span class="pulse-dot"></span> Live Application
+              </span>
+            </div>
+
+            <h3 class="tool-title">Bulk Audit Confirmation Letter Generator</h3>
+
+            <div class="tool-bottleneck">
+              <strong>Finance Bottleneck:</strong> Manually drafting, merging, and formatting hundreds of balance confirmation letters for debtors, creditors, and banks during annual audit closure.
+            </div>
+
+            <p class="tool-description">
+              Statutory auditing tool compliant with ICAI SA 505 (External Confirmations). Takes client ledgers, auto-converts balances into Indian rupee words, generates formal positive/negative audit confirmation letters with auditee letterheads, auditor verification seals, and third-party tear-off return slips ready for bulk printing or PDF export.
+            </p>
+
+            <div class="tool-engine-badge">
+              <span class="engine-label">Engine:</span>
+              <span class="engine-tag">JavaScript · ICAI SA 505 Rules · Words Engine · Print CSS</span>
+            </div>
+          </div>
+
+          <div class="tool-card-actions">
+            <button class="btn btn-primary btn-sm" onclick="Portfolio.launchSandbox('confirmation-generator', 'tools/confirmation-generator/index.html')">
+              🚀 Launch Live Sandbox
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="Portfolio.openArchitectureModal('confirmation-generator')">
+              📐 Architecture &amp; Logic
+            </button>
+            <a href="tools/confirmation-generator/index.html" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+              ↗ Full Tab
+            </a>
+          </div>
+        </article>
+
+        <!-- Tool 4: FP&A Variance & MIS Analyzer -->
+        <article class="tool-card" data-category="fpa">
+          <div>
+            <div class="tool-top-badges">
+              <span class="tool-domain-tag">FP&amp;A &amp; Power BI</span>
+              <span class="tool-status-live">
+                <span class="pulse-dot"></span> Live Application
+              </span>
+            </div>
+
+            <h3 class="tool-title">FP&amp;A Variance Analyzer &amp; MIS Showcase</h3>
+
+            <div class="tool-bottleneck">
+              <strong>Finance Bottleneck:</strong> Excessive cycle time lost at month-end close compiling repetitive spreadsheet variance reports and manually drafting qualitative board commentary.
+            </div>
+
+            <p class="tool-description">
+              Executive Budget vs. Actuals variance analyzer with real-time gross margin and EBITDA recalculations. Features automated board-level narrative commentary generation, customizable variance alert sensitivity sliders, and an interactive showcase of Power BI star-schema DAX models.
+            </p>
+
+            <div class="tool-engine-badge">
+              <span class="engine-label">Engine:</span>
+              <span class="engine-tag">Vanilla JS · Chart.js · Rule-Based Commentary · DAX</span>
+            </div>
+          </div>
+
+          <div class="tool-card-actions">
+            <button class="btn btn-primary btn-sm" onclick="Portfolio.launchSandbox('fpa-dashboard', 'tools/fpa-dashboard/index.html')">
+              🚀 Launch Live Sandbox
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="Portfolio.openArchitectureModal('fpa-dashboard')">
+              📐 Architecture &amp; Logic
+            </button>
+            <a href="tools/fpa-dashboard/index.html" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+              ↗ Full Tab
+            </a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       Section 3: Domain Rigor + Technical Stack Matrix
+       ========================================================================== -->
+  <section class="section-wrapper" id="matrix">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Competency Framework</span>
+        <h2 class="section-title">Chartered Accountant Rigor &times; Software Execution</h2>
+        <p class="section-description">
+          Most software engineers lack statutory accounting context; most finance professionals cannot code. Here is how I bridge both worlds to deliver enterprise-grade automation.
+        </p>
+      </div>
+
+      <!-- 2-Column Matrix -->
+      <div class="matrix-grid">
+        <!-- Column 1: CA Rigor -->
+        <div class="matrix-col">
+          <div class="matrix-col-header">
+            <div class="matrix-icon-wrap icon-domain">🏛️</div>
+            <div>
+              <h3>Chartered Accountant Domain Rigor</h3>
+              <span class="col-sub">Statutory compliance, audit trails, and financial control frameworks</span>
+            </div>
+          </div>
+
+          <ul class="matrix-list">
+            <li class="matrix-item">
+              <span class="matrix-bullet">✓</span>
+              <div class="matrix-item-content">
+                <h4>Financial Reporting &amp; Ind AS</h4>
+                <p>Schedule III balance sheet presentation, Ind AS 16 Property Plant &amp; Equipment, Ind AS 115 Revenue from Contracts, and Ind AS 12 Deferred Tax.</p>
+              </div>
+            </li>
+            <li class="matrix-item">
+              <span class="matrix-bullet">✓</span>
+              <div class="matrix-item-content">
+                <h4>Statutory &amp; Internal Audit (ICAI Standards)</h4>
+                <p>Audit sampling (SA 530), External confirmations (SA 505), Internal Financial Controls (IFC) testing, and Form 3CD tax audit schedules.</p>
+              </div>
+            </li>
+            <li class="matrix-item">
+              <span class="matrix-bullet">✓</span>
+              <div class="matrix-item-content">
+                <h4>GST &amp; Direct Tax Architecture</h4>
+                <p>GSTR-1/3B/9/9C reconciliation, Rule 88A tax offset sequence, Section 16(2)(aa) ITC admissibility, and Section 32/43(6) block movements.</p>
+              </div>
+            </li>
+            <li class="matrix-item">
+              <span class="matrix-bullet">✓</span>
+              <div class="matrix-item-content">
+                <h4>Corporate FP&amp;A &amp; Working Capital</h4>
+                <p>Budgeting, rolling 12-month forecasts, cash conversion cycle, Capex appraisal (DCF/IRR), and variance analysis with CFO actionable commentary.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Column 2: Tech Stack -->
+        <div class="matrix-col">
+          <div class="matrix-col-header">
+            <div class="matrix-icon-wrap icon-tech">⚡</div>
+            <div>
+              <h3>Automation, BI &amp; Applied AI Stack</h3>
+              <span class="col-sub">Deterministic calculation engines and modern software pipelines</span>
+            </div>
+          </div>
+
+          <ul class="matrix-list">
+            <li class="matrix-item">
+              <span class="matrix-bullet">⚡</span>
+              <div class="matrix-item-content">
+                <h4>Financial ETL &amp; Data Wrangling</h4>
+                <p>Python (Pandas, NumPy, OpenPyXL), Power Query M, RegEx, and automated ingestion from ERP GL extracts (SAP, Oracle, Tally, Zoho).</p>
+              </div>
+            </li>
+            <li class="matrix-item">
+              <span class="matrix-bullet">⚡</span>
+              <div class="matrix-item-content">
+                <h4>Business Intelligence &amp; Data Modeling</h4>
+                <p>Microsoft Power BI, advanced DAX (Time Intelligence, CALCULATE, Dynamic Slicers), Star-Schema design, and Publish-to-Web embedding.</p>
+              </div>
+            </li>
+            <li class="matrix-item">
+              <span class="matrix-bullet">⚡</span>
+              <div class="matrix-item-content">
+                <h4>Web &amp; Workflow Automation</h4>
+                <p>Modern JavaScript (ES6+), React 18, HTML5/CSS3, SheetJS, Google Apps Script, and automated batch processing.</p>
+              </div>
+            </li>
+            <li class="matrix-item">
+              <span class="matrix-bullet">⚡</span>
+              <div class="matrix-item-content">
+                <h4>Applied AI &amp; Document Extraction</h4>
+                <p>OCR invoice text extraction, LLM API pipelines for parsing unstructured contracts, and deterministic synthesis of board commentary.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Philosophy Callout Banner -->
+      <div class="philosophy-banner">
+        <div class="philosophy-icon">⚙️</div>
+        <div class="philosophy-text">
+          <h4>Core Engineering Philosophy: Zero-Hallucination Finance</h4>
+          <p>
+            Deterministic code (Python, JavaScript, Power Query, DAX) handles <strong>100% of arithmetic, tax reconciliations, and statutory math</strong> to guarantee audit compliance and zero calculation hallucinations. Generative AI is reserved exclusively for unstructured document extraction, text summarization, and executive narrative drafting.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       Section 4: Engineering Architecture Deep-Dive
+       ========================================================================== -->
+  <section class="section-wrapper" id="architecture">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Systems Design</span>
+        <h2 class="section-title">End-to-End Enterprise Finance Automation Pipeline</h2>
+        <p class="section-description">
+          How I architect robust financial systems that transform messy operational records into executive board intelligence and statutory tax filings.
+        </p>
+      </div>
+
+      <div class="proof-strip" style="grid-template-columns: repeat(5, 1fr); gap: 1rem;">
+        <div class="proof-item">
+          <div class="proof-num" style="font-size: 1.15rem; color: var(--green);">01. Ingestion</div>
+          <div class="proof-title">Raw ERP &amp; GL Extraction</div>
+          <div class="proof-desc">Automated ingestion of CSV/Excel extracts from SAP, Oracle, Tally, Zoho, and banking portals.</div>
+        </div>
+        <div class="proof-item">
+          <div class="proof-num" style="font-size: 1.15rem; color: var(--green);">02. Validation</div>
+          <div class="proof-title">Statutory Verification</div>
+          <div class="proof-desc">Row-by-row checks: 15-digit GSTIN Luhn check, date logic (Ready vs Put to Use), negative numbers.</div>
+        </div>
+        <div class="proof-item">
+          <div class="proof-num" style="font-size: 1.15rem; color: var(--green);">03. Rule Engine</div>
+          <div class="proof-title">Deterministic Math</div>
+          <div class="proof-desc">Schedule II daily pro-rata, 180-day tax rule, fuzzy purchase invoice matching, and Rule 88A offset.</div>
+        </div>
+        <div class="proof-item">
+          <div class="proof-num" style="font-size: 1.15rem; color: var(--green);">04. AI Augmentation</div>
+          <div class="proof-title">Unstructured Extraction</div>
+          <div class="proof-desc">LLMs parse unstructured vendor PDFs, missing PO numbers, and synthesize flash board commentary.</div>
+        </div>
+        <div class="proof-item">
+          <div class="proof-num" style="font-size: 1.15rem; color: var(--green);">05. Delivery</div>
+          <div class="proof-title">Audit-Ready Output</div>
+          <div class="proof-desc">Power BI CFO dashboards, Form 3CD Clause 18 schedules, official GSTN JSON, and SA 505 letters.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       Section 5: Career Snapshot & Professional Milestones
+       ========================================================================== -->
+  <section class="section-wrapper" id="career">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Track Record</span>
+        <h2 class="section-title">Career Milestones &amp; Experience Snapshot</h2>
+        <p class="section-description">
+          A career grounded in ICAI audit and accounting rigor, supercharged with software development and automation.
+        </p>
+      </div>
+
+      <div class="timeline">
+        <!-- Milestone 1 -->
+        <div class="timeline-item">
+          <div class="timeline-marker"></div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <h3 class="timeline-title">Chartered Accountant (ICAI Qualified)</h3>
+              <span class="timeline-period">September 2025</span>
+            </div>
+            <div class="timeline-sub">The Institute of Chartered Accountants of India (ICAI)</div>
+            <p class="timeline-body">
+              Cleared CA Final examinations with comprehensive mastery across Advanced Financial Management, Strategic Financial Reporting (Ind AS), Corporate Law, Statutory Auditing, International Taxation, and GST Framework.
+            </p>
+          </div>
+        </div>
+
+        <!-- Milestone 2 -->
+        <div class="timeline-item">
+          <div class="timeline-marker"></div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <h3 class="timeline-title">Lead Architect &amp; Developer — Financial Automation Tools</h3>
+              <span class="timeline-period">2024 &ndash; Present</span>
+            </div>
+            <div class="timeline-sub">Independent Enterprise Tools &amp; cajob.in Platform</div>
+            <p class="timeline-body">
+              Architected 15+ specialized finance web tools and automation scripts. Highlights include the flagship <em>Dual-Compliance Fixed Asset Register</em>, <em>GSTWise Enterprise Reconciliation Suite</em>, <em>SA 505 Audit Confirmation Generator</em>, and corporate FP&amp;A variance models currently serving hundreds of finance professionals.
+            </p>
+          </div>
+        </div>
+
+        <!-- Milestone 3 -->
+        <div class="timeline-item">
+          <div class="timeline-marker"></div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <h3 class="timeline-title">Corporate Trainer &amp; Automation Mentor</h3>
+              <span class="timeline-period">2024 &ndash; Present</span>
+            </div>
+            <div class="timeline-sub">Finance Transformation Workshops</div>
+            <p class="timeline-body">
+              Conducted interactive, hands-on training sessions for over 500 working Chartered Accountants, corporate controllers, and FP&amp;A analysts on Power BI DAX modeling, Power Query ETL pipelines, automated financial reporting, and applying AI to streamline accounting workflows.
+            </p>
+          </div>
+        </div>
+
+        <!-- Milestone 4 -->
+        <div class="timeline-item">
+          <div class="timeline-marker"></div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <h3 class="timeline-title">Chartered Accountancy Articleship &amp; Core Audit</h3>
+              <span class="timeline-period">Practical Training</span>
+            </div>
+            <div class="timeline-sub">Statutory Audit, Tax Audit &amp; Corporate Advisory</div>
+            <p class="timeline-body">
+              Executed statutory audits, internal financial control (IFC) testing, Form 3CD tax audit filings, GST annual reconciliations (GSTR-9/9C), and corporate tax return computations for medium and large corporate clients across manufacturing, retail, and IT services.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       Section 6: Executive Contact & Interview Booking
+       ========================================================================== -->
+  <section class="section-wrapper" id="contact">
+    <div class="container">
+      <div class="contact-card">
+        <div class="contact-layout">
+          <div>
+            <span class="section-tag" style="color: var(--lime);">Direct Executive Channel</span>
+            <h2 class="contact-headline">Let's Discuss Senior Finance Transformation Roles</h2>
+            <p class="contact-desc">
+              I am actively engaging with CFOs, VPs of Finance, and hiring partners seeking a modern Chartered Accountant who can lead digital controllership, eliminate manual close delays, and build proprietary finance tools for enterprises in <strong>India (Mumbai / Delhi NCR / Bangalore)</strong> and <strong>Dubai (UAE)</strong>.
+            </p>
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+              <button class="btn btn-primary btn-lg" onclick="Portfolio.copyEmail('ashish@caashishtripathi.in', this)">
+                ✉️ Copy ashish@caashishtripathi.in
+              </button>
+              <button class="btn btn-secondary btn-lg" onclick="Portfolio.openResumeModal()">
+                📄 View / Download Resume
+              </button>
+            </div>
+          </div>
+
+          <div class="contact-links-grid">
+            <a href="mailto:ashish@caashishtripathi.in" class="contact-link-pill">
+              <span class="contact-link-icon">📧</span>
+              <div>
+                <div style="font-size:0.75rem; color:#94a3b8;">Official Portfolio Email</div>
+                <div>ashish@caashishtripathi.in</div>
+              </div>
+            </a>
+            <a href="https://www.linkedin.com/in/caashishtripathi" target="_blank" rel="noopener noreferrer" class="contact-link-pill">
+              <span class="contact-link-icon">💼</span>
+              <div>
+                <div style="font-size:0.75rem; color:#94a3b8;">Professional Network</div>
+                <div>linkedin.com/in/caashishtripathi</div>
+              </div>
+            </a>
+            <a href="https://github.com/caashishtripathi" target="_blank" rel="noopener noreferrer" class="contact-link-pill">
+              <span class="contact-link-icon">💻</span>
+              <div>
+                <div style="font-size:0.75rem; color:#94a3b8;">Source Code &amp; Repositories</div>
+                <div>github.com/caashishtripathi</div>
+              </div>
+            </a>
+            <div class="contact-link-pill" style="cursor: default;">
+              <span class="contact-link-icon">📍</span>
+              <div>
+                <div style="font-size:0.75rem; color:#94a3b8;">Geographic Mobility</div>
+                <div>India (Metro Hubs) &bull; Dubai (UAE)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       Footer
+       ========================================================================== -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <div class="footer-copy">
+        <strong>CA Ashish Tripathi</strong> &bull; Chartered Accountant (ICAI)
+        <div class="footer-sub">
+          &copy; 2026 caashishtripathi.in &bull; Built with deterministic HTML5/CSS3 &bull; Deployed on Vercel
+        </div>
+      </div>
+      <div class="footer-links">
+        <a href="#tools">Tools</a>
+        <a href="#matrix">Stack Matrix</a>
+        <a href="#career">Milestones</a>
+        <a href="#contact">Contact</a>
+        <a href="#" onclick="Portfolio.openResumeModal(); return false;">Resume</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       Modal 1: Live Tool Sandbox Modal (Embeds the tool live!)
+       ========================================================================== -->
+  <div id="sandboxModal" class="modal-overlay">
+    <div class="modal-box modal-box-large">
+      <div class="modal-header">
+        <div>
+          <h3 id="sandboxTitle">Interactive Tool Sandbox</h3>
+          <span class="modal-subtitle">Live execution environment &bull; 100% Client-Side Privacy</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <a id="sandboxFullTabLink" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="color:var(--navy);">
+            ↗ Open in Dedicated Full Tab
+          </a>
+          <button class="modal-close-btn" onclick="Portfolio.closeSandbox()">&times;</button>
+        </div>
+      </div>
+      <div class="modal-iframe-wrap">
+        <iframe id="sandboxIframe" src="about:blank" title="Interactive Financial Tool Sandbox"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       Modal 2: Architecture & Logic Modal
+       ========================================================================== -->
+  <div id="archModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div>
+          <h3 id="archTitle">Architecture &amp; Statutory Logic</h3>
+          <span class="modal-subtitle">Technical blueprint, data transformations &amp; compliance rules</span>
+        </div>
+        <button class="modal-close-btn" onclick="Portfolio.closeArchModal()">&times;</button>
+      </div>
+      <div class="modal-content-area" id="archContent">
+        <!-- Injected dynamically via Portfolio.openArchitectureModal -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       Modal 3: Executive Resume Modal
+       ========================================================================== -->
+  <div id="resumeModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div>
+          <h3>Curriculum Vitae · CA Ashish Tripathi</h3>
+          <span class="modal-subtitle">Chartered Accountant &bull; Finance Transformation &bull; AI Automation</span>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Print / Save PDF</button>
+          <button class="modal-close-btn" onclick="Portfolio.closeResumeModal()">&times;</button>
+        </div>
+      </div>
+      <div class="modal-content-area">
+        <div class="resume-paper">
+          <div class="resume-header">
+            <div>
+              <div class="resume-name">CA Ashish Tripathi</div>
+              <div class="resume-title">Chartered Accountant (ICAI) &bull; Finance Transformation Leader</div>
+              <div style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">
+                Email: ashish@caashishtripathi.in &bull; Web: caashishtripathi.in &bull; Locations: India &bull; Dubai (UAE)
+              </div>
+            </div>
+            <div style="text-align: right; font-size: 0.75rem; color: #08765D; font-weight: 700;">
+              ICAI Member (Final: Sept 2025)
+            </div>
+          </div>
+
+          <div class="resume-section-title">Executive Summary</div>
+          <p style="font-size: 0.8125rem; color: #334155;">
+            Qualified Chartered Accountant (ICAI) bridging statutory audit, Ind AS financial reporting, and direct/indirect taxation with advanced software execution (Python, Power BI, Power Query, React, and Applied AI). Architect of 15+ production finance automation tools, including dual-compliance Fixed Asset Registers, GSTR-2B multi-criteria reconcilers, and SA 505 audit generators. Proven track record conducting corporate finance workshops for 500+ professionals.
+          </p>
+
+          <div class="resume-section-title">Core Competencies &amp; Technical Stack</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.8rem;">
+            <div>
+              <strong>Chartered Accountant Domain:</strong>
+              <ul style="padding-left: 1.25rem; margin-top: 0.25rem; color: #475569;">
+                <li>Ind AS &amp; Schedule III Financial Reporting</li>
+                <li>Statutory &amp; Tax Auditing (ICAI SA Standards)</li>
+                <li>Direct Tax (Sec 32, 43(6), 50, 3CD Schedules)</li>
+                <li>GST Compliance (Rule 88A/88C/88D, GSTR-1/2B/3B/9C)</li>
+                <li>Corporate FP&amp;A, Budgeting &amp; Rolling Forecasts</li>
+              </ul>
+            </div>
+            <div>
+              <strong>Software &amp; AI Stack:</strong>
+              <ul style="padding-left: 1.25rem; margin-top: 0.25rem; color: #475569;">
+                <li>Financial ETL: Python (Pandas, OpenPyXL), Power Query M</li>
+                <li>BI &amp; Modeling: Microsoft Power BI, Advanced DAX, Star Schema</li>
+                <li>Frontend: Modern JavaScript (ES6+), React 18, Tailwind, SheetJS</li>
+                <li>Applied AI: OCR document extraction, LLM API pipelines</li>
+                <li>Workflow Automation: Google Apps Script, VBA Macros</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="resume-section-title">Key Projects &amp; Software Architecture</div>
+          <div style="font-size: 0.8rem; display: flex; flex-direction: column; gap: 0.65rem;">
+            <div>
+              <strong>1. Dual-Compliance Fixed Asset Register (FAR) Engine</strong>
+              <div style="color: #475569;">Architected a web engine calculating pro-rata depreciation simultaneously under Companies Act 2013 (useful life, 5% residual floor, shift multipliers) and Income Tax Act (block of assets, 180-day rule), with automated AS 22 / Ind AS 12 Deferred Tax Asset/Liability (DTA/DTL) calculations.</div>
+            </div>
+            <div>
+              <strong>2. GSTWise Enterprise: GSTR-2B vs. Books Reconciliation Suite</strong>
+              <div style="color: #475569;">Engineered multi-criteria invoice matching engine sorting millions of line items into Exact Match, Value Mismatches with configurable tolerance, and Missing Invoices. Automated Rule 88A tax offset and generated 100% compliant GSTN offline JSONs.</div>
+            </div>
+            <div>
+              <strong>3. Bulk Audit Confirmation Generator (ICAI SA 505)</strong>
+              <div style="color: #475569;">Developed bulk confirmation generator creating formal positive/negative balance confirmation letters with numbers-to-words conversion, auditee headers, and printable tear-off auditor reply slips.</div>
+            </div>
+            <div>
+              <strong>4. FP&amp;A Variance Analyzer &amp; Power BI Showcase</strong>
+              <div style="color: #475569;">Built live P&amp;L variance analyzer with automated executive board commentary generation, dynamic sensitivity threshold sliders, and star-schema DAX metrics (YTD, QoQ, Rolling 12M).</div>
+            </div>
+          </div>
+
+          <div class="resume-section-title">Education &amp; Professional Credentials</div>
+          <div style="font-size: 0.8rem; display: flex; flex-direction: column; gap: 0.4rem;">
+            <div style="display:flex; justify-content:space-between;">
+              <strong>Chartered Accountant (ICAI)</strong>
+              <span style="font-family:'JetBrains Mono',monospace;">Cleared Sept 2025</span>
+            </div>
+            <div style="color: #475569;">The Institute of Chartered Accountants of India &bull; Full Professional Qualification</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main JavaScript File -->
+  <script src="js/main.js"></script>
+</body>
+</html>
