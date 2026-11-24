@@ -1,754 +1,1031 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CA Ashish Tripathi | Finance Transformation, FP&amp;A Automation &amp; AI Architect</title>
-  <meta name="description" content="Chartered Accountant (ICAI) specializing in Finance Transformation, Dual-Compliance FAR, GSTR-2B Automation, FP&A Power BI modeling, and Applied AI workflows. Personal portfolio and interactive tool sandbox for CFO and Finance Leadership roles in India & Dubai.">
-  
-  <!-- Canonical & Open Graph -->
-  <link rel="canonical" href="https://caashishtripathi.in">
-  <meta property="og:title" content="CA Ashish Tripathi | Finance Transformation &amp; AI Automation">
-  <meta property="og:description" content="Bridge deep Chartered Accountant domain rigor with software execution. Explore live interactive financial automation tools built by CA Ashish Tripathi.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://caashishtripathi.in">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CA Ashish Tripathi · Finance tools & automation</title>
+<meta name="description" content="Chartered Accountant building finance tools for accounting, tax, audit and reporting work.">
+<meta name="theme-color" content="#F8FAFC">
+<meta property="og:title" content="CA Ashish Tripathi">
+<meta property="og:description" content="Chartered Accountant building tools for finance work.">
+<meta property="og:url" content="https://caashishtripathi.in">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3/dist/tabler-icons.min.css">
+<script>document.documentElement.classList.add('js')</script>
+<style>
+:root{
+  /* BRAND TOKENS */
+  --bg:#F8FAFC;
+  --surface:#FFFFFF;
+  --surface-2:#F1F5F9;
+  --card:rgba(255,255,255,.82);
+  --ink:#0B1220;
+  --ink-2:#475569;
+  --muted:#64748B;
+  --faint:#94A3B8;
+  --line:rgba(15,23,42,.08);
+  --line-2:rgba(15,23,42,.13);
+  --brand:#0F766E;
+  --brand-2:#4338CA;
+  --brand-soft:rgba(13,148,136,.09);
+  --wa:#25D366;
+  --wa-ink:#052E16;
+  --shadow:0 22px 50px -30px rgba(15,23,42,.3);
+  --radius:16px;
+  --max:1160px;
+  --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+img{max-width:100%;display:block}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font:500 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--brand)}
+.eyebrow::before{content:"";width:20px;height:1px;background:currentColor}
+::selection{background:var(--brand);color:#fff}
+:focus-visible{outline:2px solid var(--brand);outline-offset:3px;border-radius:8px}
 
-  <!-- Google Fonts: Inter & JetBrains Mono -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Custom Stylesheet (cajob.in synchronized design tokens) -->
-  <link rel="stylesheet" href="css/styles.css">
+/* Background layers */
+.bg{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.bg-aurora{position:absolute;left:-15%;right:-15%;top:-25%;height:85vh;background:radial-gradient(38% 50% at 18% 30%,rgba(99,102,241,.14),transparent 70%),radial-gradient(34% 46% at 82% 18%,rgba(20,184,166,.15),transparent 70%),radial-gradient(30% 40% at 55% 60%,rgba(14,165,233,.08),transparent 70%);filter:blur(30px);animation:drift 20s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(-3%,6%,0) scale(1.08)}}
+.bg-dots{position:absolute;inset:0;background-image:radial-gradient(rgba(15,23,42,.13) 1px,transparent 1.2px);background-size:26px 26px;-webkit-mask-image:radial-gradient(ellipse 75% 55% at 50% 0%,#000 25%,transparent 75%);mask-image:radial-gradient(ellipse 75% 55% at 50% 0%,#000 25%,transparent 75%)}
+#field{position:absolute;inset:0}
+#progress{position:fixed;top:0;left:0;height:2px;width:0;z-index:60;background:linear-gradient(90deg,#14B8A6,#6366F1)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:0 20px;border-radius:12px;font:500 14px var(--sans);border:1px solid var(--line-2);background:var(--surface);color:var(--ink);transition:background .25s,background-position .5s,border-color .2s,transform .15s,box-shadow .25s,color .2s;white-space:nowrap}
+.btn:hover{border-color:rgba(15,23,42,.28);box-shadow:0 10px 26px -16px rgba(15,23,42,.45)}
+.btn:active{transform:translateY(1px)}
+.btn i{font-size:18px}
+.btn-primary{color:#fff;border-color:transparent;background:linear-gradient(120deg,#0F766E,#0E7490 50%,#4338CA);background-size:200% 100%;box-shadow:0 10px 24px -12px rgba(13,148,136,.65)}
+.btn-primary:hover{background-position:100% 0;border-color:transparent;box-shadow:0 16px 34px -12px rgba(67,56,202,.55)}
+.btn-soft{background:rgba(13,148,136,.08);color:var(--brand);border-color:rgba(13,148,136,.28)}
+.btn-soft:hover{background:rgba(13,148,136,.14);border-color:rgba(13,148,136,.5);box-shadow:0 10px 26px -16px rgba(13,148,136,.6)}
+.btn-wa{background:var(--wa);border-color:var(--wa);color:var(--wa-ink)}
+.btn-wa:hover{background:#2FE07A;border-color:#2FE07A;box-shadow:0 14px 34px -14px rgba(37,211,102,.8)}
+.btn-sm{height:36px;padding:0 14px;font-size:13px;border-radius:10px}
+.btn-sm i{font-size:16px}
+.btn-icon{width:36px;padding:0}
+.only-touch{display:none!important}
+@media (pointer:coarse){.only-touch{display:inline-flex!important}.only-desk{display:none!important}}
+
+/* Nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;border-bottom:1px solid transparent;transition:background .3s,border-color .3s}
+.nav.scrolled{background:rgba(248,250,252,.78);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);border-bottom-color:var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:-.01em}
+.logo-mark{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;font:600 12px var(--mono);color:#fff;background:linear-gradient(135deg,#0F766E,#4338CA)}
+.menu{display:flex;align-items:center;gap:4px}
+.menu>a,.menu-trigger{display:inline-flex;align-items:center;gap:6px;font-size:14px;color:var(--ink-2);padding:8px 12px;border-radius:10px;transition:color .2s,background .2s}
+.menu>a:not(.btn):hover,.menu-trigger:hover,.dd.open .menu-trigger{color:var(--ink);background:rgba(15,23,42,.05)}
+.menu-trigger i{font-size:16px;transition:transform .25s}
+.dd.open .menu-trigger i{transform:rotate(180deg)}
+.menu .btn{margin-left:10px;padding:0 14px}
+.mega{position:absolute;left:0;right:0;top:68px;padding:0 24px;opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .22s,transform .22s,visibility .22s}
+.dd.open .mega{opacity:1;visibility:visible;transform:none}
+.mega-in{max-width:var(--max);margin:6px auto 0;background:rgba(255,255,255,.97);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid var(--line-2);border-radius:18px;padding:22px;box-shadow:0 30px 80px -24px rgba(15,23,42,.3)}
+.mega-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:6px 20px}
+.mega-cat{display:flex;align-items:center;gap:12px;width:100%;padding:8px;border-radius:12px;font-size:14px;font-weight:600;text-align:left;transition:background .2s}
+.mega-cat:hover{background:var(--surface-2)}
+.mega-cat small{margin-left:auto;font:12px var(--mono);color:var(--muted)}
+.mega-list{list-style:none;margin:2px 0 12px}
+.mega-list a{display:block;font-size:13.5px;color:var(--ink-2);padding:6px 10px 6px 56px;border-radius:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .2s,background .2s}
+.mega-list a:hover{color:var(--ink);background:var(--surface-2)}
+.mega-list a.more{font:12px var(--mono);color:var(--brand)}
+.mega-foot{display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding:16px 8px 2px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.mega-foot a{display:inline-flex;align-items:center;gap:6px;color:var(--ink);font-weight:500}
+.mega-foot a:hover{color:var(--brand)}
+.ico{width:40px;height:40px;flex:none;border-radius:11px;display:grid;place-items:center;background:var(--brand-soft);color:var(--brand);font-size:19px;border:1px solid rgba(13,148,136,.2)}
+.burger{display:none;width:42px;height:42px;border-radius:11px;border:1px solid var(--line-2);background:var(--surface);place-items:center;font-size:20px}
+.sheet{display:none}
+.sheet-in{padding:4px 24px 24px}
+.sheet h6{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+.sheet a.s{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);font-size:15px}
+.sheet a.s i{color:var(--brand)}
+.sheet a.s small{margin-left:auto;color:var(--muted);font:12px var(--mono)}
+.sheet .btn{width:100%;margin-top:20px}
+
+/* Hero */
+.hero{min-height:100svh;display:flex;align-items:center;padding:120px 0 48px}
+.hero .wrap{width:100%}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center}
+.name{display:inline-flex;align-items:center;gap:10px;font:500 13px var(--mono);color:var(--ink-2);border:1px solid var(--line-2);background:rgba(255,255,255,.8);padding:6px 14px 6px 12px;border-radius:999px;box-shadow:0 6px 18px -12px rgba(15,23,42,.35)}
+.pulse{position:relative;width:8px;height:8px;border-radius:50%;background:#14B8A6}
+.pulse::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid #14B8A6;animation:ping 2s infinite}
+@keyframes ping{from{transform:scale(.6);opacity:1}to{transform:scale(2.2);opacity:0}}
+h1{font-size:clamp(38px,5.8vw,76px);line-height:1.04;letter-spacing:-.042em;font-weight:600;margin:26px 0 22px}
+.grad{background:linear-gradient(90deg,#0F766E,#0E7490,#4338CA,#0F766E);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 8s linear infinite}
+@keyframes shine{to{background-position:300% 0}}
+.rot{display:inline-block}
+.rot.swap{animation:rotIn .6s cubic-bezier(.2,.8,.2,1),shine 8s linear infinite}
+@keyframes rotIn{from{opacity:0;transform:translateY(40%);filter:blur(8px)}}
+.lede{font-size:clamp(16px,1.6vw,19px);color:var(--ink-2);max-width:48ch}
+.ctas{display:flex;gap:12px;margin-top:34px;flex-wrap:wrap}
+.cue{display:flex;align-items:center;gap:12px;margin-top:80px;font:12px var(--mono);color:var(--muted);letter-spacing:.04em}
+.mouse{width:22px;height:34px;border:1.5px solid rgba(15,23,42,.22);border-radius:12px;position:relative}
+.mouse::after{content:"";position:absolute;left:50%;top:7px;width:3px;height:7px;margin-left:-1.5px;border-radius:2px;background:var(--brand);animation:wheel 1.8s infinite}
+@keyframes wheel{0%{opacity:0;transform:translateY(-3px)}30%{opacity:1}100%{opacity:0;transform:translateY(11px)}}
+
+/* Console (dark code window) */
+.console{position:relative;border-radius:18px;background:linear-gradient(180deg,#0F172A,#0B1220);box-shadow:0 50px 90px -40px rgba(15,23,42,.55),0 0 0 1px rgba(15,23,42,.08);overflow:hidden;transform:perspective(1200px) rotateY(-7deg) rotateX(3deg);transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+.console:hover{transform:none}
+.console::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(135deg,rgba(45,212,191,.75),transparent 40%,transparent 60%,rgba(129,140,248,.75));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.c-bar{display:flex;align-items:center;gap:6px;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
+.c-bar .d{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.14)}
+.c-bar span{margin-left:8px;font:12px var(--mono);color:#7C8798}
+.c-bar em{margin-left:auto;font:normal 11px var(--mono);color:#7C8798;border:1px solid rgba(255,255,255,.1);padding:2px 8px;border-radius:999px}
+.c-tabs{display:flex;gap:6px;padding:14px 18px 0;flex-wrap:wrap}
+.c-tabs span{font:11px var(--mono);color:#7C8798;padding:3px 8px;border-radius:6px;border:1px solid rgba(255,255,255,.1);transition:all .3s}
+.c-tabs span.on{color:#5EEAD4;border-color:rgba(45,212,191,.4);background:rgba(45,212,191,.12)}
+.c-body{padding:14px 18px 6px;font:13px/1.95 var(--mono);min-height:200px}
+.c-line{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#CBD5E1}
+.c-line .p{color:#A5B4FC;margin-right:8px}
+.c-line.ok{color:#5EEAD4}
+.c-caret{display:inline-block;width:8px;height:15px;background:#2DD4BF;vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.c-prog{height:3px;background:rgba(255,255,255,.08);margin:8px 18px 18px;border-radius:3px;overflow:hidden}
+.c-prog b{display:block;height:100%;width:0;background:linear-gradient(90deg,#2DD4BF,#818CF8);transition:width .5s}
+
+/* Marquee */
+.marquee{border-block:1px solid var(--line);background:rgba(255,255,255,.6);padding:18px 0;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.track{display:flex;width:max-content;animation:scroll 45s linear infinite}
+.marquee:hover .track{animation-play-state:paused}
+.track span{display:inline-flex;align-items:center;font:500 14px var(--mono);color:var(--ink-2);white-space:nowrap;padding-right:44px}
+.track span::after{content:"";width:5px;height:5px;transform:rotate(45deg);background:var(--brand);margin-left:44px}
+@keyframes scroll{to{transform:translateX(-50%)}}
+
+/* Sections */
+section{position:relative;padding:120px 0}
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:36px;flex-wrap:wrap}
+h2{font-size:clamp(32px,4.2vw,52px);line-height:1.05;letter-spacing:-.035em;font-weight:600;margin-top:14px}
+h2 sup{font:500 14px var(--mono);color:var(--brand);letter-spacing:0;margin-left:8px;vertical-align:super}
+.sec-sub{color:var(--ink-2);max-width:40ch}
+
+/* Cursor-following border glow (shared) */
+.glow{position:relative}
+.glow::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:radial-gradient(260px circle at var(--x,50%) var(--y,50%),rgba(13,148,136,.75),rgba(67,56,202,.35) 40%,transparent 70%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .3s;pointer-events:none}
+.glow:hover::after{opacity:1}
+
+/* Tools */
+.controls{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:24px;flex-wrap:wrap}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.fchip{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 14px;border-radius:999px;border:1px solid var(--line-2);background:var(--surface);font-size:13px;color:var(--ink-2);white-space:nowrap;transition:all .2s}
+.fchip small{font:11px var(--mono);color:var(--muted)}
+.fchip:hover{color:var(--ink);border-color:rgba(15,23,42,.28)}
+.fchip.on{background:rgba(13,148,136,.1);color:var(--brand);border-color:rgba(13,148,136,.4);font-weight:500}
+.fchip.on small{color:var(--brand)}
+.search{position:relative}
+.search i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:16px}
+.search input{height:38px;width:240px;padding:0 12px 0 36px;border-radius:10px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink);font:14px var(--sans);outline:none;transition:border-color .2s,box-shadow .2s}
+.search input::placeholder{color:var(--faint)}
+.search input:focus{border-color:var(--brand);box-shadow:0 0 0 4px var(--brand-soft)}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.tcard{display:flex;flex-direction:column;gap:14px;padding:22px;border-radius:var(--radius);border:1px solid var(--line-2);background:var(--card);overflow:hidden;transition:transform .3s,box-shadow .3s}
+.tcard::before{content:"";position:absolute;inset:0;background:radial-gradient(380px circle at var(--x,50%) var(--y,0%),rgba(13,148,136,.07),transparent 45%);opacity:0;transition:opacity .3s;pointer-events:none}
+.tcard:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.tcard:hover::before{opacity:1}
+.pop{animation:pop .5s cubic-bezier(.2,.8,.2,1) both}
+@keyframes pop{from{opacity:0;transform:translateY(14px)}}
+.t-thumb{aspect-ratio:16/9;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+.t-thumb img{width:100%;height:100%;object-fit:cover;object-position:top}
+.t-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.t-tag{display:flex;align-items:center;gap:8px;font:500 11px var(--mono);color:var(--muted);letter-spacing:.04em;text-align:right}
+.t-new{font:600 10px var(--mono);color:#fff;background:var(--brand);padding:2px 7px;border-radius:999px}
+.tcard h3{font-size:18px;letter-spacing:-.02em;font-weight:600;line-height:1.3}
+.tcard p{font-size:14px;color:var(--ink-2)}
+.stack{display:flex;flex-wrap:wrap;gap:6px}
+.stack span{font:11.5px var(--mono);color:var(--ink-2);padding:3px 8px;border-radius:6px;background:var(--surface-2);border:1px solid var(--line)}
+.t-act{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;padding-top:14px;border-top:1px solid var(--line)}
+.t-open{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:500;color:var(--brand)}
+.t-open i{transition:transform .2s}
+.t-open:hover i{transform:translate(2px,-2px)}
+.t-how{font:12px var(--mono);color:var(--muted);transition:color .2s}
+.t-how:hover{color:var(--brand)}
+.t-sample{font:11px var(--mono);color:var(--faint)}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:48px 0;border:1px dashed var(--line-2);border-radius:var(--radius);background:rgba(255,255,255,.7)}
+.more{display:flex;justify-content:center;margin-top:32px}
+
+/* Approach */
+.how-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:64px;align-items:start}
+.how-sticky{position:sticky;top:130px}
+.how-sticky p{color:var(--ink-2);margin-top:18px;max-width:34ch}
+.tl{position:relative;padding-left:56px}
+.tl-line{position:absolute;left:15px;top:10px;bottom:10px;width:2px;background:var(--line-2);border-radius:2px}
+.tl-fill{position:absolute;left:0;top:0;width:100%;height:0;border-radius:2px;background:linear-gradient(#0F766E,#4338CA);box-shadow:0 0 14px rgba(13,148,136,.45)}
+.step{position:relative;padding:4px 0 72px}
+.step:last-child{padding-bottom:4px}
+.node{position:absolute;left:-56px;top:2px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font:500 11px var(--mono);color:var(--muted);background:var(--surface);border:1px solid var(--line-2);transition:all .45s}
+.step.on .node{color:#fff;background:var(--brand);border-color:var(--brand);box-shadow:0 0 0 6px var(--brand-soft)}
+.step h3{font-size:clamp(22px,2.4vw,28px);letter-spacing:-.02em;font-weight:600;margin-bottom:10px;color:var(--faint);transition:color .45s}
+.step.on h3{color:var(--ink)}
+.step p{color:var(--ink-2);max-width:46ch}
+
+/* Toolkit */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.panel{padding:28px;border-radius:var(--radius);border:1px solid var(--line-2);background:var(--card);transition:box-shadow .3s}
+.panel:hover{box-shadow:var(--shadow)}
+.panel h3{display:flex;align-items:center;gap:14px;font-size:18px;font-weight:600}
+.panel ul{list-style:none;display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.panel li{font-size:14px;padding:7px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink-2);transition:color .2s,border-color .2s,background .2s}
+.panel li:hover{color:var(--brand);border-color:rgba(13,148,136,.45);background:var(--brand-soft)}
+
+/* Contact */
+.contact-box{position:relative;border:1px solid var(--line-2);border-radius:28px;padding:56px;overflow:hidden;background:radial-gradient(80% 120% at 0% 0%,rgba(20,184,166,.12),transparent 60%),radial-gradient(60% 100% at 100% 100%,rgba(99,102,241,.12),transparent 60%),rgba(255,255,255,.88);box-shadow:var(--shadow)}
+.contact-top{margin-bottom:40px}
+.contact-top h2{font-size:clamp(44px,6.4vw,84px)}
+.cgrid{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:16px}
+.ccard{display:flex;flex-direction:column;gap:14px;padding:24px;border-radius:var(--radius);border:1px solid var(--line-2);background:rgba(255,255,255,.9);transition:transform .25s,box-shadow .25s}
+.ccard:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.ccard .lbl{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.ccard .val{font-size:18px;font-weight:500;overflow-wrap:anywhere;line-height:1.35}
+.ccard .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:6px}
+.ccard.wa{border-color:rgba(37,211,102,.4);background:linear-gradient(160deg,rgba(37,211,102,.12),rgba(255,255,255,.92) 60%)}
+.ccard.wa .ico{background:rgba(37,211,102,.14);color:#15803D;border-color:rgba(37,211,102,.35)}
+.also{margin-top:24px;font-size:14px;color:var(--muted)}
+.also a{color:var(--ink);display:inline-flex;align-items:center;gap:6px}
+.also a:hover{color:var(--brand)}
+
+footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);font-size:13px;background:rgba(255,255,255,.5)}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+footer .mono{font-family:var(--mono)}
+footer a:hover{color:var(--ink)}
+
+.fab{position:fixed;right:20px;bottom:20px;z-index:40;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:var(--wa);color:#fff;font-size:28px;box-shadow:0 14px 34px -10px rgba(37,211,102,.75);transform:scale(0);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.fab.show{transform:scale(1)}
+.fab.show:hover{transform:scale(1.08)}
+.toast{position:fixed;left:50%;bottom:28px;z-index:70;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:var(--ink);color:#fff;font-size:13px;font-weight:500;padding:10px 16px;border-radius:10px;transition:opacity .25s,transform .25s}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* Modal */
+dialog{border:1px solid var(--line-2);border-radius:20px;padding:0;max-width:560px;width:calc(100% - 32px);margin:auto;background:var(--surface);color:var(--ink);box-shadow:0 40px 120px -30px rgba(15,23,42,.45)}
+dialog::backdrop{background:rgba(15,23,42,.4);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+dialog[open]{animation:dlg .3s cubic-bezier(.2,.8,.2,1)}
+@keyframes dlg{from{opacity:0;transform:translateY(12px) scale(.98)}}
+.modal-in{padding:32px}
+.modal-in h3{font-size:24px;letter-spacing:-.02em;margin:14px 0 6px}
+.modal-in .sub{color:var(--ink-2);font-size:14px}
+.steps{list-style:none;display:grid;gap:10px;margin-top:22px}
+.steps li{display:grid;grid-template-columns:64px 1fr;gap:12px;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}
+.steps .k{font:500 11px var(--mono);color:var(--brand);text-transform:uppercase;letter-spacing:.06em;padding-top:3px}
+.steps p{font-size:14px;color:var(--ink-2)}
+.modal-foot{display:flex;justify-content:flex-end;gap:10px;margin-top:24px}
+
+/* Reveal */
+.js .reveal{opacity:0;transform:translateY(26px);filter:blur(6px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1),filter .9s}
+.js .reveal.in{opacity:1;transform:none;filter:none}
+
+/* Responsive */
+@media (max-width:1000px){
+  .tgrid{grid-template-columns:repeat(2,1fr)}
+  .cgrid{grid-template-columns:1fr 1fr}
+  .ccard.wa{grid-column:1/-1}
+}
+@media (max-width:900px){
+  .menu{display:none}
+  .burger{display:grid}
+  .sheet{display:block;max-height:0;overflow:hidden;transition:max-height .4s ease}
+  .nav.sheet-open{background:rgba(248,250,252,.98);border-bottom-color:var(--line)}
+  .nav.sheet-open .sheet{max-height:80vh;overflow:auto}
+  .hero{min-height:auto;padding-top:112px}
+  .hero-grid,.how-grid,.two{grid-template-columns:1fr}
+  .hero-grid{gap:40px}
+  .how-grid{gap:40px}
+  .how-sticky{position:static}
+  .console{transform:none}
+  .cue{display:none}
+}
+@media (max-width:640px){
+  section{padding:88px 0}
+  .tgrid,.cgrid{grid-template-columns:1fr}
+  .contact-box{padding:28px 20px;border-radius:22px}
+  .controls{flex-direction:column;align-items:stretch}
+  .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+  .chips::-webkit-scrollbar{display:none}
+  .search input{width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+  .js .reveal{opacity:1;transform:none;filter:none}
+}
+</style>
 </head>
 <body>
 
-  <!-- ==========================================================================
-       Navigation Bar
-       ========================================================================== -->
-  <header class="navbar">
-    <div class="container navbar-container">
-      <a href="#" class="brand-wrapper">
-        <div class="brand-seal">CA</div>
-        <div class="brand-info">
-          <span class="brand-name">CA Ashish Tripathi</span>
-          <span class="brand-title">Finance Transformation &amp; AI</span>
-        </div>
-      </a>
+<div class="bg" aria-hidden="true">
+  <div class="bg-aurora"></div>
+  <div class="bg-dots"></div>
+  <canvas id="field"></canvas>
+</div>
+<div id="progress" aria-hidden="true"></div>
 
-      <nav class="nav-links">
-        <a href="#tools" class="nav-link">Interactive Tools</a>
-        <a href="#matrix" class="nav-link">Domain &amp; Tech Stack</a>
-        <a href="#architecture" class="nav-link">Engineering Architecture</a>
-        <a href="#career" class="nav-link">Career Snapshot</a>
-        <a href="#contact" class="nav-link">Contact</a>
-      </nav>
-
-      <div class="nav-cta-group">
-        <button class="btn btn-secondary btn-sm" onclick="Portfolio.openResumeModal()">📄 Resume (PDF)</button>
-        <a href="#tools" class="btn btn-primary btn-sm">⚡ Explore Tools</a>
-      </div>
-    </div>
-  </header>
-
-  <!-- ==========================================================================
-       Hero Section (Above the Fold)
-       ========================================================================== -->
-  <section class="hero-section">
-    <div class="container">
-      <!-- Status Badges -->
-      <div class="hero-badge-strip">
-        <span class="badge-icai">
-          <span class="pulse-dot"></span>
-          Chartered Accountant (ICAI) • Cleared CA Final Sept 2025
-        </span>
-        <span class="badge-location">
-          📍 Open to Senior Finance Roles · India &amp; Dubai (UAE)
-        </span>
-      </div>
-
-      <!-- Main Headline -->
-      <h1 class="hero-headline">
-        Bridging Chartered Accountant Rigor with <span>AI &amp; Automation Execution</span>
-      </h1>
-
-      <!-- Subheadline -->
-      <p class="hero-subheadline">
-        I turn manual accounting, tax reconciliations, and FP&amp;A bottlenecks into <strong>automated, audit-ready workflows</strong> using Python, Power Query, Power BI, and deterministic rule engines. Designed for CFOs, Controllers, and Finance Leaders who demand zero-hallucination accuracy.
-      </p>
-
-      <!-- Primary Action Buttons -->
-      <div class="hero-cta-group">
-        <a href="#tools" class="btn btn-primary btn-lg">
-          <span>🚀 Explore Live Tool Sandboxes</span>
-          <span>&darr;</span>
-        </a>
-        <button class="btn btn-secondary btn-lg" onclick="Portfolio.openResumeModal()">
-          <span>📄 Download Resume (PDF)</span>
-        </button>
-        <a href="https://www.linkedin.com/in/caashishtripathi" target="_blank" rel="noopener noreferrer" class="btn btn-navy btn-lg">
-          <span>💼 LinkedIn Profile</span>
-          <span>&nearr;</span>
-        </a>
-      </div>
-
-      <!-- Key Proof Strip (4 Crisp Metrics) -->
-      <div class="proof-strip">
-        <div class="proof-item">
-          <div class="proof-num">15+</div>
-          <div class="proof-title">Finance Tools Built</div>
-          <div class="proof-desc">FAR, GST Reco, SA 505 Confirmations, FP&amp;A Variance, and OCR Pipelines.</div>
-        </div>
-        <div class="proof-item">
-          <div class="proof-num">100%</div>
-          <div class="proof-title">Deterministic Math</div>
-          <div class="proof-desc">Zero mathematical hallucinations; code handles calculation, AI handles unstructured text.</div>
-        </div>
-        <div class="proof-item">
-          <div class="proof-num">500+</div>
-          <div class="proof-title">Corporate Trainees</div>
-          <div class="proof-desc">Trained corporate finance teams on Power BI, Advanced Excel, and AI automation.</div>
-        </div>
-        <div class="proof-item">
-          <div class="proof-num">Sept '25</div>
-          <div class="proof-title">CA Final Qualified</div>
-          <div class="proof-desc">Statutory auditing, Ind AS reporting, corporate law, and direct/indirect taxation.</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ==========================================================================
-       Section 2: Interactive Finance & AI Tool Suite (The Core)
-       ========================================================================== -->
-  <section class="section-wrapper" id="tools">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">Interactive Portfolio Sandbox</span>
-        <h2 class="section-title">Production Financial Software &amp; Automation Tools</h2>
-        <p class="section-description">
-          Every tool below runs 100% client-side with zero backend dependencies. Click <strong>"Launch Live Sandbox"</strong> to run an interactive demo with pre-loaded enterprise data, test calculations live, and export audit schedules.
-        </p>
-      </div>
-
-      <!-- Category Filter Tabs -->
-      <div class="tools-filter-bar">
-        <button class="filter-tab active" data-filter="all">All Tools (4)</button>
-        <button class="filter-tab" data-filter="accounting">Accounting &amp; Fixed Assets</button>
-        <button class="filter-tab" data-filter="tax">Tax &amp; GST Compliance</button>
-        <button class="filter-tab" data-filter="audit">Audit &amp; Assurance</button>
-        <button class="filter-tab" data-filter="fpa">FP&amp;A &amp; Power BI</button>
-      </div>
-
-      <!-- Tools Grid -->
-      <div class="tools-grid">
-
-        <!-- Tool 1: Fixed Asset Register -->
-        <article class="tool-card" data-category="accounting">
-          <div>
-            <div class="tool-top-badges">
-              <span class="tool-domain-tag">Accounting &amp; Fixed Assets</span>
-              <span class="tool-status-live">
-                <span class="pulse-dot"></span> Live Application
-              </span>
-            </div>
-
-            <h3 class="tool-title">Dual-Compliance Fixed Asset Register (FAR)</h3>
-
-            <div class="tool-bottleneck">
-              <strong>Finance Bottleneck:</strong> Disjointed depreciation workings under Companies Act (Schedule II) vs. Income Tax Act (Sec 32) causing timing errors and audit reconciliations delays.
-            </div>
-
-            <p class="tool-description">
-              Calculates daily pro-rata depreciation simultaneously under Companies Act, 2013 (useful life, 5% residual floor, 1.5x/2.0x shift multipliers) and Income Tax Act (Block of Assets, 180-day rule, Sec 50 STCG), with automated AS 22 / Ind AS 12 Deferred Tax Asset/Liability (DTA/DTL) computation.
-            </p>
-
-            <div class="tool-engine-badge">
-              <span class="engine-label">Engine:</span>
-              <span class="engine-tag">Vanilla JS · Pro-Rata Math · SheetJS · Chart.js</span>
-            </div>
-          </div>
-
-          <div class="tool-card-actions">
-            <button class="btn btn-primary btn-sm" onclick="Portfolio.launchSandbox('fixed-asset-register', 'tools/fixed-asset-register/index.html')">
-              🚀 Launch Live Sandbox
-            </button>
-            <button class="btn btn-secondary btn-sm" onclick="Portfolio.openArchitectureModal('fixed-asset-register')">
-              📐 Architecture &amp; Logic
-            </button>
-            <a href="tools/fixed-asset-register/index.html" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
-              ↗ Full Tab
-            </a>
-          </div>
-        </article>
-
-        <!-- Tool 2: GSTWise Enterprise Reco -->
-        <article class="tool-card" data-category="tax">
-          <div>
-            <div class="tool-top-badges">
-              <span class="tool-domain-tag">Tax &amp; GST Compliance</span>
-              <span class="tool-status-live">
-                <span class="pulse-dot"></span> Live Application
-              </span>
-            </div>
-
-            <h3 class="tool-title">GSTWise: GSTR-2B vs. Books Reconciler Suite</h3>
-
-            <div class="tool-bottleneck">
-              <strong>Finance Bottleneck:</strong> Missing input tax credit (ITC) and statutory notice risks (Rule 36(4), Form DRC-01C) arising from manual purchase register matching against portal GSTR-2B.
-            </div>
-
-            <p class="tool-description">
-              High-performance reconciliation engine comparing purchase registers against GSTR-2B downloads using exact and configurable tolerance matching. Features Invoice Management System (IMS) marking, Rule 88A tax offset optimizer, and 100% compliant GSTN offline JSON generation.
-            </p>
-
-            <div class="tool-engine-badge">
-              <span class="engine-label">Engine:</span>
-              <span class="engine-tag">React 18 · Vite · Mod-36 Luhn · Multi-Criteria Matcher</span>
-            </div>
-          </div>
-
-          <div class="tool-card-actions">
-            <button class="btn btn-primary btn-sm" onclick="Portfolio.launchSandbox('gst-reco', 'tools/gst-reco/index.html')">
-              🚀 Launch Live Sandbox
-            </button>
-            <button class="btn btn-secondary btn-sm" onclick="Portfolio.openArchitectureModal('gst-reco')">
-              📐 Architecture &amp; Logic
-            </button>
-            <a href="tools/gst-reco/index.html" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
-              ↗ Full Tab
-            </a>
-          </div>
-        </article>
-
-        <!-- Tool 3: SA 505 Bulk Confirmation Generator -->
-        <article class="tool-card" data-category="audit">
-          <div>
-            <div class="tool-top-badges">
-              <span class="tool-domain-tag">Audit &amp; Assurance</span>
-              <span class="tool-status-live">
-                <span class="pulse-dot"></span> Live Application
-              </span>
-            </div>
-
-            <h3 class="tool-title">Bulk Audit Confirmation Letter Generator</h3>
-
-            <div class="tool-bottleneck">
-              <strong>Finance Bottleneck:</strong> Manually drafting, merging, and formatting hundreds of balance confirmation letters for debtors, creditors, and banks during annual audit closure.
-            </div>
-
-            <p class="tool-description">
-              Statutory auditing tool compliant with ICAI SA 505 (External Confirmations). Takes client ledgers, auto-converts balances into Indian rupee words, generates formal positive/negative audit confirmation letters with auditee letterheads, auditor verification seals, and third-party tear-off return slips ready for bulk printing or PDF export.
-            </p>
-
-            <div class="tool-engine-badge">
-              <span class="engine-label">Engine:</span>
-              <span class="engine-tag">JavaScript · ICAI SA 505 Rules · Words Engine · Print CSS</span>
-            </div>
-          </div>
-
-          <div class="tool-card-actions">
-            <button class="btn btn-primary btn-sm" onclick="Portfolio.launchSandbox('confirmation-generator', 'tools/confirmation-generator/index.html')">
-              🚀 Launch Live Sandbox
-            </button>
-            <button class="btn btn-secondary btn-sm" onclick="Portfolio.openArchitectureModal('confirmation-generator')">
-              📐 Architecture &amp; Logic
-            </button>
-            <a href="tools/confirmation-generator/index.html" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
-              ↗ Full Tab
-            </a>
-          </div>
-        </article>
-
-        <!-- Tool 4: FP&A Variance & MIS Analyzer -->
-        <article class="tool-card" data-category="fpa">
-          <div>
-            <div class="tool-top-badges">
-              <span class="tool-domain-tag">FP&amp;A &amp; Power BI</span>
-              <span class="tool-status-live">
-                <span class="pulse-dot"></span> Live Application
-              </span>
-            </div>
-
-            <h3 class="tool-title">FP&amp;A Variance Analyzer &amp; MIS Showcase</h3>
-
-            <div class="tool-bottleneck">
-              <strong>Finance Bottleneck:</strong> Excessive cycle time lost at month-end close compiling repetitive spreadsheet variance reports and manually drafting qualitative board commentary.
-            </div>
-
-            <p class="tool-description">
-              Executive Budget vs. Actuals variance analyzer with real-time gross margin and EBITDA recalculations. Features automated board-level narrative commentary generation, customizable variance alert sensitivity sliders, and an interactive showcase of Power BI star-schema DAX models.
-            </p>
-
-            <div class="tool-engine-badge">
-              <span class="engine-label">Engine:</span>
-              <span class="engine-tag">Vanilla JS · Chart.js · Rule-Based Commentary · DAX</span>
-            </div>
-          </div>
-
-          <div class="tool-card-actions">
-            <button class="btn btn-primary btn-sm" onclick="Portfolio.launchSandbox('fpa-dashboard', 'tools/fpa-dashboard/index.html')">
-              🚀 Launch Live Sandbox
-            </button>
-            <button class="btn btn-secondary btn-sm" onclick="Portfolio.openArchitectureModal('fpa-dashboard')">
-              📐 Architecture &amp; Logic
-            </button>
-            <a href="tools/fpa-dashboard/index.html" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
-              ↗ Full Tab
-            </a>
-          </div>
-        </article>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ==========================================================================
-       Section 3: Domain Rigor + Technical Stack Matrix
-       ========================================================================== -->
-  <section class="section-wrapper" id="matrix">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">Competency Framework</span>
-        <h2 class="section-title">Chartered Accountant Rigor &times; Software Execution</h2>
-        <p class="section-description">
-          Most software engineers lack statutory accounting context; most finance professionals cannot code. Here is how I bridge both worlds to deliver enterprise-grade automation.
-        </p>
-      </div>
-
-      <!-- 2-Column Matrix -->
-      <div class="matrix-grid">
-        <!-- Column 1: CA Rigor -->
-        <div class="matrix-col">
-          <div class="matrix-col-header">
-            <div class="matrix-icon-wrap icon-domain">🏛️</div>
-            <div>
-              <h3>Chartered Accountant Domain Rigor</h3>
-              <span class="col-sub">Statutory compliance, audit trails, and financial control frameworks</span>
-            </div>
-          </div>
-
-          <ul class="matrix-list">
-            <li class="matrix-item">
-              <span class="matrix-bullet">✓</span>
-              <div class="matrix-item-content">
-                <h4>Financial Reporting &amp; Ind AS</h4>
-                <p>Schedule III balance sheet presentation, Ind AS 16 Property Plant &amp; Equipment, Ind AS 115 Revenue from Contracts, and Ind AS 12 Deferred Tax.</p>
-              </div>
-            </li>
-            <li class="matrix-item">
-              <span class="matrix-bullet">✓</span>
-              <div class="matrix-item-content">
-                <h4>Statutory &amp; Internal Audit (ICAI Standards)</h4>
-                <p>Audit sampling (SA 530), External confirmations (SA 505), Internal Financial Controls (IFC) testing, and Form 3CD tax audit schedules.</p>
-              </div>
-            </li>
-            <li class="matrix-item">
-              <span class="matrix-bullet">✓</span>
-              <div class="matrix-item-content">
-                <h4>GST &amp; Direct Tax Architecture</h4>
-                <p>GSTR-1/3B/9/9C reconciliation, Rule 88A tax offset sequence, Section 16(2)(aa) ITC admissibility, and Section 32/43(6) block movements.</p>
-              </div>
-            </li>
-            <li class="matrix-item">
-              <span class="matrix-bullet">✓</span>
-              <div class="matrix-item-content">
-                <h4>Corporate FP&amp;A &amp; Working Capital</h4>
-                <p>Budgeting, rolling 12-month forecasts, cash conversion cycle, Capex appraisal (DCF/IRR), and variance analysis with CFO actionable commentary.</p>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Column 2: Tech Stack -->
-        <div class="matrix-col">
-          <div class="matrix-col-header">
-            <div class="matrix-icon-wrap icon-tech">⚡</div>
-            <div>
-              <h3>Automation, BI &amp; Applied AI Stack</h3>
-              <span class="col-sub">Deterministic calculation engines and modern software pipelines</span>
-            </div>
-          </div>
-
-          <ul class="matrix-list">
-            <li class="matrix-item">
-              <span class="matrix-bullet">⚡</span>
-              <div class="matrix-item-content">
-                <h4>Financial ETL &amp; Data Wrangling</h4>
-                <p>Python (Pandas, NumPy, OpenPyXL), Power Query M, RegEx, and automated ingestion from ERP GL extracts (SAP, Oracle, Tally, Zoho).</p>
-              </div>
-            </li>
-            <li class="matrix-item">
-              <span class="matrix-bullet">⚡</span>
-              <div class="matrix-item-content">
-                <h4>Business Intelligence &amp; Data Modeling</h4>
-                <p>Microsoft Power BI, advanced DAX (Time Intelligence, CALCULATE, Dynamic Slicers), Star-Schema design, and Publish-to-Web embedding.</p>
-              </div>
-            </li>
-            <li class="matrix-item">
-              <span class="matrix-bullet">⚡</span>
-              <div class="matrix-item-content">
-                <h4>Web &amp; Workflow Automation</h4>
-                <p>Modern JavaScript (ES6+), React 18, HTML5/CSS3, SheetJS, Google Apps Script, and automated batch processing.</p>
-              </div>
-            </li>
-            <li class="matrix-item">
-              <span class="matrix-bullet">⚡</span>
-              <div class="matrix-item-content">
-                <h4>Applied AI &amp; Document Extraction</h4>
-                <p>OCR invoice text extraction, LLM API pipelines for parsing unstructured contracts, and deterministic synthesis of board commentary.</p>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Philosophy Callout Banner -->
-      <div class="philosophy-banner">
-        <div class="philosophy-icon">⚙️</div>
-        <div class="philosophy-text">
-          <h4>Core Engineering Philosophy: Zero-Hallucination Finance</h4>
-          <p>
-            Deterministic code (Python, JavaScript, Power Query, DAX) handles <strong>100% of arithmetic, tax reconciliations, and statutory math</strong> to guarantee audit compliance and zero calculation hallucinations. Generative AI is reserved exclusively for unstructured document extraction, text summarization, and executive narrative drafting.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ==========================================================================
-       Section 4: Engineering Architecture Deep-Dive
-       ========================================================================== -->
-  <section class="section-wrapper" id="architecture">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">Systems Design</span>
-        <h2 class="section-title">End-to-End Enterprise Finance Automation Pipeline</h2>
-        <p class="section-description">
-          How I architect robust financial systems that transform messy operational records into executive board intelligence and statutory tax filings.
-        </p>
-      </div>
-
-      <div class="proof-strip" style="grid-template-columns: repeat(5, 1fr); gap: 1rem;">
-        <div class="proof-item">
-          <div class="proof-num" style="font-size: 1.15rem; color: var(--green);">01. Ingestion</div>
-          <div class="proof-title">Raw ERP &amp; GL Extraction</div>
-          <div class="proof-desc">Automated ingestion of CSV/Excel extracts from SAP, Oracle, Tally, Zoho, and banking portals.</div>
-        </div>
-        <div class="proof-item">
-          <div class="proof-num" style="font-size: 1.15rem; color: var(--green);">02. Validation</div>
-          <div class="proof-title">Statutory Verification</div>
-          <div class="proof-desc">Row-by-row checks: 15-digit GSTIN Luhn check, date logic (Ready vs Put to Use), negative numbers.</div>
-        </div>
-        <div class="proof-item">
-          <div class="proof-num" style="font-size: 1.15rem; color: var(--green);">03. Rule Engine</div>
-          <div class="proof-title">Deterministic Math</div>
-          <div class="proof-desc">Schedule II daily pro-rata, 180-day tax rule, fuzzy purchase invoice matching, and Rule 88A offset.</div>
-        </div>
-        <div class="proof-item">
-          <div class="proof-num" style="font-size: 1.15rem; color: var(--green);">04. AI Augmentation</div>
-          <div class="proof-title">Unstructured Extraction</div>
-          <div class="proof-desc">LLMs parse unstructured vendor PDFs, missing PO numbers, and synthesize flash board commentary.</div>
-        </div>
-        <div class="proof-item">
-          <div class="proof-num" style="font-size: 1.15rem; color: var(--green);">05. Delivery</div>
-          <div class="proof-title">Audit-Ready Output</div>
-          <div class="proof-desc">Power BI CFO dashboards, Form 3CD Clause 18 schedules, official GSTN JSON, and SA 505 letters.</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ==========================================================================
-       Section 5: Career Snapshot & Professional Milestones
-       ========================================================================== -->
-  <section class="section-wrapper" id="career">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">Track Record</span>
-        <h2 class="section-title">Career Milestones &amp; Experience Snapshot</h2>
-        <p class="section-description">
-          A career grounded in ICAI audit and accounting rigor, supercharged with software development and automation.
-        </p>
-      </div>
-
-      <div class="timeline">
-        <!-- Milestone 1 -->
-        <div class="timeline-item">
-          <div class="timeline-marker"></div>
-          <div class="timeline-content">
-            <div class="timeline-header">
-              <h3 class="timeline-title">Chartered Accountant (ICAI Qualified)</h3>
-              <span class="timeline-period">September 2025</span>
-            </div>
-            <div class="timeline-sub">The Institute of Chartered Accountants of India (ICAI)</div>
-            <p class="timeline-body">
-              Cleared CA Final examinations with comprehensive mastery across Advanced Financial Management, Strategic Financial Reporting (Ind AS), Corporate Law, Statutory Auditing, International Taxation, and GST Framework.
-            </p>
-          </div>
-        </div>
-
-        <!-- Milestone 2 -->
-        <div class="timeline-item">
-          <div class="timeline-marker"></div>
-          <div class="timeline-content">
-            <div class="timeline-header">
-              <h3 class="timeline-title">Lead Architect &amp; Developer — Financial Automation Tools</h3>
-              <span class="timeline-period">2024 &ndash; Present</span>
-            </div>
-            <div class="timeline-sub">Independent Enterprise Tools &amp; cajob.in Platform</div>
-            <p class="timeline-body">
-              Architected 15+ specialized finance web tools and automation scripts. Highlights include the flagship <em>Dual-Compliance Fixed Asset Register</em>, <em>GSTWise Enterprise Reconciliation Suite</em>, <em>SA 505 Audit Confirmation Generator</em>, and corporate FP&amp;A variance models currently serving hundreds of finance professionals.
-            </p>
-          </div>
-        </div>
-
-        <!-- Milestone 3 -->
-        <div class="timeline-item">
-          <div class="timeline-marker"></div>
-          <div class="timeline-content">
-            <div class="timeline-header">
-              <h3 class="timeline-title">Corporate Trainer &amp; Automation Mentor</h3>
-              <span class="timeline-period">2024 &ndash; Present</span>
-            </div>
-            <div class="timeline-sub">Finance Transformation Workshops</div>
-            <p class="timeline-body">
-              Conducted interactive, hands-on training sessions for over 500 working Chartered Accountants, corporate controllers, and FP&amp;A analysts on Power BI DAX modeling, Power Query ETL pipelines, automated financial reporting, and applying AI to streamline accounting workflows.
-            </p>
-          </div>
-        </div>
-
-        <!-- Milestone 4 -->
-        <div class="timeline-item">
-          <div class="timeline-marker"></div>
-          <div class="timeline-content">
-            <div class="timeline-header">
-              <h3 class="timeline-title">Chartered Accountancy Articleship &amp; Core Audit</h3>
-              <span class="timeline-period">Practical Training</span>
-            </div>
-            <div class="timeline-sub">Statutory Audit, Tax Audit &amp; Corporate Advisory</div>
-            <p class="timeline-body">
-              Executed statutory audits, internal financial control (IFC) testing, Form 3CD tax audit filings, GST annual reconciliations (GSTR-9/9C), and corporate tax return computations for medium and large corporate clients across manufacturing, retail, and IT services.
-            </p>
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a href="#top" class="logo"><span class="logo-mark">AT</span>Ashish Tripathi</a>
+    <nav class="menu" aria-label="Main">
+      <div class="dd" id="dd">
+        <button class="menu-trigger" aria-expanded="false" aria-controls="mega">Tools <i class="ti ti-chevron-down"></i></button>
+        <div class="mega" id="mega">
+          <div class="mega-in">
+            <div class="mega-grid" id="mega-grid"></div>
+            <div class="mega-foot"><span id="mega-count"></span><a href="#tools" data-cat="all">See all tools <i class="ti ti-arrow-right"></i></a></div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+      <a href="#approach">Approach</a>
+      <a href="#toolkit">Toolkit</a>
+      <a class="btn btn-sm btn-soft" href="#contact">Get in touch <i class="ti ti-arrow-right"></i></a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false"><i class="ti ti-menu-2"></i></button>
+  </div>
+  <div class="sheet" id="sheet"><div class="sheet-in" id="sheet-in"></div></div>
+</header>
 
-  <!-- ==========================================================================
-       Section 6: Executive Contact & Interview Booking
-       ========================================================================== -->
-  <section class="section-wrapper" id="contact">
-    <div class="container">
-      <div class="contact-card">
-        <div class="contact-layout">
-          <div>
-            <span class="section-tag" style="color: var(--lime);">Direct Executive Channel</span>
-            <h2 class="contact-headline">Let's Discuss Senior Finance Transformation Roles</h2>
-            <p class="contact-desc">
-              I am actively engaging with CFOs, VPs of Finance, and hiring partners seeking a modern Chartered Accountant who can lead digital controllership, eliminate manual close delays, and build proprietary finance tools for enterprises in <strong>India (Mumbai / Delhi NCR / Bangalore)</strong> and <strong>Dubai (UAE)</strong>.
-            </p>
-            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-              <button class="btn btn-primary btn-lg" onclick="Portfolio.copyEmail('ashish@caashishtripathi.in', this)">
-                ✉️ Copy ashish@caashishtripathi.in
-              </button>
-              <button class="btn btn-secondary btn-lg" onclick="Portfolio.openResumeModal()">
-                📄 View / Download Resume
-              </button>
-            </div>
-          </div>
-
-          <div class="contact-links-grid">
-            <a href="mailto:ashish@caashishtripathi.in" class="contact-link-pill">
-              <span class="contact-link-icon">📧</span>
-              <div>
-                <div style="font-size:0.75rem; color:#94a3b8;">Official Portfolio Email</div>
-                <div>ashish@caashishtripathi.in</div>
-              </div>
-            </a>
-            <a href="https://www.linkedin.com/in/caashishtripathi" target="_blank" rel="noopener noreferrer" class="contact-link-pill">
-              <span class="contact-link-icon">💼</span>
-              <div>
-                <div style="font-size:0.75rem; color:#94a3b8;">Professional Network</div>
-                <div>linkedin.com/in/caashishtripathi</div>
-              </div>
-            </a>
-            <a href="https://github.com/caashishtripathi" target="_blank" rel="noopener noreferrer" class="contact-link-pill">
-              <span class="contact-link-icon">💻</span>
-              <div>
-                <div style="font-size:0.75rem; color:#94a3b8;">Source Code &amp; Repositories</div>
-                <div>github.com/caashishtripathi</div>
-              </div>
-            </a>
-            <div class="contact-link-pill" style="cursor: default;">
-              <span class="contact-link-icon">📍</span>
-              <div>
-                <div style="font-size:0.75rem; color:#94a3b8;">Geographic Mobility</div>
-                <div>India (Metro Hubs) &bull; Dubai (UAE)</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ==========================================================================
-       Footer
-       ========================================================================== -->
-  <footer class="footer">
-    <div class="container footer-container">
-      <div class="footer-copy">
-        <strong>CA Ashish Tripathi</strong> &bull; Chartered Accountant (ICAI)
-        <div class="footer-sub">
-          &copy; 2026 caashishtripathi.in &bull; Built with deterministic HTML5/CSS3 &bull; Deployed on Vercel
-        </div>
-      </div>
-      <div class="footer-links">
-        <a href="#tools">Tools</a>
-        <a href="#matrix">Stack Matrix</a>
-        <a href="#career">Milestones</a>
-        <a href="#contact">Contact</a>
-        <a href="#" onclick="Portfolio.openResumeModal(); return false;">Resume</a>
-      </div>
-    </div>
-  </footer>
-
-  <!-- ==========================================================================
-       Modal 1: Live Tool Sandbox Modal (Embeds the tool live!)
-       ========================================================================== -->
-  <div id="sandboxModal" class="modal-overlay">
-    <div class="modal-box modal-box-large">
-      <div class="modal-header">
+<main id="top">
+  <div class="hero">
+    <div class="wrap">
+      <div class="hero-grid">
         <div>
-          <h3 id="sandboxTitle">Interactive Tool Sandbox</h3>
-          <span class="modal-subtitle">Live execution environment &bull; 100% Client-Side Privacy</span>
+          <span class="name reveal"><span class="pulse"></span>CA Ashish Tripathi</span>
+          <h1 class="reveal">Chartered Accountant<br>building tools for<br><span class="grad rot" id="rot">reconciliations</span></h1>
+          <p class="lede reveal">Manual accounting, tax and reporting work, rebuilt as tools that run in seconds and keep every figure traceable.</p>
+          <div class="ctas reveal">
+            <a class="btn btn-primary" href="#tools">Explore tools <i class="ti ti-arrow-down"></i></a>
+            <a class="btn" href="#contact">Get in touch</a>
+          </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 0.75rem;">
-          <a id="sandboxFullTabLink" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="color:var(--navy);">
-            ↗ Open in Dedicated Full Tab
-          </a>
-          <button class="modal-close-btn" onclick="Portfolio.closeSandbox()">&times;</button>
+        <div class="console reveal" aria-label="Sample run of a finance tool">
+          <div class="c-bar"><i class="d"></i><i class="d"></i><i class="d"></i><span id="c-file">pipeline.run</span><em>Sample run</em></div>
+          <div class="c-tabs" id="c-tabs"></div>
+          <div class="c-body" id="c-body"></div>
+          <div class="c-prog"><b id="c-prog"></b></div>
         </div>
       </div>
-      <div class="modal-iframe-wrap">
-        <iframe id="sandboxIframe" src="about:blank" title="Interactive Financial Tool Sandbox"></iframe>
-      </div>
+      <a class="cue reveal" href="#tools"><span class="mouse"></span>Scroll to explore</a>
     </div>
   </div>
 
-  <!-- ==========================================================================
-       Modal 2: Architecture & Logic Modal
-       ========================================================================== -->
-  <div id="archModal" class="modal-overlay">
-    <div class="modal-box">
-      <div class="modal-header">
-        <div>
-          <h3 id="archTitle">Architecture &amp; Statutory Logic</h3>
-          <span class="modal-subtitle">Technical blueprint, data transformations &amp; compliance rules</span>
-        </div>
-        <button class="modal-close-btn" onclick="Portfolio.closeArchModal()">&times;</button>
-      </div>
-      <div class="modal-content-area" id="archContent">
-        <!-- Injected dynamically via Portfolio.openArchitectureModal -->
-      </div>
-    </div>
+  <div class="marquee" aria-hidden="true">
+    <div class="track" id="track"></div>
   </div>
 
-  <!-- ==========================================================================
-       Modal 3: Executive Resume Modal
-       ========================================================================== -->
-  <div id="resumeModal" class="modal-overlay">
-    <div class="modal-box">
-      <div class="modal-header">
-        <div>
-          <h3>Curriculum Vitae · CA Ashish Tripathi</h3>
-          <span class="modal-subtitle">Chartered Accountant &bull; Finance Transformation &bull; AI Automation</span>
-        </div>
-        <div style="display: flex; gap: 0.5rem;">
-          <button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Print / Save PDF</button>
-          <button class="modal-close-btn" onclick="Portfolio.closeResumeModal()">&times;</button>
-        </div>
+  <section id="tools">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div><p class="eyebrow">Tools</p><h2>Built and live<sup id="tools-sup"></sup></h2></div>
+        <p class="sec-sub">Open any tool and try it.</p>
       </div>
-      <div class="modal-content-area">
-        <div class="resume-paper">
-          <div class="resume-header">
-            <div>
-              <div class="resume-name">CA Ashish Tripathi</div>
-              <div class="resume-title">Chartered Accountant (ICAI) &bull; Finance Transformation Leader</div>
-              <div style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">
-                Email: ashish@caashishtripathi.in &bull; Web: caashishtripathi.in &bull; Locations: India &bull; Dubai (UAE)
-              </div>
-            </div>
-            <div style="text-align: right; font-size: 0.75rem; color: #08765D; font-weight: 700;">
-              ICAI Member (Final: Sept 2025)
-            </div>
-          </div>
+      <div class="controls reveal">
+        <div class="chips" id="chips" role="tablist" aria-label="Filter tools by category"></div>
+        <label class="search"><i class="ti ti-search"></i><input id="q" type="search" placeholder="Search tools" aria-label="Search tools"></label>
+      </div>
+      <div class="tgrid" id="tgrid"></div>
+      <div class="more"><button class="btn" id="more" hidden></button></div>
+    </div>
+  </section>
 
-          <div class="resume-section-title">Executive Summary</div>
-          <p style="font-size: 0.8125rem; color: #334155;">
-            Qualified Chartered Accountant (ICAI) bridging statutory audit, Ind AS financial reporting, and direct/indirect taxation with advanced software execution (Python, Power BI, Power Query, React, and Applied AI). Architect of 15+ production finance automation tools, including dual-compliance Fixed Asset Registers, GSTR-2B multi-criteria reconcilers, and SA 505 audit generators. Proven track record conducting corporate finance workshops for 500+ professionals.
-          </p>
+  <section id="approach">
+    <div class="wrap how-grid">
+      <div class="how-sticky reveal">
+        <p class="eyebrow">Approach</p>
+        <h2>How I build</h2>
+        <p>Finance judgement first. Code second. AI only where it earns its place.</p>
+      </div>
+      <div class="tl" id="tl">
+        <div class="tl-line"><div class="tl-fill" id="tl-fill"></div></div>
+        <div class="step"><span class="node">01</span><h3>Code does the math</h3><p>Reconciliations, depreciation and tax run on fixed rules. Same input, same answer, every time.</p></div>
+        <div class="step"><span class="node">02</span><h3>AI where it fits</h3><p>Reading invoices and documents, drafting commentary. Code checks every number it touches.</p></div>
+        <div class="step"><span class="node">03</span><h3>Built for review</h3><p>Inputs, rules and exceptions stay visible, so any figure can be traced back to its source.</p></div>
+      </div>
+    </div>
+  </section>
 
-          <div class="resume-section-title">Core Competencies &amp; Technical Stack</div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.8rem;">
-            <div>
-              <strong>Chartered Accountant Domain:</strong>
-              <ul style="padding-left: 1.25rem; margin-top: 0.25rem; color: #475569;">
-                <li>Ind AS &amp; Schedule III Financial Reporting</li>
-                <li>Statutory &amp; Tax Auditing (ICAI SA Standards)</li>
-                <li>Direct Tax (Sec 32, 43(6), 50, 3CD Schedules)</li>
-                <li>GST Compliance (Rule 88A/88C/88D, GSTR-1/2B/3B/9C)</li>
-                <li>Corporate FP&amp;A, Budgeting &amp; Rolling Forecasts</li>
-              </ul>
-            </div>
-            <div>
-              <strong>Software &amp; AI Stack:</strong>
-              <ul style="padding-left: 1.25rem; margin-top: 0.25rem; color: #475569;">
-                <li>Financial ETL: Python (Pandas, OpenPyXL), Power Query M</li>
-                <li>BI &amp; Modeling: Microsoft Power BI, Advanced DAX, Star Schema</li>
-                <li>Frontend: Modern JavaScript (ES6+), React 18, Tailwind, SheetJS</li>
-                <li>Applied AI: OCR document extraction, LLM API pipelines</li>
-                <li>Workflow Automation: Google Apps Script, VBA Macros</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="resume-section-title">Key Projects &amp; Software Architecture</div>
-          <div style="font-size: 0.8rem; display: flex; flex-direction: column; gap: 0.65rem;">
-            <div>
-              <strong>1. Dual-Compliance Fixed Asset Register (FAR) Engine</strong>
-              <div style="color: #475569;">Architected a web engine calculating pro-rata depreciation simultaneously under Companies Act 2013 (useful life, 5% residual floor, shift multipliers) and Income Tax Act (block of assets, 180-day rule), with automated AS 22 / Ind AS 12 Deferred Tax Asset/Liability (DTA/DTL) calculations.</div>
-            </div>
-            <div>
-              <strong>2. GSTWise Enterprise: GSTR-2B vs. Books Reconciliation Suite</strong>
-              <div style="color: #475569;">Engineered multi-criteria invoice matching engine sorting millions of line items into Exact Match, Value Mismatches with configurable tolerance, and Missing Invoices. Automated Rule 88A tax offset and generated 100% compliant GSTN offline JSONs.</div>
-            </div>
-            <div>
-              <strong>3. Bulk Audit Confirmation Generator (ICAI SA 505)</strong>
-              <div style="color: #475569;">Developed bulk confirmation generator creating formal positive/negative balance confirmation letters with numbers-to-words conversion, auditee headers, and printable tear-off auditor reply slips.</div>
-            </div>
-            <div>
-              <strong>4. FP&amp;A Variance Analyzer &amp; Power BI Showcase</strong>
-              <div style="color: #475569;">Built live P&amp;L variance analyzer with automated executive board commentary generation, dynamic sensitivity threshold sliders, and star-schema DAX metrics (YTD, QoQ, Rolling 12M).</div>
-            </div>
-          </div>
-
-          <div class="resume-section-title">Education &amp; Professional Credentials</div>
-          <div style="font-size: 0.8rem; display: flex; flex-direction: column; gap: 0.4rem;">
-            <div style="display:flex; justify-content:space-between;">
-              <strong>Chartered Accountant (ICAI)</strong>
-              <span style="font-family:'JetBrains Mono',monospace;">Cleared Sept 2025</span>
-            </div>
-            <div style="color: #475569;">The Institute of Chartered Accountants of India &bull; Full Professional Qualification</div>
-          </div>
+  <section id="toolkit">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div><p class="eyebrow">Toolkit</p><h2>Finance meets code</h2></div>
+      </div>
+      <div class="two">
+        <div class="panel glow reveal">
+          <h3><span class="ico"><i class="ti ti-briefcase"></i></span>Finance</h3>
+          <ul><li>Ind AS reporting</li><li>Statutory &amp; internal audit</li><li>GST</li><li>Direct tax</li><li>Month-end close</li><li>FP&amp;A &amp; MIS</li></ul>
+        </div>
+        <div class="panel glow reveal">
+          <h3><span class="ico"><i class="ti ti-code"></i></span>Build</h3>
+          <ul><li>Python · pandas</li><li>Power Query (M)</li><li>Power BI · DAX</li><li>Excel · VBA</li><li>Apps Script</li><li>LLM APIs</li></ul>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Main JavaScript File -->
-  <script src="js/main.js"></script>
+  <section id="contact">
+    <div class="wrap">
+      <div class="contact-box reveal">
+        <div class="contact-top">
+          <p class="eyebrow">Contact</p><h2>Let's talk.</h2>
+        </div>
+        <div class="cgrid">
+          <div class="ccard wa glow">
+            <span class="ico"><i class="ti ti-brand-whatsapp"></i></span>
+            <span class="lbl">WhatsApp</span>
+            <span class="val">Quickest way to reach me</span>
+            <div class="row">
+              <a class="btn btn-wa" target="_blank" rel="noopener" href="https://wa.me/917772837079?text=Hi%20Ashish%2C%20I%20came%20across%20your%20portfolio%20and%20would%20like%20to%20connect%20regarding%20an%20opportunity.">Start a chat <i class="ti ti-arrow-up-right"></i></a>
+            </div>
+          </div>
+          <div class="ccard glow">
+            <span class="ico"><i class="ti ti-phone"></i></span>
+            <span class="lbl">Call or text</span>
+            <span class="val">+91 77728 37079</span>
+            <div class="row">
+              <a class="btn btn-sm only-touch" href="tel:+917772837079"><i class="ti ti-phone"></i>Call</a>
+              <a class="btn btn-sm only-touch" href="sms:+917772837079?&amp;body=Hi%20Ashish%2C%20I%20came%20across%20your%20portfolio."><i class="ti ti-message"></i>Text</a>
+              <button class="btn btn-sm only-touch btn-icon" data-copy="+91 77728 37079" aria-label="Copy phone number"><i class="ti ti-copy"></i></button>
+              <button class="btn btn-sm only-desk" data-copy="+91 77728 37079"><i class="ti ti-copy"></i>Copy number</button>
+            </div>
+          </div>
+          <div class="ccard glow">
+            <span class="ico"><i class="ti ti-mail"></i></span>
+            <span class="lbl">Email</span>
+            <span class="val">caashishkumartripathi@gmail.com</span>
+            <div class="row">
+              <a class="btn btn-sm only-desk" target="_blank" rel="noopener" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=caashishkumartripathi@gmail.com&amp;su=Connecting%20via%20your%20portfolio&amp;body=Hi%20Ashish%2C%0A%0A"><i class="ti ti-brand-gmail"></i>Gmail</a>
+              <a class="btn btn-sm only-desk" target="_blank" rel="noopener" href="https://outlook.office.com/mail/deeplink/compose?to=caashishkumartripathi@gmail.com&amp;subject=Connecting%20via%20your%20portfolio&amp;body=Hi%20Ashish%2C%0A%0A"><i class="ti ti-mail"></i>Outlook</a>
+              <a class="btn btn-sm only-touch" href="mailto:caashishkumartripathi@gmail.com?subject=Connecting%20via%20your%20portfolio&amp;body=Hi%20Ashish%2C%0A%0A"><i class="ti ti-mail"></i>Write email</a>
+              <button class="btn btn-sm btn-icon" data-copy="caashishkumartripathi@gmail.com" aria-label="Copy email address"><i class="ti ti-copy"></i></button>
+            </div>
+          </div>
+        </div>
+        <p class="also" id="also" hidden>Also on <a id="li-link" target="_blank" rel="noopener" href="#">LinkedIn <i class="ti ti-arrow-up-right"></i></a></p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="yr"></span> Ashish Tripathi</span>
+    <span class="mono">caashishtripathi.in</span>
+    <a href="#top">Back to top ↑</a>
+  </div>
+</footer>
+
+<a class="fab" id="fab" target="_blank" rel="noopener" aria-label="Chat on WhatsApp" href="https://wa.me/917772837079?text=Hi%20Ashish%2C%20I%20came%20across%20your%20portfolio%20and%20would%20like%20to%20connect%20regarding%20an%20opportunity."><i class="ti ti-brand-whatsapp"></i></a>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<dialog id="how">
+  <div class="modal-in">
+    <p class="eyebrow">How it works</p>
+    <h3 id="how-title"></h3>
+    <p class="sub" id="how-sub"></p>
+    <ol class="steps" id="how-steps"></ol>
+    <div class="modal-foot">
+      <button class="btn btn-sm" id="how-close">Close</button>
+      <a class="btn btn-sm btn-primary" id="how-open">Open tool <i class="ti ti-arrow-up-right"></i></a>
+    </div>
+  </div>
+</dialog>
+
+<script>
+/* ============================================================
+   SETTINGS
+   ============================================================ */
+const SHOW_SAMPLES = true;   // set to false before going live
+const LINKEDIN_URL = '';     // paste your LinkedIn URL to show the link
+const HOME_LIMIT = 6;        // tools shown on the homepage before "See all"
+
+/* Particle colours: top of page → bottom of page (RGB) */
+const FIELD_FROM = [13, 148, 136];   // teal
+const FIELD_TO   = [79, 70, 229];    // indigo
+
+/* ============================================================
+   CATEGORIES: add a new one here and it appears everywhere
+   ============================================================ */
+const CATS = [
+  { id: 'accounting', name: 'Accounting',       icon: 'ti-calculator' },
+  { id: 'tax',        name: 'Tax & GST',        icon: 'ti-receipt-tax' },
+  { id: 'audit',      name: 'Audit',            icon: 'ti-shield-check' },
+  { id: 'fpa',        name: 'FP&A & reporting', icon: 'ti-chart-line' },
+  { id: 'ai',         name: 'AI & documents',   icon: 'ti-sparkles' }
+];
+
+/* ============================================================
+   YOUR TOOLS: our 4 actual tools plugged in
+   ============================================================ */
+const TOOLS = [
+  {
+    id: 'far',
+    cat: 'accounting',
+    featured: true,
+    isNew: true,
+    title: 'Fixed asset register',
+    problem: 'Companies Act and Income Tax depreciation side by side, with the deferred tax difference.',
+    stack: ['JavaScript', 'SheetJS', 'Companies Act', 'Sec 32'],
+    url: 'tools/fixed-asset-register/',
+    image: '',
+    how: [
+      { k: 'Input',  d: 'Asset register Excel/CSV with cost, put-to-use and ready-for-use dates.' },
+      { k: 'Logic',  d: 'Schedule II useful life vs Section 32 block WDV with 180-day rule.' },
+      { k: 'Output', d: 'Pro-rata depreciation schedule, DTA/DTL timing difference and Excel export.' }
+    ]
+  },
+  {
+    id: 'gst-reco',
+    cat: 'tax',
+    featured: true,
+    isNew: true,
+    title: 'GSTR-2B vs purchase register',
+    problem: 'Matches books against GSTR-2B, identifies value & tax differences and Rule 88A offsets.',
+    stack: ['React', 'Vite', 'Tailwind', 'GSTN JSON'],
+    url: 'tools/gst-reco/',
+    image: '',
+    how: [
+      { k: 'Input',  d: 'Purchase register Excel and official GSTR-2B JSON or Excel file.' },
+      { k: 'Logic',  d: 'Multi-criteria matching on GSTIN, invoice number and tax values with configurable tolerance.' },
+      { k: 'Output', d: 'Reconciliation report, IMS marking, Rule 88A tax optimization and GSTN offline JSON.' }
+    ]
+  },
+  {
+    id: 'audit-confirmation',
+    cat: 'audit',
+    featured: true,
+    isNew: true,
+    title: 'Balance confirmation letters',
+    problem: 'Turns a party ledger into ready-to-send SA 505 audit confirmation letters with reply slips.',
+    stack: ['JavaScript', 'SA 505', 'Print Engine'],
+    url: 'tools/confirmation-generator/',
+    image: '',
+    how: [
+      { k: 'Input',  d: 'Party ledger with balances, reference dates and GSTINs.' },
+      { k: 'Logic',  d: 'ICAI SA 505 positive/negative confirmation template with rupee words conversion.' },
+      { k: 'Output', d: 'Print-ready formal letters with auditee header, auditor seal and tear-off reply slips.' }
+    ]
+  },
+  {
+    id: 'fpa-variance',
+    cat: 'fpa',
+    featured: true,
+    isNew: true,
+    title: 'Budget vs actual MIS analyzer',
+    problem: 'Variance against budget and prior period, with automated commentary and sensitivity thresholds.',
+    stack: ['JavaScript', 'Chart.js', 'Power BI', 'DAX'],
+    url: 'tools/fpa-dashboard/',
+    image: '',
+    how: [
+      { k: 'Input',  d: 'Actuals, budget and prior year P&L line items.' },
+      { k: 'Logic',  d: 'Real-time gross margin and EBITDA recalculation with variance threshold alerts.' },
+      { k: 'Output', d: 'Executive flash commentary, visual variance charts and CSV export.' }
+    ]
+  }
+];
+
+/* Preview-only entries, to see how menus look with many tools */
+const SAMPLE_TOOLS = [
+  { id:'s3', cat:'accounting', title:'Bank reconciliation',           problem:'Matches statement lines to ledger entries and lists what is left to clear.', stack:['Power Query'] },
+  { id:'s6', cat:'ai',         title:'Invoice data extraction',       problem:'Reads PDF invoices and puts GSTIN, amounts and dates into a sheet for review.', stack:['Python','LLM API'] },
+  { id:'s7', cat:'tax',        title:'TDS: 26AS vs books',            problem:'Compares TDS credits in 26AS with books and lists every gap by deductor.', stack:['Python'] },
+  { id:'s8', cat:'fpa',        title:'Receivables ageing',            problem:'Buckets debtors by age and highlights accounts that need follow-up.', stack:['Power Query','Excel'] }
+];
+
+const ALL = (SHOW_SAMPLES ? TOOLS.concat(SAMPLE_TOOLS) : TOOLS.slice())
+  .sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+
+const SKILLS = ['Python','pandas','Power Query','Power BI','DAX','Excel','VBA','Apps Script','LLM APIs','Ind AS','GST','Direct tax','Audit','FP&A','MIS'];
+
+const RUNS = [
+  { tab:'Fixed assets', file:'far.run', lines:[
+    ['$','load asset_register.xlsx'],
+    ['→','apply Schedule II lives, 5% residual'],
+    ['→','tax: block WDV with 180-day rule'],
+    ['→','compute deferred tax difference'],
+    ['✓','far_schedule.xlsx ready for review'] ]},
+  { tab:'GST reco', file:'gst_reco.run', lines:[
+    ['$','load purchase_register.xlsx, gstr2b.json'],
+    ['→','normalise invoice no., GSTIN and dates'],
+    ['→','match on GSTIN + invoice + taxable value'],
+    ['→','flag value, tax and missing differences'],
+    ['✓','reco_report.xlsx ready for review'] ]},
+  { tab:'Confirmations', file:'confirmations.run', lines:[
+    ['$','load debtors_creditors_ledger.csv'],
+    ['→','convert balances to Indian rupee words'],
+    ['→','generate SA 505 positive/negative letters'],
+    ['→','append third-party audit tear-off slips'],
+    ['✓','confirmation_letters.pdf ready to send'] ]},
+  { tab:'MIS', file:'mis.run', lines:[
+    ['$','load trial_balance.xlsx, budget.xlsx'],
+    ['→','map ledgers to MIS heads'],
+    ['→','variance vs budget and last month'],
+    ['→','draft commentary, checked by rules'],
+    ['✓','mis_pack.pdf ready for review'] ]}
+];
+
+const ROT_WORDS = ['reconciliations','depreciation','GST compliance','MIS reporting','audit work'];
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ext = u => /^https?:/.test(u) ? ' target="_blank" rel="noopener"' : '';
+const catOf = id => CATS.find(c => c.id === id) || { name: id, icon: 'ti-tool' };
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const usedCats = CATS.filter(c => ALL.some(t => t.cat === c.id));
+
+/* ============================================================
+   MENUS (desktop dropdown + mobile sheet)
+   ============================================================ */
+$('#mega-grid').innerHTML = usedCats.map(c => {
+  const list = ALL.filter(t => t.cat === c.id);
+  const links = list.slice(0, 4).map(t => t.url
+    ? `<li><a href="${esc(t.url)}"${ext(t.url)}>${esc(t.title)}</a></li>`
+    : `<li><a href="#tools" data-cat="${c.id}">${esc(t.title)}</a></li>`).join('');
+  const more = list.length > 4 ? `<li><a href="#tools" class="more" data-cat="${c.id}">+${list.length - 4} more</a></li>` : '';
+  return `<div><button class="mega-cat" data-cat="${c.id}"><span class="ico"><i class="ti ${c.icon}"></i></span>${esc(c.name)}<small>${list.length}</small></button><ul class="mega-list">${links}${more}</ul></div>`;
+}).join('');
+$('#mega-count').textContent = `${ALL.length} tools across ${usedCats.length} areas`;
+
+$('#sheet-in').innerHTML =
+  `<h6>Tools</h6>` +
+  `<a class="s" href="#tools" data-cat="all">All tools<small>${ALL.length}</small></a>` +
+  usedCats.map(c => `<a class="s" href="#tools" data-cat="${c.id}"><i class="ti ${c.icon}"></i>${esc(c.name)}<small>${ALL.filter(t => t.cat === c.id).length}</small></a>`).join('') +
+  `<h6>More</h6><a class="s" href="#approach">Approach</a><a class="s" href="#toolkit">Toolkit</a><a class="s" href="#contact">Contact</a>` +
+  `<a class="btn btn-wa" target="_blank" rel="noopener" href="${$('#fab').href}"><i class="ti ti-brand-whatsapp"></i>Chat on WhatsApp</a>`;
+
+const dd = $('#dd'), trig = dd.querySelector('.menu-trigger');
+const canHover = matchMedia('(hover: hover)').matches;
+let ddTimer;
+const openDD = () => { clearTimeout(ddTimer); dd.classList.add('open'); trig.setAttribute('aria-expanded', 'true'); };
+const closeDD = () => { clearTimeout(ddTimer); dd.classList.remove('open'); trig.setAttribute('aria-expanded', 'false'); };
+dd.addEventListener('mouseenter', () => { if (canHover) openDD(); });
+dd.addEventListener('mouseleave', () => { if (canHover) ddTimer = setTimeout(closeDD, 180); });
+trig.addEventListener('click', () => { if (canHover) openDD(); else dd.classList.contains('open') ? closeDD() : openDD(); });
+document.addEventListener('click', e => { if (!dd.contains(e.target)) closeDD(); });
+
+const nav = $('#nav'), burger = $('#burger');
+const setSheet = open => {
+  nav.classList.toggle('sheet-open', open);
+  burger.setAttribute('aria-expanded', open);
+  burger.innerHTML = `<i class="ti ${open ? 'ti-x' : 'ti-menu-2'}"></i>`;
+};
+burger.addEventListener('click', () => setSheet(!nav.classList.contains('sheet-open')));
+$('#sheet').addEventListener('click', e => { if (e.target.closest('a')) setSheet(false); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeDD(); setSheet(false); } });
+
+/* ============================================================
+   TOOLS GRID
+   ============================================================ */
+const state = { cat: 'all', q: '', expanded: false };
+const grid = $('#tgrid'), moreBtn = $('#more');
+
+function filtered() {
+  const q = state.q.trim().toLowerCase();
+  return ALL.filter(t => (state.cat === 'all' || t.cat === state.cat) &&
+    (!q || [t.title, t.problem, t.stack.join(' '), catOf(t.cat).name].join(' ').toLowerCase().includes(q)));
+}
+
+function toolCard(t, i) {
+  const c = catOf(t.cat);
+  return `<article class="tcard glow pop" style="animation-delay:${Math.min(i, 8) * 50}ms">
+    ${t.image ? `<div class="t-thumb"><img src="${esc(t.image)}" alt="${esc(t.title)} screenshot" loading="lazy"></div>` : ''}
+    <div class="t-top"><span class="ico"><i class="ti ${c.icon}"></i></span><span class="t-tag">${t.isNew ? '<span class="t-new">New</span>' : ''}${esc(c.name)}</span></div>
+    <h3>${esc(t.title)}</h3>
+    <p>${esc(t.problem)}</p>
+    <div class="stack">${t.stack.map(s => `<span>${esc(s)}</span>`).join('')}</div>
+    <div class="t-act">
+      ${t.url ? `<a class="t-open" href="${esc(t.url)}"${ext(t.url)}>Open tool <i class="ti ti-arrow-up-right"></i></a>` : `<span class="t-sample">Sample entry</span>`}
+      ${t.how ? `<button class="t-how" data-how="${esc(t.id)}">How it works</button>` : ''}
+    </div>
+  </article>`;
+}
+
+function renderChips() {
+  const all = `<button class="fchip${state.cat === 'all' ? ' on' : ''}" data-cat="all" role="tab" aria-selected="${state.cat === 'all'}">All <small>${ALL.length}</small></button>`;
+  $('#chips').innerHTML = all + usedCats.map(c =>
+    `<button class="fchip${state.cat === c.id ? ' on' : ''}" data-cat="${c.id}" role="tab" aria-selected="${state.cat === c.id}">${esc(c.name)} <small>${ALL.filter(t => t.cat === c.id).length}</small></button>`).join('');
+}
+
+function renderTools() {
+  const list = filtered();
+  const collapsible = state.cat === 'all' && !state.q && list.length > HOME_LIMIT;
+  const shown = collapsible && !state.expanded ? list.slice(0, HOME_LIMIT) : list;
+  grid.innerHTML = shown.length ? shown.map(toolCard).join('')
+    : `<div class="empty">No tools match “${esc(state.q)}”.</div>`;
+  moreBtn.hidden = !collapsible;
+  moreBtn.innerHTML = state.expanded ? 'Show fewer' : `See all ${list.length} tools <i class="ti ti-arrow-down"></i>`;
+  renderChips();
+}
+
+function setCat(cat) { state.cat = cat; state.expanded = cat !== 'all' ? true : state.expanded; renderTools(); }
+
+moreBtn.addEventListener('click', () => {
+  state.expanded = !state.expanded;
+  renderTools();
+  if (!state.expanded) $('#tools').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+});
+$('#q').addEventListener('input', e => { state.q = e.target.value; renderTools(); });
+$('#tools-sup').textContent = ALL.length;
+
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-cat]');
+  if (!el) return;
+  e.preventDefault();
+  const fromChip = el.classList.contains('fchip');
+  if (el.dataset.cat === 'all' && !fromChip) state.expanded = true;
+  setCat(el.dataset.cat);
+  closeDD(); setSheet(false);
+  if (!fromChip) $('#tools').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+});
+
+renderTools();
+
+/* Cursor-following glow on cards */
+document.addEventListener('pointermove', e => {
+  const card = e.target.closest && e.target.closest('.glow');
+  if (!card) return;
+  const r = card.getBoundingClientRect();
+  card.style.setProperty('--x', `${e.clientX - r.left}px`);
+  card.style.setProperty('--y', `${e.clientY - r.top}px`);
+}, { passive: true });
+
+/* ============================================================
+   HOW-IT-WORKS MODAL
+   ============================================================ */
+const dlg = $('#how');
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-how]');
+  if (!b) return;
+  const t = ALL.find(x => x.id === b.dataset.how);
+  if (!t || !t.how) return;
+  $('#how-title').textContent = t.title;
+  $('#how-sub').textContent = t.problem;
+  $('#how-steps').innerHTML = t.how.map(s => `<li><span class="k">${esc(s.k)}</span><p>${esc(s.d)}</p></li>`).join('');
+  const open = $('#how-open');
+  open.hidden = !t.url;
+  if (t.url) open.href = t.url;
+  dlg.showModal();
+});
+$('#how-close').onclick = () => dlg.close();
+dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+
+/* ============================================================
+   COPY BUTTONS + TOAST
+   ============================================================ */
+const toast = $('#toast');
+let toastTimer;
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+}
+document.addEventListener('click', async e => {
+  const b = e.target.closest('[data-copy]');
+  if (!b) return;
+  const text = b.dataset.copy;
+  try { await navigator.clipboard.writeText(text); }
+  catch {
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); ta.remove();
+  }
+  showToast('Copied');
+});
+
+if (LINKEDIN_URL) { $('#li-link').href = LINKEDIN_URL; $('#also').hidden = false; }
+
+/* ============================================================
+   MARQUEE
+   ============================================================ */
+const half = SKILLS.map(s => `<span>${esc(s)}</span>`).join('');
+$('#track').innerHTML = half + half;
+
+/* ============================================================
+   ROTATING HERO WORD
+   ============================================================ */
+if (!reduce) {
+  const rot = $('#rot');
+  let ri = 0;
+  setInterval(() => {
+    ri = (ri + 1) % ROT_WORDS.length;
+    rot.classList.remove('swap');
+    void rot.offsetWidth;
+    rot.textContent = ROT_WORDS[ri];
+    rot.classList.add('swap');
+  }, 2600);
+}
+
+/* ============================================================
+   HERO CONSOLE (sample run)
+   ============================================================ */
+(async function consoleLoop() {
+  const body = $('#c-body'), tabs = $('#c-tabs'), prog = $('#c-prog'), file = $('#c-file');
+  tabs.innerHTML = RUNS.map(r => `<span>${esc(r.tab)}</span>`).join('');
+  const tabEls = [...tabs.children];
+  const lineHTML = (p, text) => `<span class="p">${p}</span>${esc(text)}`;
+  let i = 0;
+  if (reduce) {
+    tabEls[0].classList.add('on');
+    body.innerHTML = RUNS[0].lines.map(([p, t]) => `<div class="c-line${p === '✓' ? ' ok' : ''}">${lineHTML(p, t)}</div>`).join('');
+    prog.style.width = '100%';
+    return;
+  }
+  while (true) {
+    const run = RUNS[i];
+    tabEls.forEach((t, k) => t.classList.toggle('on', k === i));
+    file.textContent = run.file;
+    body.innerHTML = ''; prog.style.width = '0';
+    for (let n = 0; n < run.lines.length; n++) {
+      const [p, text] = run.lines[n];
+      const row = document.createElement('div');
+      row.className = 'c-line' + (p === '✓' ? ' ok' : '');
+      body.appendChild(row);
+      for (let c = 0; c <= text.length; c++) {
+        row.innerHTML = lineHTML(p, text.slice(0, c)) + '<span class="c-caret"></span>';
+        await sleep(16);
+      }
+      row.innerHTML = lineHTML(p, text);
+      prog.style.width = `${((n + 1) / run.lines.length) * 100}%`;
+      await sleep(320);
+    }
+    await sleep(2400);
+    i = (i + 1) % RUNS.length;
+  }
+})();
+
+/* ============================================================
+   BACKGROUND: LIVE DATA NETWORK
+   - particles drift and link up
+   - cursor pulls nearby particles into an orbit, with a soft halo
+   - glowing "data packets" travel along the links
+   - click / tap sends out a ripple
+   - colour shifts teal → indigo as you scroll
+   ============================================================ */
+const mouse = { x: -9999, y: -9999 };
+let scrollP = 0;
+(function field() {
+  const c = $('#field'), ctx = c.getContext('2d');
+  let w, h, dpr, L, L2, M, R0, pts = [], packets = [], ripples = [], lastY = scrollY, running = true;
+
+  function size() {
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    w = c.width = innerWidth * dpr; h = c.height = innerHeight * dpr;
+    c.style.width = innerWidth + 'px'; c.style.height = innerHeight + 'px';
+    L = 140 * dpr; L2 = L * L; M = 210 * dpr; R0 = 70 * dpr;
+    const n = Math.round(Math.min(120, (innerWidth * innerHeight) / 13000));
+    pts = Array.from({ length: n }, () => {
+      const vx = (Math.random() - .5) * .3 * dpr, vy = (Math.random() - .5) * .3 * dpr;
+      return { x: Math.random() * w, y: Math.random() * h, vx, vy, bx: vx, by: vy, r: (Math.random() * 1.4 + .8) * dpr, h: Math.random() };
+    });
+    packets = []; ripples = [];
+  }
+
+  const col = (t, a) => {
+    t = Math.max(0, Math.min(1, t));
+    const f = FIELD_FROM, g = FIELD_TO;
+    return `rgba(${Math.round(f[0] + (g[0] - f[0]) * t)},${Math.round(f[1] + (g[1] - f[1]) * t)},${Math.round(f[2] + (g[2] - f[2]) * t)},${a})`;
+  };
+
+  function spawnPacket() {
+    const a = pts[(Math.random() * pts.length) | 0];
+    for (let k = 0; k < pts.length; k++) {
+      const b = pts[(Math.random() * pts.length) | 0];
+      if (b === a) continue;
+      const dx = a.x - b.x, dy = a.y - b.y;
+      if (dx * dx + dy * dy < L2 * .8) { packets.push({ a, b, t: 0, s: .01 + Math.random() * .012 }); return; }
+    }
+  }
+
+  function frame() {
+    ctx.clearRect(0, 0, w, h);
+    const dy = (scrollY - lastY) * dpr * .35; lastY = scrollY;
+    const mx = mouse.x * dpr, my = mouse.y * dpr, active = mouse.x > -1000;
+
+    if (active) {
+      const g = ctx.createRadialGradient(mx, my, 0, mx, my, M);
+      g.addColorStop(0, col(scrollP, .09)); g.addColorStop(1, col(scrollP, 0));
+      ctx.fillStyle = g; ctx.fillRect(mx - M, my - M, M * 2, M * 2);
+    }
+
+    for (const p of pts) {
+      if (active) {
+        const dx = mx - p.x, dy2 = my - p.y, d = Math.hypot(dx, dy2);
+        if (d < M && d > 1) {
+          const f = d < R0 ? -(1 - d / R0) * .35 * dpr : (1 - d / M) * .03 * dpr;
+          p.vx += dx / d * f; p.vy += dy2 / d * f;
+        }
+      }
+      p.vx += (p.bx - p.vx) * .03; p.vy += (p.by - p.vy) * .03;
+      p.x += p.vx; p.y += p.vy - dy;
+      if (p.x < 0) p.x += w; else if (p.x > w) p.x -= w;
+      if (p.y < 0) p.y += h; else if (p.y > h) p.y -= h;
+    }
+
+    ctx.lineWidth = .8 * dpr;
+    for (let i = 0; i < pts.length; i++) {
+      const a = pts[i];
+      for (let j = i + 1; j < pts.length; j++) {
+        const b = pts[j], dx = a.x - b.x, dy2 = a.y - b.y, d = dx * dx + dy2 * dy2;
+        if (d < L2) { ctx.strokeStyle = col(scrollP, (1 - d / L2) * .22); ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }
+      }
+    }
+
+    for (const p of pts) {
+      let near = 0;
+      if (active) {
+        const md = Math.hypot(p.x - mx, p.y - my);
+        if (md < M) {
+          near = 1 - md / M;
+          ctx.strokeStyle = col(scrollP + .15, near * .55); ctx.lineWidth = dpr;
+          ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(mx, my); ctx.stroke();
+        }
+      }
+      ctx.fillStyle = col(scrollP * .8 + p.h * .3, .45 + near * .45);
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r * (1 + near * 1.1), 0, Math.PI * 2); ctx.fill();
+    }
+
+    if (packets.length < 9 && Math.random() < .09) spawnPacket();
+    ctx.shadowBlur = 12 * dpr;
+    for (let k = packets.length - 1; k >= 0; k--) {
+      const q = packets[k]; q.t += q.s;
+      const dx = q.b.x - q.a.x, dy2 = q.b.y - q.a.y;
+      if (q.t >= 1 || dx * dx + dy2 * dy2 > L2 * 1.6) { packets.splice(k, 1); continue; }
+      const x = q.a.x + dx * q.t, y = q.a.y + dy2 * q.t;
+      ctx.shadowColor = col(scrollP + .2, .9);
+      ctx.fillStyle = col(scrollP + .2, .95);
+      ctx.beginPath(); ctx.arc(x, y, 2.2 * dpr, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.shadowBlur = 0;
+
+    for (let k = ripples.length - 1; k >= 0; k--) {
+      const r = ripples[k]; r.r += 7 * dpr; r.a *= .93;
+      if (r.a < .02) { ripples.splice(k, 1); continue; }
+      ctx.strokeStyle = col(scrollP, r.a); ctx.lineWidth = 1.5 * dpr;
+      ctx.beginPath(); ctx.arc(r.x, r.y, r.r, 0, Math.PI * 2); ctx.stroke();
+    }
+
+    if (running && !reduce) requestAnimationFrame(frame);
+  }
+
+  size(); frame();
+  let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { size(); if (reduce) frame(); }, 150); });
+  document.addEventListener('visibilitychange', () => {
+    const was = running; running = document.visibilityState === 'visible';
+    if (running && !was && !reduce) requestAnimationFrame(frame);
+  });
+  if (!reduce) addEventListener('pointerdown', e => {
+    const x = e.clientX * dpr, y = e.clientY * dpr;
+    ripples.push({ x, y, r: 0, a: .5 });
+    for (const p of pts) {
+      const dx = p.x - x, dy = p.y - y, d = Math.hypot(dx, dy);
+      if (d < 240 * dpr && d > 1) { const f = (1 - d / (240 * dpr)) * 5 * dpr; p.vx += dx / d * f; p.vy += dy / d * f; }
+    }
+  }, { passive: true });
+})();
+
+addEventListener('pointermove', e => {
+  if (e.pointerType === 'touch') return;
+  mouse.x = e.clientX; mouse.y = e.clientY;
+}, { passive: true });
+document.addEventListener('pointerleave', () => { mouse.x = mouse.y = -9999; });
+
+/* ============================================================
+   SCROLL EFFECTS
+   ============================================================ */
+const prog = $('#progress'), tl = $('#tl'), tlFill = $('#tl-fill'),
+      steps = [...document.querySelectorAll('.step')], fab = $('#fab'), contact = $('#contact');
+let ticking = false;
+function onScroll() {
+  const max = document.documentElement.scrollHeight - innerHeight;
+  scrollP = max > 0 ? Math.min(1, scrollY / max) : 0;
+  prog.style.width = (scrollP * 100) + '%';
+  nav.classList.toggle('scrolled', scrollY > 10);
+  const r = tl.getBoundingClientRect(), mark = innerHeight * .55;
+  tlFill.style.height = (Math.min(1, Math.max(0, (mark - r.top) / r.height)) * 100) + '%';
+  steps.forEach(s => s.classList.toggle('on', s.getBoundingClientRect().top < mark));
+  fab.classList.toggle('show', scrollY > innerHeight * .7 && contact.getBoundingClientRect().top > innerHeight * .85);
+  ticking = false;
+}
+addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+onScroll();
+
+/* Reveal on scroll */
+const io = new IntersectionObserver(es => es.forEach(en => {
+  if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+}), { threshold: .12, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach((el, i) => {
+  if (el.closest('.hero')) el.style.transitionDelay = `${(i % 6) * 80}ms`;
+  io.observe(el);
+});
+
+$('#yr').textContent = new Date().getFullYear();
+</script>
 </body>
 </html>
