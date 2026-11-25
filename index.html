@@ -513,7 +513,8 @@ const CATS = [
   { id: 'tax',        name: 'Tax & GST',        icon: 'ti-receipt-tax' },
   { id: 'audit',      name: 'Audit',            icon: 'ti-shield-check' },
   { id: 'fpa',        name: 'FP&A & reporting', icon: 'ti-chart-line' },
-  { id: 'ai',         name: 'AI & documents',   icon: 'ti-sparkles' }
+  { id: 'ai',         name: 'AI & documents',   icon: 'ti-sparkles' },
+  { id: 'ops',        name: 'Business ops',     icon: 'ti-calendar-time' }
 ];
 
 /* ============================================================
@@ -582,6 +583,22 @@ const TOOLS = [
       { k: 'Input',  d: 'Actuals, budget and prior year P&L line items.' },
       { k: 'Logic',  d: 'Real-time gross margin and EBITDA recalculation with variance threshold alerts.' },
       { k: 'Output', d: 'Executive flash commentary, visual variance charts and CSV export.' }
+    ]
+  },
+  {
+    id: 'salon-queue',
+    cat: 'ops',
+    featured: true,
+    isNew: true,
+    title: 'Salon queue & booking sync',
+    problem: 'Syncs owner phone-call appointments with shop walk-ins live across devices, plus diary & cashbook.',
+    stack: ['Supabase Realtime', 'Live Slots', 'WhatsApp', 'Cashbook'],
+    url: 'tools/salon-queue/',
+    image: '',
+    how: [
+      { k: 'Input',  d: 'Owner phone bookings and front-desk walk-in entries with mobile number & service.' },
+      { k: 'Logic',  d: 'Live next-free-slot finder per chair, drag/shift rescheduling, and conflict checks.' },
+      { k: 'Output', d: 'Instant owner + shop sync, WhatsApp updates, customer visit history & daily ₹ cashbook.' }
     ]
   }
 ];

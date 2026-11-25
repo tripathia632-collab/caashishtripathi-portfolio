@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SalonSync Studio — Live Appointment &amp; Walk-In Queue</title>
+  <meta name="description" content="Real-time salon booking & walk-in queue tool connecting owner phone calls with shop reception via Supabase Realtime.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/bg-network.css">
+  <link rel="stylesheet" href="/tools/salon-queue/styles.css">
+  <script src="/js/bg-network.js" defer></script>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-area">
+        <a href="/" class="btn btn-back">&larr; All tools</a>
+        <div class="brand-divider"></div>
+        <div class="logo-mark">SQ</div>
+        <div class="brand-title-wrap">
+          <h1 id="headerSalonName">Studio Luxe Salon</h1>
+          <p class="subtitle">Owner Phone + Shop Desk Live Sync</p>
+        </div>
+      </div>
+
+      <nav class="workspace-tabs" aria-label="Salon views">
+        <button type="button" class="ws-tab active" data-tab="board" onclick="SalonApp.switchTab('board')">
+          <span class="tab-idx">1</span>
+          <span>Today&rsquo;s Board</span>
+          <span id="boardCountBadge" class="tab-count">0</span>
+        </button>
+        <button type="button" class="ws-tab" data-tab="diary" onclick="SalonApp.switchTab('diary')">
+          <span class="tab-idx">2</span>
+          <span>Diary &amp; Cashbook</span>
+        </button>
+      </nav>
+
+      <div class="header-actions">
+        <div class="role-seg" title="Switch active role view">
+          <button type="button" id="roleOwnerBtn" class="role-btn on" onclick="SalonApp.setRole('owner')">Owner (Phone)</button>
+          <button type="button" id="roleRecBtn" class="role-btn" onclick="SalonApp.setRole('reception')">Reception (Shop)</button>
+        </div>
+
+        <button type="button" id="syncStatusBtn" class="sync-pill is-demo" onclick="SalonApp.openSyncModal()" title="Configure Supabase Realtime sync across devices">
+          <span class="sync-dot"></span>
+          <span id="syncStatusLabel">Demo Sync &middot; Connect Supabase</span>
+        </button>
+
+        <button type="button" class="btn btn-sm btn-secondary" onclick="SalonApp.openSettingsModal()" title="Customize chairs & service menu">
+          Services &amp; Chairs
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="workspace-shell">
+
+    <!-- =========================================================
+         TAB 1: TODAY'S BOARD (NEXT FREE SLOTS + QUEUE + CHAIR GRID)
+         ========================================================= -->
+    <section id="view-board" class="tab-view active">
+
+      <!-- Top Live Summary Row -->
+      <div class="top-kpi-grid">
+        <div class="card kpi-card kpi-wide">
+          <div class="kpi-head-row">
+            <span class="kpi-k">Next Free Slot Per Chair (Click Any Chip to Book)</span>
+          </div>
+          <div id="nextSlotsChips" class="free-slots-row"></div>
+        </div>
+        <div class="card kpi-card">
+          <span class="kpi-k">Waiting / Booked</span>
+          <strong id="kpiWaiting" class="kpi-v teal">0</strong>
+          <span id="kpiWaitingSub" class="kpi-sub">0 walk-in · 0 phone</span>
+        </div>
+        <div class="card kpi-card">
+          <span class="kpi-k">In Chair Now</span>
+          <strong id="kpiInChair" class="kpi-v">0 / 3</strong>
+          <span class="kpi-sub">Live chairs active</span>
+        </div>
+        <div class="card kpi-card">
+          <span class="kpi-k">Today&rsquo;s Collection</span>
+          <strong id="kpiCollection" class="kpi-v mono">&#8377;0</strong>
+          <span class="kpi-sub">Cash + UPI + Card</span>
+        </div>
+      </div>
+
+      <!-- Board Action Bar -->
+      <div class="card board-toolbar">
+        <div class="tb-left">
+          <div class="date-stepper">
+            <button type="button" class="btn btn-xs btn-secondary" onclick="SalonApp.shiftSelectedDate(-1)">&larr;</button>
+            <input type="date" id="datePickerInput" class="date-inp">
+            <button type="button" class="btn btn-xs btn-secondary" onclick="SalonApp.shiftSelectedDate(0)">Today</button>
+            <button type="button" class="btn btn-xs btn-secondary" onclick="SalonApp.shiftSelectedDate(1)">&rarr;</button>
+          </div>
+          <select id="chairFilterSelect" class="tb-select"></select>
+          <select id="sourceFilterSelect" class="tb-select">
+            <option value="all">All Sources</option>
+            <option value="walkin">Walk-Ins Only</option>
+            <option value="phone">Phone Bookings Only</option>
+          </select>
+        </div>
+
+        <div class="tb-right">
+          <button type="button" class="btn btn-primary" onclick="SalonApp.openBookingModal(null)">
+            + New Booking / Walk-In
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Split Workspace -->
+      <div class="board-split">
+        <!-- Left Panel: Live Action Queue -->
+        <aside class="card queue-panel">
+          <div class="panel-hdr">
+            <div>
+              <h2>Live Queue &amp; Bookings</h2>
+              <p>Tap <strong>Seat Now</strong>, <strong>Done &amp; Pay ₹</strong>, or <strong>Shift</strong></p>
+            </div>
+          </div>
+          <div id="queueListBody" class="queue-scroll"></div>
+        </aside>
+
+        <!-- Right Panel: Interactive Chair Timeline Grid -->
+        <div class="card grid-panel">
+          <div class="panel-hdr flex-row">
+            <div>
+              <h2>Chair &amp; Time Slot Board</h2>
+              <p>Click any empty slot to book · Drag cards across chairs/times to shift</p>
+            </div>
+            <div class="legend-pills">
+              <span class="lg-pill walkin">Walk-In</span>
+              <span class="lg-pill phone">Phone Call</span>
+              <span class="lg-pill seated">In Chair</span>
+              <span class="lg-pill done">Paid</span>
+            </div>
+          </div>
+          <div id="timeSlotGrid" class="time-grid-scroll"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- =========================================================
+         TAB 2: CUSTOMER DIARY & RECEPTION CASHBOOK
+         ========================================================= -->
+    <section id="view-diary" class="tab-view">
+      <div class="diary-layout">
+
+        <!-- Daily Cashbook Window -->
+        <div class="card diary-card">
+          <div class="card-hdr-row">
+            <div>
+              <h2 id="cbDateLabel">Daily Collection</h2>
+              <p>Payments recorded at reception after each service</p>
+            </div>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="SalonApp.exportDailyCSV()">
+              Export Daily CSV
+            </button>
+          </div>
+
+          <div class="cash-kpis">
+            <div class="cash-box total">
+              <span>Total Received</span>
+              <strong id="cbTotal" class="mono">&#8377;0</strong>
+            </div>
+            <div class="cash-box">
+              <span>UPI</span>
+              <strong id="cbUpi" class="mono">&#8377;0</strong>
+            </div>
+            <div class="cash-box">
+              <span>Cash</span>
+              <strong id="cbCash" class="mono">&#8377;0</strong>
+            </div>
+            <div class="cash-box">
+              <span>Card</span>
+              <strong id="cbCard" class="mono">&#8377;0</strong>
+            </div>
+          </div>
+
+          <div class="table-scroll">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Customer</th>
+                  <th>Service</th>
+                  <th>Chair</th>
+                  <th>Mode</th>
+                  <th class="right">Paid (&#8377;)</th>
+                </tr>
+              </thead>
+              <tbody id="cashbookTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Customer Diary Window -->
+        <div class="card diary-card">
+          <div class="card-hdr-row">
+            <div>
+              <h2>Customer Diary &amp; Visit History</h2>
+              <p>Search any mobile number or name to inspect past visits &amp; spend</p>
+            </div>
+            <input type="text" id="diarySearchInput" class="search-inp" placeholder="Search mobile number or customer name...">
+          </div>
+
+          <div class="table-scroll">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Customer Name</th>
+                  <th>Mobile Number</th>
+                  <th>Visits</th>
+                  <th>Last Service &amp; Date</th>
+                  <th class="right">Total Spend (&#8377;)</th>
+                  <th class="right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="diaryTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================
+       MODAL 1: NEW / EDIT / SHIFT BOOKING
+       ========================================================= -->
+  <div id="bookingModal" class="modal-overlay hidden">
+    <div class="modal-dialog modal-form">
+      <div class="modal-header">
+        <div>
+          <h2 id="bkModalTitle">New Booking / Walk-In</h2>
+          <p class="subtitle">Updates Owner &amp; Shop Reception screens simultaneously</p>
+        </div>
+        <button type="button" class="btn btn-xs btn-secondary" onclick="SalonApp.closeModal('bookingModal')">Close</button>
+      </div>
+
+      <form class="modal-form-body" onsubmit="SalonApp.saveBookingModal(event)">
+        <input type="hidden" id="bkId">
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label for="bkSource">Booking Type</label>
+            <select id="bkSource">
+              <option value="phone">Phone Call (Owner / Remote)</option>
+              <option value="walkin">Walk-In (Front Desk)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="bkPhone">Mobile Number</label>
+            <input type="tel" id="bkPhone" class="mono" placeholder="10-digit mobile (auto-fills name)">
+          </div>
+        </div>
+
+        <div id="bkReturningBadge" class="returning-pill hidden"></div>
+
+        <div class="form-group">
+          <label for="bkName">Customer Name *</label>
+          <input type="text" id="bkName" required placeholder="e.g. Rahul Verma">
+        </div>
+
+        <div class="form-grid-3">
+          <div class="form-group" style="grid-column: span 2;">
+            <label for="bkService">Service</label>
+            <select id="bkService"></select>
+          </div>
+          <div class="form-group">
+            <label for="bkDuration">Duration (min)</label>
+            <input type="number" id="bkDuration" min="15" step="15" value="30" required>
+          </div>
+        </div>
+
+        <div class="form-grid-3">
+          <div class="form-group">
+            <label for="bkDate">Date</label>
+            <input type="date" id="bkDate" required>
+          </div>
+          <div class="form-group">
+            <label for="bkTime">Start Time</label>
+            <input type="time" id="bkTime" step="900" required>
+          </div>
+          <div class="form-group">
+            <label for="bkChair">Chair / Stylist</label>
+            <select id="bkChair"></select>
+          </div>
+        </div>
+
+        <div id="bkShiftGroup" class="shift-quick-row hidden">
+          <span>Quick Shift Slot:</span>
+          <button type="button" class="btn btn-xs btn-secondary" onclick="SalonApp.nudgeModalTime(-30)">-30m</button>
+          <button type="button" class="btn btn-xs btn-secondary" onclick="SalonApp.nudgeModalTime(-15)">-15m</button>
+          <button type="button" class="btn btn-xs btn-secondary" onclick="SalonApp.nudgeModalTime(15)">+15m</button>
+          <button type="button" class="btn btn-xs btn-secondary" onclick="SalonApp.nudgeModalTime(30)">+30m</button>
+        </div>
+
+        <div id="bkConflictAlert" class="conflict-alert hidden"></div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label for="bkPrice">Estimated Price (&#8377;)</label>
+            <input type="number" id="bkPrice" class="mono" min="0" value="250">
+          </div>
+          <div class="form-group">
+            <label for="bkNotes">Notes (Optional)</label>
+            <input type="text" id="bkNotes" placeholder="Style preference...">
+          </div>
+        </div>
+
+        <div class="modal-form-footer">
+          <a id="bkWhatsAppBtn" class="btn btn-sm btn-wa hidden" target="_blank" rel="noopener">Send WhatsApp Update</a>
+          <div style="margin-left:auto; display:flex; gap:8px;">
+            <button type="button" class="btn btn-sm btn-secondary" onclick="SalonApp.closeModal('bookingModal')">Cancel</button>
+            <button type="submit" class="btn btn-sm btn-primary">Save Booking</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       MODAL 2: RECEPTION PAYMENT ENTRY (AFTER SERVICE)
+       ========================================================= -->
+  <div id="paymentModal" class="modal-overlay hidden">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-header">
+        <div>
+          <h2>Record Payment &amp; Complete</h2>
+          <p id="payPartyMeta" class="subtitle"></p>
+        </div>
+        <button type="button" class="btn btn-xs btn-secondary" onclick="SalonApp.closeModal('paymentModal')">Close</button>
+      </div>
+      <form class="modal-form-body" onsubmit="SalonApp.savePaymentModal(event)">
+        <input type="hidden" id="payBookingId">
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label for="payAmount">Amount Paid (&#8377;) *</label>
+            <input type="number" id="payAmount" class="mono" min="0" step="1" required>
+          </div>
+          <div class="form-group">
+            <label for="payMode">Payment Mode</label>
+            <select id="payMode">
+              <option value="UPI">UPI / GPay / PhonePe</option>
+              <option value="Cash">Cash</option>
+              <option value="Card">Card</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="payNotes">Remarks (Optional)</label>
+          <input type="text" id="payNotes" placeholder="Extra service, discount, or diary note...">
+        </div>
+        <div class="modal-form-footer">
+          <button type="button" class="btn btn-sm btn-secondary" onclick="SalonApp.closeModal('paymentModal')">Cancel</button>
+          <button type="submit" class="btn btn-sm btn-primary">Save Payment &amp; Mark Done</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       MODAL 3: CUSTOMER HISTORY DIARY VIEW
+       ========================================================= -->
+  <div id="customerModal" class="modal-overlay hidden">
+    <div class="modal-dialog modal-form">
+      <div class="modal-header">
+        <div>
+          <h2 id="custModalTitle">Customer History</h2>
+          <p id="custModalSub" class="subtitle"></p>
+        </div>
+        <button type="button" class="btn btn-xs btn-secondary" onclick="SalonApp.closeModal('customerModal')">Close</button>
+      </div>
+      <div class="modal-form-body">
+        <div id="custHistoryRows" class="history-list"></div>
+        <div class="modal-form-footer">
+          <button type="button" class="btn btn-sm btn-secondary" onclick="SalonApp.closeModal('customerModal')">Close</button>
+          <button type="button" id="custQuickBookBtn" class="btn btn-sm btn-primary">+ Book Again</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       MODAL 4: SUPABASE REALTIME SYNC SETUP
+       ========================================================= -->
+  <div id="syncModal" class="modal-overlay hidden">
+    <div class="modal-dialog modal-form">
+      <div class="modal-header">
+        <div>
+          <h2>Multi-Device Live Sync (Supabase)</h2>
+          <p class="subtitle">Connect Owner phone &amp; Shop Reception screen in real time</p>
+        </div>
+        <button type="button" class="btn btn-xs btn-secondary" onclick="SalonApp.closeModal('syncModal')">Close</button>
+      </div>
+      <form class="modal-form-body" onsubmit="SalonApp.saveSupabaseConnection(event)">
+        <div id="syncModalAlert" class="sync-alert info hidden"></div>
+
+        <div class="form-group">
+          <label for="syncShopCode">Shop Code (Same code on Owner &amp; Shop devices)</label>
+          <input type="text" id="syncShopCode" class="mono" required placeholder="STUDIO-LUXE">
+        </div>
+
+        <div class="form-group">
+          <label for="syncSbUrl">Supabase Project URL</label>
+          <input type="url" id="syncSbUrl" class="mono" placeholder="https://your-project.supabase.co">
+        </div>
+
+        <div class="form-group">
+          <label for="syncSbKey">Supabase Anon Public Key</label>
+          <input type="text" id="syncSbKey" class="mono" placeholder="eyJhbGciOiJIUzI1NiIs...">
+        </div>
+
+        <div class="sync-tools-row">
+          <button type="button" class="btn btn-xs btn-soft" onclick="SalonApp.copySqlScript()">
+            1. Copy SQL Table Script
+          </button>
+          <span class="tiny-hint">Run once inside Supabase &rarr; SQL Editor</span>
+        </div>
+
+        <div class="form-group">
+          <label for="shareStaffUrl">Shareable Reception Join Link</label>
+          <div class="copy-row">
+            <input type="text" id="shareStaffUrl" class="mono" readonly>
+            <button type="button" class="btn btn-xs btn-secondary" onclick="SalonApp.copyStaffLink()">Copy</button>
+          </div>
+        </div>
+
+        <div class="modal-form-footer">
+          <button type="button" class="btn btn-xs btn-danger-ghost" onclick="SyncStore.resetDemoData(); SalonApp.closeModal('syncModal');">Reset Demo Data</button>
+          <div style="margin-left:auto; display:flex; gap:8px;">
+            <button type="button" class="btn btn-sm btn-secondary" onclick="SalonApp.closeModal('syncModal')">Close</button>
+            <button type="submit" class="btn btn-sm btn-primary">Save &amp; Connect</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       MODAL 5: SALON CHAIRS & SERVICE MENU SETTINGS
+       ========================================================= -->
+  <div id="settingsModal" class="modal-overlay hidden">
+    <div class="modal-dialog modal-form">
+      <div class="modal-header">
+        <div>
+          <h2>Salon Chairs &amp; Service Menu</h2>
+          <p class="subtitle">Synced across both Owner &amp; Reception views</p>
+        </div>
+        <button type="button" class="btn btn-xs btn-secondary" onclick="SalonApp.closeModal('settingsModal')">Close</button>
+      </div>
+      <form class="modal-form-body" onsubmit="SalonApp.saveSalonSettings(event)">
+        <div class="form-group">
+          <label for="cfgSalonName">Salon Name</label>
+          <input type="text" id="cfgSalonName" required>
+        </div>
+        <div class="form-group">
+          <label for="cfgChairsText">Chairs / Stylists (one per line)</label>
+          <textarea id="cfgChairsText" rows="3" class="mono"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="cfgServicesText">Services (Format: Service Name | Minutes | Price ₹)</label>
+          <textarea id="cfgServicesText" rows="6" class="mono"></textarea>
+        </div>
+        <div class="modal-form-footer">
+          <button type="button" class="btn btn-sm btn-secondary" onclick="SalonApp.closeModal('settingsModal')">Cancel</button>
+          <button type="submit" class="btn btn-sm btn-primary">Save Menu</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="studioToast" class="studio-toast hidden" role="status"></div>
+
+  <!-- Self-Hosted Supabase SDK & App Modules -->
+  <script src="/tools/salon-queue/vendor/supabase.min.js"></script>
+  <script src="/tools/salon-queue/js/scheduler.js"></script>
+  <script src="/tools/salon-queue/js/sync-store.js"></script>
+  <script src="/tools/salon-queue/js/app.js"></script>
+
+</body>
+</html>
