@@ -392,7 +392,9 @@ body {
 }
 
 .kpi-card {
-  background: var(--surface);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--line-2);
   border-radius: var(--radius-md);
   padding: 18px 20px;
@@ -454,7 +456,9 @@ body {
 
 /* --- Content Cards & Panels --- */
 .card {
-  background: var(--surface);
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--line-2);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
@@ -468,7 +472,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--surface);
+  background: rgba(255, 255, 255, 0.72);
 }
 
 .card-title {

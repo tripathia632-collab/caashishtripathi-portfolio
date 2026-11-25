@@ -1,0 +1,53 @@
+/* Shared interactive aurora, dot-grid, and particle background matching caashishtripathi.in */
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bg-aurora {
+  position: absolute;
+  left: -15%;
+  right: -15%;
+  top: -25%;
+  height: 85vh;
+  background:
+    radial-gradient(38% 50% at 18% 30%, rgba(99, 102, 241, 0.14), transparent 70%),
+    radial-gradient(34% 46% at 82% 18%, rgba(20, 184, 166, 0.15), transparent 70%),
+    radial-gradient(30% 40% at 55% 60%, rgba(14, 165, 233, 0.08), transparent 70%);
+  filter: blur(30px);
+  animation: bg-drift 20s ease-in-out infinite alternate;
+}
+
+@keyframes bg-drift {
+  to {
+    transform: translate3d(-3%, 6%, 0) scale(1.08);
+  }
+}
+
+.bg-dots {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(15, 23, 42, 0.12) 1px, transparent 1.2px);
+  background-size: 26px 26px;
+  -webkit-mask-image: radial-gradient(ellipse 75% 55% at 50% 0%, #000 25%, transparent 75%);
+  mask-image: radial-gradient(ellipse 75% 55% at 50% 0%, #000 25%, transparent 75%);
+}
+
+#field {
+  position: absolute;
+  inset: 0;
+}
+
+body > *:not(.bg):not(.modal-backdrop):not(.modal) {
+  position: relative;
+  z-index: 1;
+}
+
+@media print {
+  .bg {
+    display: none !important;
+  }
+}
