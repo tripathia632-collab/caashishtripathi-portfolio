@@ -2,7 +2,7 @@
 .bg {
   position: fixed;
   inset: 0;
-  z-index: 0;
+  z-index: -1;
   pointer-events: none;
   overflow: hidden;
 }
@@ -39,11 +39,6 @@
 #field {
   position: absolute;
   inset: 0;
-}
-
-body > *:not(.bg):not(.modal-backdrop):not(.modal) {
-  position: relative;
-  z-index: 1;
 }
 
 @media print {
