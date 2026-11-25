@@ -1,7 +1,12 @@
 {
   "version": 2,
   "cleanUrls": true,
-  "trailingSlash": true,
+  "redirects": [
+    { "source": "/tools/fixed-asset-register", "destination": "/tools/fixed-asset-register/", "permanent": true },
+    { "source": "/tools/gst-reco", "destination": "/tools/gst-reco/", "permanent": true },
+    { "source": "/tools/confirmation-generator", "destination": "/tools/confirmation-generator/", "permanent": true },
+    { "source": "/tools/fpa-dashboard", "destination": "/tools/fpa-dashboard/", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/(.*)",

@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "GSTWise Portal Connector",
+  "version": "1.0.0",
+  "description": "Assisted navigation, credential prefill, and return sync bridge between GST Management Software (caashishtripathi.in) and the official GST Portal (services.gst.gov.in). Never bypasses CAPTCHA, OTP, or DSC.",
+  "permissions": [
+    "tabs",
+    "storage",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://services.gst.gov.in/*",
+    "https://www.caashishtripathi.in/*",
+    "https://caashishtripathi.in/*",
+    "http://localhost:*/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.caashishtripathi.in/*",
+        "https://caashishtripathi.in/*",
+        "http://localhost:*/*"
+      ],
+      "js": ["content-app.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://services.gst.gov.in/*"
+      ],
+      "js": ["content-gst.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
