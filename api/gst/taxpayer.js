@@ -32,6 +32,7 @@ module.exports = async function handler(req, res) {
   }
 
   let returnsData = null;
+  let returnsError = null;
   let filingPref = null;
   if (includeReturns) {
     const [retRes, prefRes] = await Promise.all([
@@ -39,6 +40,7 @@ module.exports = async function handler(req, res) {
       callGstinApi(`/v1/gstin/${encodeURIComponent(effectiveGstin)}/filing-preference?fy=${encodeURIComponent(fy)}`)
     ]);
     if (retRes.ok) returnsData = retRes.data;
+    else returnsError = retRes.error;
     if (prefRes.ok) filingPref = prefRes.data;
   }
 
@@ -50,6 +52,7 @@ module.exports = async function handler(req, res) {
     isFreeSandboxGstin: effectiveGstin === '00AAAAA0000A1ZT',
     profile: profileRes.data,
     returns: returnsData,
+    returnsError,
     filingPreference: filingPref
   });
 };
