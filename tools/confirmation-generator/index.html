@@ -3,167 +3,511 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bulk Audit Confirmation Letter Generator (ICAI SA 505) | CA Ashish Tripathi</title>
-  <meta name="description" content="Generate audit-ready positive and negative balance confirmation letters for debtors and creditors as per ICAI SA 505. Built by CA Ashish Tripathi.">
-  <base href="/tools/confirmation-generator/">
+  <title>Balance Confirmation Studio — CA Ashish Tripathi</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3/dist/tabler-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bg-network.css">
   <link rel="stylesheet" href="/tools/confirmation-generator/styles.css">
   <script src="/js/bg-network.js" defer></script>
 </head>
 <body>
-  <!-- Header Bar -->
+
+  <!-- Sleek Top Workspace Header -->
   <header class="app-header">
     <div class="header-container">
       <div class="brand-area">
-        <a href="/" class="brand-badge" style="display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--ink);" title="Return to caashishtripathi.in">
-          <span class="logo-mark">AT</span>
-          <span style="display:flex; flex-direction:column;">
-            <span style="font-size:14px; font-weight:600; line-height:1.2;">Ashish Tripathi</span>
-            <span style="font-size:11px; color:var(--muted); font-family:var(--mono);">SA 505 Audit Confirmations</span>
-          </span>
-        </a>
+        <a href="/" class="btn btn-back" title="Back to CA Ashish Tripathi Portfolio">&larr; All tools</a>
+        <div class="brand-divider"></div>
+        <div class="logo-mark">BC</div>
+        <div class="brand-title-wrap">
+          <h1>Balance Confirmation Studio</h1>
+          <p class="subtitle">Excel-to-PDF &amp; Word Generator</p>
+        </div>
       </div>
+
+      <!-- Segmented Step Navigation -->
+      <nav class="workspace-tabs" aria-label="Tool workspace views">
+        <button type="button" class="ws-tab active" data-tab="draft" onclick="ConfirmationStudio.switchTab('draft')">
+          <span class="tab-idx">1</span>
+          <span>Draft &amp; Letterhead</span>
+        </button>
+        <button type="button" class="ws-tab" data-tab="upload" onclick="ConfirmationStudio.switchTab('upload')">
+          <span class="tab-idx">2</span>
+          <span>Template &amp; Upload</span>
+        </button>
+        <button type="button" class="ws-tab" data-tab="output" onclick="ConfirmationStudio.switchTab('output')">
+          <span class="tab-idx">3</span>
+          <span>Generated Output</span>
+          <span id="navOutputBadge" class="tab-count">24</span>
+        </button>
+      </nav>
+
       <div class="header-actions">
-        <a href="/" class="btn btn-sm btn-soft"><i class="ti ti-arrow-left"></i> All tools</a>
-        <button class="btn btn-sm btn-secondary" onclick="ConfirmationApp.loadSampleData()">⚡ 1-Click Sample Parties</button>
-        <button class="btn btn-sm btn-primary" onclick="ConfirmationApp.openBulkPrintModal()">📄 Generate &amp; Print Letters</button>
+        <span class="privacy-pill" title="All Excel parsing, PDF/Word rendering, and ZIP packaging happen locally in your browser. Zero data is sent to any server.">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Data Never Leaves Your Computer
+        </span>
       </div>
     </div>
   </header>
 
-  <main class="main-container">
-    <!-- Notice Banner -->
-    <div class="notice-card">
-      <div class="notice-icon">🛡️</div>
-      <div class="notice-content">
-        <h3>Statutory Compliance: ICAI SA 505 External Confirmations</h3>
-        <p>This deterministic audit engine automates the generation of balance confirmations for Trade Receivables, Trade Payables, Loans, and Bank Balances. Letters include formal auditor representation, exact rupee amounts in words, client authorization, and a tear-off verification return slip.</p>
+  <main class="workspace-shell">
+
+    <!-- =========================================================
+         VIEW 1: DRAFT TEMPLATE & LETTERHEAD STUDIO (Default View)
+         ========================================================= -->
+    <section id="view-draft" class="tab-view active">
+      <div class="draft-workbench">
+
+        <!-- Left Sidebar Window: Letterhead & Template Controls -->
+        <aside class="studio-sidebar card">
+          <div class="sidebar-head">
+            <div>
+              <h2>Letterhead &amp; Format</h2>
+              <p>Changes reflect live on the draft sheet</p>
+            </div>
+            <button type="button" class="btn btn-xs btn-ghost" onclick="ConfirmationStudio.resetSettings()" title="Reset letterhead to defaults">Reset</button>
+          </div>
+
+          <div class="sidebar-scroll">
+            <!-- Group 1: Mode & Nature -->
+            <div class="ctrl-group">
+              <div class="ctrl-group-title">Template &amp; Balance Nature</div>
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label for="templateMode">Letter Style</label>
+                  <select id="templateMode">
+                    <option value="corporate">Corporate AR / AP</option>
+                    <option value="sa505">Audit (ICAI SA 505)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="defaultBalanceType">Balance Nature</label>
+                  <select id="defaultBalanceType">
+                    <option value="Receivable">Receivable (Dr)</option>
+                    <option value="Payable">Payable (Cr)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Group 2: Sender Company Details -->
+            <div class="ctrl-group">
+              <div class="ctrl-group-title">Sender Organization</div>
+              <div class="form-group">
+                <label for="companyName">Company / Firm Name</label>
+                <input type="text" id="companyName" placeholder="Asterline Industrial Components Pvt. Ltd.">
+              </div>
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label for="companyDept">Department</label>
+                  <input type="text" id="companyDept" placeholder="Finance & Accounts">
+                </div>
+                <div class="form-group">
+                  <label for="companyEmail">Finance Email</label>
+                  <input type="email" id="companyEmail" placeholder="finance@company.com">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="companyAddress">Registered Address</label>
+                <input type="text" id="companyAddress" placeholder="Full office address">
+              </div>
+              <div class="form-group">
+                <label for="companyTaxId">GSTIN / CIN (Optional)</label>
+                <input type="text" id="companyTaxId" class="code-font" placeholder="GSTIN / CIN">
+              </div>
+
+              <div class="logo-row">
+                <div class="logo-meta">
+                  <span class="logo-title">Company Logo</span>
+                  <span id="logoStatusBadge" class="logo-sub">Optional PNG / JPG</span>
+                </div>
+                <div class="logo-actions">
+                  <label class="btn btn-xs btn-soft file-label">
+                    Upload
+                    <input type="file" id="logoUploadInput" accept="image/png,image/jpeg" hidden>
+                  </label>
+                  <button type="button" id="clearLogoBtn" class="btn btn-xs btn-danger-ghost hidden">Remove</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Conditional Auditor Group (SA 505) -->
+            <div id="auditorFieldsWrap" class="ctrl-group hidden">
+              <div class="ctrl-group-title">Statutory Auditor (SA 505)</div>
+              <div class="form-group">
+                <label for="auditorName">Auditor Firm Name</label>
+                <input type="text" id="auditorName" placeholder="Tripathi & Associates, Chartered Accountants">
+              </div>
+              <div class="form-group">
+                <label for="auditorEmail">Auditor Direct Reply Email</label>
+                <input type="email" id="auditorEmail" placeholder="audit@caashishtripathi.in">
+              </div>
+            </div>
+
+            <!-- Group 3: Letter Metadata & Signatory -->
+            <div class="ctrl-group">
+              <div class="ctrl-group-title">Reference &amp; Signatory</div>
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label for="refPrefix">Reference Prefix</label>
+                  <input type="text" id="refPrefix" class="code-font" placeholder="AR/CONF/2026-27">
+                </div>
+                <div class="form-group">
+                  <label for="letterDate">Letter Issue Date</label>
+                  <input type="date" id="letterDate">
+                </div>
+              </div>
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label for="signatoryName">Signatory / Team</label>
+                  <input type="text" id="signatoryName" placeholder="Accounts Receivable Team">
+                </div>
+                <div class="form-group">
+                  <label for="responseDays">Reply Window</label>
+                  <input type="text" id="responseDays" placeholder="7 working days">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="signatoryTitle">Designation / Footer Title</label>
+                <input type="text" id="signatoryTitle" placeholder="Finance & Accounts Department">
+              </div>
+
+              <label class="check-row">
+                <input type="checkbox" id="includeTearOff" checked>
+                <span>Include bottom <strong>Confirmation Reply Slip</strong></span>
+              </label>
+
+              <label class="check-row">
+                <input type="checkbox" id="rememberSenderToggle">
+                <span>Save only my letterhead locally in browser</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="sidebar-foot">
+            <button type="button" class="btn btn-primary btn-full" onclick="ConfirmationStudio.switchTab('upload')">
+              Next: Upload Excel Data &rarr;
+            </button>
+          </div>
+        </aside>
+
+        <!-- Right Window: True A4 Draft Preview Stage -->
+        <div class="draft-stage-window card">
+          <div class="stage-toolbar">
+            <div class="stage-title-group">
+              <span class="stage-dot"></span>
+              <span class="stage-title">Draft Confirmation Letter Preview</span>
+              <div class="seg-control">
+                <button type="button" id="btnPreviewSample" class="seg-btn active" onclick="ConfirmationStudio.setPreviewMode('sample')">
+                  Sample Data
+                </button>
+                <button type="button" id="btnPreviewPlaceholder" class="seg-btn" onclick="ConfirmationStudio.setPreviewMode('placeholder')">
+                  &#123;&#123;Placeholders&#125;&#125;
+                </button>
+              </div>
+            </div>
+            <div class="stage-actions">
+              <button type="button" class="btn btn-xs btn-secondary" onclick="ConfirmationStudio.downloadDraft('pdf')">Download Draft PDF</button>
+              <button type="button" class="btn btn-xs btn-secondary" onclick="ConfirmationStudio.downloadDraft('docx')">Download Draft Word</button>
+            </div>
+          </div>
+
+          <div class="paper-desk">
+            <div id="draftPreviewSheet" class="a4-paper-frame"></div>
+          </div>
+        </div>
+
       </div>
-    </div>
+    </section>
 
-    <!-- Configuration & Parameters Grid -->
-    <div class="config-grid">
-      <!-- Audit Engagement Settings -->
-      <div class="card">
-        <div class="card-header">
-          <span class="badge">Step 1</span>
-          <h2>Audit &amp; Company Parameters</h2>
+    <!-- =========================================================
+         VIEW 2: TEMPLATE DOWNLOAD & EXCEL UPLOAD
+         ========================================================= -->
+    <section id="view-upload" class="tab-view">
+      <div class="upload-workbench">
+
+        <div class="view-header-bar">
+          <div>
+            <h2>Step 2 &mdash; Download Excel Template &amp; Upload Party Balances</h2>
+            <p>Start with our standardized 5-column workbook or upload your own Excel/CSV ledger directly.</p>
+          </div>
+          <button type="button" class="btn btn-soft btn-sm" onclick="ConfirmationStudio.switchTab('draft')">&larr; Back to Draft</button>
         </div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Client / Auditee Company</label>
-            <input type="text" id="companyName" value="Apex Bharat Technologies Ltd." placeholder="e.g. Acme Corp Ltd.">
+
+        <!-- Privacy Assurance Window -->
+        <div class="privacy-callout">
+          <div class="privacy-shield">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
           </div>
-          <div class="form-group">
-            <label>Auditing Firm Name</label>
-            <input type="text" id="auditorName" value="Tripathi &amp; Associates, Chartered Accountants" placeholder="e.g. CA Firm">
-          </div>
-          <div class="form-group">
-            <label>Auditor Contact Email for Response</label>
-            <input type="email" id="auditorEmail" value="audit.confirmations@caashishtripathi.in">
-          </div>
-          <div class="form-group">
-            <label>Confirmation As-On Date</label>
-            <input type="date" id="asOnDate" value="2026-03-31">
-          </div>
-          <div class="form-group">
-            <label>Confirmation Type</label>
-            <select id="confirmationType">
-              <option value="positive">Positive Confirmation (Strict response required whether agree or disagree)</option>
-              <option value="negative">Negative Confirmation (Response requested only if in disagreement)</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Response Due Date</label>
-            <input type="date" id="dueDate" value="2026-04-20">
+          <div>
+            <strong>Zero Server Upload &mdash; Strict Client Data Privacy</strong>
+            <p>Your Excel file is read exclusively inside your browser&rsquo;s temporary memory. Client names, addresses, and outstanding balances <strong>never leave your computer</strong>, are never stored on any server, and vanish completely when you close or refresh this tab.</p>
           </div>
         </div>
+
+        <div class="upload-two-col">
+          <!-- Left Window: Excel Template -->
+          <div class="card upload-card">
+            <div class="card-kicker">OPTION A &middot; PREPARE DATA</div>
+            <h3>Download Standardized Excel Template</h3>
+            <p class="card-desc">
+              Clean <code>.xlsx</code> workbook with pre-formatted columns, date instructions, and 5 example rows so you can paste your receivables or payables in seconds.
+            </p>
+
+            <div class="schema-table-preview">
+              <div class="schema-row schema-head">
+                <span>Column Name</span>
+                <span>Requirement</span>
+              </div>
+              <div class="schema-row"><code>Client ID</code><span class="req-badge">Required</span></div>
+              <div class="schema-row"><code>Client Name</code><span class="req-badge">Required</span></div>
+              <div class="schema-row"><code>Address</code><span class="req-badge">Required</span></div>
+              <div class="schema-row"><code>Outstanding Amount</code><span class="req-badge">Required</span></div>
+              <div class="schema-row"><code>As On Date</code><span class="req-badge">Required</span></div>
+              <div class="schema-row"><code>Balance Type, Email, GSTIN</code><span class="opt-badge">Optional</span></div>
+            </div>
+
+            <div class="card-footer-btns">
+              <button type="button" class="btn btn-primary" onclick="ExcelIO.downloadExcelTemplate()">
+                Download Excel Template (.xlsx)
+              </button>
+              <button type="button" class="btn btn-soft" onclick="ConfirmationStudio.loadSampleData(true, true)">
+                Load 24 Sample Clients
+              </button>
+            </div>
+          </div>
+
+          <!-- Right Window: Dropzone Upload -->
+          <div class="card upload-card">
+            <div class="card-kicker">OPTION B &middot; UPLOAD SPREADSHEET</div>
+            <h3>Upload Populated Excel or CSV</h3>
+            <p class="card-desc">
+              Supports <code>.xlsx</code>, <code>.xlsm</code>, <code>.xls</code>, and <code>.csv</code>. Automatically parses Indian numbers, parentheses negatives, and Excel date serials.
+            </p>
+
+            <div id="excelDropzone" class="dropzone-area" role="button" tabindex="0" aria-label="Upload Excel or CSV file">
+              <input type="file" id="excelFileInput" accept=".xlsx,.xls,.xlsm,.csv" hidden>
+              <div class="dz-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              </div>
+              <strong>Drop your Excel file here or click to browse</strong>
+              <span>100% browser memory &middot; No cloud transmission</span>
+            </div>
+
+            <div id="uploadStatusBanner" class="upload-banner hidden"></div>
+
+            <div class="card-footer-btns right-align">
+              <button type="button" class="btn btn-secondary" onclick="ConfirmationStudio.switchTab('output')">
+                <span>Go to Generated Output (<span id="uploadNextCount">24</span>) &rarr;</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
       </div>
+    </section>
 
-      <!-- Letter Template Customization -->
-      <div class="card">
-        <div class="card-header">
-          <span class="badge">Step 2</span>
-          <h2>Custom Letterhead Template</h2>
-        </div>
-        <div class="form-group">
-          <label>Letter Body (Supports variables: <code class="mono-tag">{PartyName}</code>, <code class="mono-tag">{Balance}</code>, <code class="mono-tag">{DrCr}</code>, <code class="mono-tag">{AsOnDate}</code>, <code class="mono-tag">{CompanyName}</code>, <code class="mono-tag">{AuditorName}</code>, <code class="mono-tag">{DueDate}</code>)</label>
-          <textarea id="templateBody" rows="7" class="code-font">In connection with the statutory audit of our financial statements for the period ended {AsOnDate}, our statutory auditors, {AuditorName}, require direct written confirmation of the balance outstanding in your account as per our books of accounts.
+    <!-- =========================================================
+         VIEW 3: GENERATED OUTPUT & DOWNLOADS
+         ========================================================= -->
+    <section id="view-output" class="tab-view">
+      <div class="output-workbench">
 
-According to our records, the balance outstanding as on {AsOnDate} was ₹{Balance} ({DrCr}).
+        <!-- Output Batch Header & Primary Downloads -->
+        <div class="card output-hero-bar">
+          <div>
+            <h2>Generated Balance Confirmation Letters</h2>
+            <p id="datasetSourceLabel" class="card-desc">24 Sample Clients loaded locally &middot; Ready for PDF, Word (.docx), ZIP &amp; Excel export</p>
+          </div>
+          <div class="batch-actions">
+            <button type="button" class="btn btn-primary" onclick="ConfirmationStudio.downloadAllZip('pdf')">
+              Download All PDFs (.zip)
+            </button>
+            <button type="button" class="btn btn-soft" onclick="ConfirmationStudio.downloadAllZip('docx')">
+              Download All Word (.docx) (.zip)
+            </button>
+            <button type="button" class="btn btn-secondary" onclick="ConfirmationStudio.downloadSummaryExcel()">
+              Summary Excel (.xlsx)
+            </button>
+            <button type="button" class="btn btn-secondary" onclick="ConfirmationStudio.openPrintAllModal()">
+              Print Batch
+            </button>
+          </div>
+        </div>
 
-Kindly examine your accounts and confirm directly to our statutory auditors via email ({AuditorEmail}) whether the stated balance agrees with your books of accounts by {DueDate}. In case of any discrepancy or unadjusted credit note/debit note, please furnish the itemized statement of reconciliation.</textarea>
+        <!-- Batch Progress Window -->
+        <div id="batchProgressWrap" class="progress-card hidden">
+          <div class="progress-meta">
+            <strong id="batchProgressText">Generating files...</strong>
+            <span id="batchProgressPct" class="mono">0%</span>
+          </div>
+          <div class="progress-track">
+            <div id="batchProgressBar" class="progress-fill" style="width: 0%;"></div>
+          </div>
         </div>
-        <div class="template-footer-actions">
-          <button class="btn btn-sm btn-outline" onclick="ConfirmationApp.resetTemplate()">Restore Default Template</button>
-          <span class="helper-text">Changes update live in generated letters.</span>
+
+        <!-- 4 KPI Tiles -->
+        <div class="kpi-row">
+          <div class="kpi-tile card">
+            <span class="kpi-k">Total Parties</span>
+            <strong id="kpiTotalRows" class="kpi-v">0</strong>
+          </div>
+          <div class="kpi-tile card">
+            <span class="kpi-k">Ready to Export</span>
+            <strong id="kpiReadyRows" class="kpi-v teal">0</strong>
+          </div>
+          <div class="kpi-tile card">
+            <span class="kpi-k">Needs Attention</span>
+            <strong id="kpiErrorRows" class="kpi-v danger">0</strong>
+          </div>
+          <div class="kpi-tile card">
+            <span class="kpi-k">Total Valid Balance</span>
+            <strong id="kpiTotalValue" class="kpi-v mono">&#8377;0.00</strong>
+          </div>
         </div>
+
+        <!-- Clean Read-Only Ledger Table Window -->
+        <div class="card table-window">
+          <div class="table-toolbar">
+            <div class="search-group">
+              <input type="text" id="queueSearchInput" class="search-input" placeholder="Search Client ID, Name, or Address...">
+              <select id="queueFilterSelect" class="filter-select">
+                <option value="all">All Parties</option>
+                <option value="ready">Ready Only</option>
+                <option value="error">Errors Only</option>
+              </select>
+            </div>
+            <div class="row-manage-btns">
+              <button type="button" class="btn btn-soft btn-sm" onclick="ConfirmationStudio.switchTab('upload')">Upload New File</button>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="ConfirmationStudio.openPartyModal(null)">+ Add Party</button>
+              <button type="button" class="btn btn-danger-outline btn-sm" onclick="ConfirmationStudio.clearParties()">Clear All</button>
+            </div>
+          </div>
+
+          <div class="table-scroll">
+            <table class="ledger-table">
+              <thead>
+                <tr>
+                  <th style="width: 115px;">Client ID</th>
+                  <th>Party Name &amp; Address</th>
+                  <th style="width: 120px;">As On Date</th>
+                  <th style="width: 110px;">Nature</th>
+                  <th style="width: 150px; text-align:right;">Balance (&#8377;)</th>
+                  <th style="width: 105px;">Status</th>
+                  <th style="width: 245px; text-align:right;">Actions &amp; Export</th>
+                </tr>
+              </thead>
+              <tbody id="queueTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
       </div>
-    </div>
+    </section>
 
-    <!-- Parties Ledger Table -->
-    <div class="card mt-6">
-      <div class="card-header flex-between">
-        <div>
-          <span class="badge">Step 3</span>
-          <h2>Parties Ledger Master (<span id="partyCount">0</span> Parties Loaded)</h2>
-        </div>
-        <div class="table-actions">
-          <button class="btn btn-sm btn-outline" onclick="ConfirmationApp.addNewRow()">+ Add Single Party</button>
-          <button class="btn btn-sm btn-secondary" onclick="ConfirmationApp.exportPartiesCSV()">📥 Export CSV</button>
-          <label class="btn btn-sm btn-secondary file-upload-btn">
-            📤 Import CSV
-            <input type="file" id="csvFileInput" accept=".csv" onchange="ConfirmationApp.handleCSVUpload(event)" style="display:none;">
-          </label>
-          <button class="btn btn-sm btn-danger-outline" onclick="ConfirmationApp.clearAllParties()">Clear All</button>
-        </div>
-      </div>
-
-      <div class="table-container">
-        <table class="data-table" id="partiesTable">
-          <thead>
-            <tr>
-              <th width="40">#</th>
-              <th>Party / Entity Name</th>
-              <th>Category</th>
-              <th>GSTIN</th>
-              <th>Ledger Balance (₹)</th>
-              <th>Dr / Cr</th>
-              <th>Contact Email</th>
-              <th width="80">Actions</th>
-            </tr>
-          </thead>
-          <tbody id="partiesTableBody">
-            <!-- Populated dynamically -->
-          </tbody>
-        </table>
-      </div>
-    </div>
   </main>
 
-  <!-- Modal for Bulk Printable Letters View -->
-  <div id="printModal" class="modal-overlay hidden">
-    <div class="modal-dialog">
+  <!-- Centered Letter Preview / Batch Print Modal -->
+  <div id="previewModal" class="modal-overlay hidden">
+    <div class="modal-dialog modal-wide">
       <div class="modal-header">
         <div>
-          <h2>Audit Confirmation Letters Preview</h2>
-          <p class="subtitle">Ready to print or save as PDF. Formatted strictly per SA 505 guidelines.</p>
+          <h2 id="modalTitle">Balance Confirmation Preview</h2>
+          <p id="modalSubtitle" class="subtitle"></p>
         </div>
         <div class="modal-actions">
-          <button class="btn btn-primary" onclick="window.print()">🖨️ Print All Letters (or Save PDF)</button>
-          <button class="btn btn-secondary" onclick="ConfirmationApp.closeModal()">Close</button>
+          <button type="button" id="modalDownloadPdfBtn" class="btn btn-primary btn-sm">Download PDF</button>
+          <button type="button" id="modalDownloadDocxBtn" class="btn btn-soft btn-sm">Download Word (.docx)</button>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="window.print()">Print</button>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="ConfirmationStudio.closeModal('previewModal')">Close</button>
         </div>
       </div>
-      <div class="modal-body printable-area" id="printLettersContainer">
-        <!-- Rendered letters go here -->
-      </div>
+      <div id="modalLettersContainer" class="modal-body printable-area"></div>
     </div>
   </div>
 
-  <script src="/tools/confirmation-generator/script.js"></script>
+  <!-- Centered Add / Edit Party Modal -->
+  <div id="partyModal" class="modal-overlay hidden">
+    <div class="modal-dialog modal-form">
+      <div class="modal-header">
+        <div>
+          <h2 id="partyModalTitle">Add Party</h2>
+          <p class="subtitle">Updates immediately in your local browser session</p>
+        </div>
+        <button type="button" class="btn btn-xs btn-secondary" onclick="ConfirmationStudio.closeModal('partyModal')">Close</button>
+      </div>
+      <form id="partyForm" class="modal-form-body" onsubmit="ConfirmationStudio.savePartyModal(event)">
+        <input type="hidden" id="editPartyUid">
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label for="pmClientId">Client ID *</label>
+            <input type="text" id="pmClientId" class="code-font" required placeholder="CUST-1025">
+          </div>
+          <div class="form-group">
+            <label for="pmAsOnDate">As On Date *</label>
+            <input type="date" id="pmAsOnDate" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="pmClientName">Client / Party Legal Name *</label>
+          <input type="text" id="pmClientName" required placeholder="Enterprise Pvt. Ltd.">
+        </div>
+        <div class="form-group">
+          <label for="pmAddress">Address *</label>
+          <input type="text" id="pmAddress" required placeholder="City, State - PIN">
+        </div>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label for="pmAmount">Outstanding Amount (&#8377;) *</label>
+            <input type="number" step="0.01" id="pmAmount" class="code-font" required placeholder="500000">
+          </div>
+          <div class="form-group">
+            <label for="pmBalanceType">Balance Nature</label>
+            <select id="pmBalanceType">
+              <option value="Receivable">Receivable (Dr)</option>
+              <option value="Payable">Payable (Cr)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label for="pmEmail">Email (Optional)</label>
+            <input type="email" id="pmEmail" placeholder="accounts@party.com">
+          </div>
+          <div class="form-group">
+            <label for="pmGstin">GSTIN (Optional)</label>
+            <input type="text" id="pmGstin" class="code-font" placeholder="27AAAAA0000A1Z5">
+          </div>
+        </div>
+        <div class="modal-form-footer">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="ConfirmationStudio.closeModal('partyModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm">Save Party</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="studioToast" class="studio-toast hidden" role="status"></div>
+
+  <!-- Local Libraries (SheetJS reused from portfolio vendor with CDN fallback) -->
+  <script src="/tools/fixed-asset-register/vendor/xlsx.full.min.js"></script>
+  <script>
+    if (typeof XLSX === "undefined") {
+      document.write('<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"><\/script>');
+    }
+  </script>
+  <script src="/tools/confirmation-generator/vendor/jszip.min.js"></script>
+  <script src="/tools/confirmation-generator/vendor/jspdf.umd.min.js"></script>
+
+  <!-- App Modules -->
+  <script src="/tools/confirmation-generator/js/letter-templates.js"></script>
+  <script src="/tools/confirmation-generator/js/excel-io.js"></script>
+  <script src="/tools/confirmation-generator/js/pdf-builder.js"></script>
+  <script src="/tools/confirmation-generator/js/docx-builder.js"></script>
+  <script src="/tools/confirmation-generator/js/app.js"></script>
+
 </body>
 </html>

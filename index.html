@@ -557,15 +557,15 @@ const TOOLS = [
     cat: 'audit',
     featured: true,
     isNew: true,
-    title: 'Balance confirmation letters',
-    problem: 'Turns a party ledger into ready-to-send SA 505 audit confirmation letters with reply slips.',
-    stack: ['JavaScript', 'SA 505', 'Print Engine'],
+    title: 'Balance confirmation generator',
+    problem: 'Preview live letters, upload Excel ledgers locally (zero server upload), and export PDF/Word ZIPs.',
+    stack: ['Excel / CSV', 'Vector PDF', 'Word (.docx)', 'ZIP Export'],
     url: 'tools/confirmation-generator/',
     image: '',
     how: [
-      { k: 'Input',  d: 'Party ledger with balances, reference dates and GSTINs.' },
-      { k: 'Logic',  d: 'ICAI SA 505 positive/negative confirmation template with rupee words conversion.' },
-      { k: 'Output', d: 'Print-ready formal letters with auditee header, auditor seal and tear-off reply slips.' }
+      { k: 'Input',  d: 'Downloadable 5-column Excel template or your existing party balance sheet (processed locally).' },
+      { k: 'Logic',  d: '100% browser-side validation, Indian ₹ formatting, amount in words & SA 505 / corporate copy.' },
+      { k: 'Output', d: 'Individual or ZIP bundles of executive PDFs, editable .docx letters, tear-off slips & Excel summary.' }
     ]
   },
   {
