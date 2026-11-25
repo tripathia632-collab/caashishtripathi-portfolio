@@ -488,7 +488,7 @@ dialog[open]{animation:dlg .3s cubic-bezier(.2,.8,.2,1)}
     <ol class="steps" id="how-steps"></ol>
     <div class="modal-foot">
       <button class="btn btn-sm" id="how-close">Close</button>
-      <a class="btn btn-sm btn-primary" id="how-open">Open tool <i class="ti ti-arrow-up-right"></i></a>
+      <a class="btn btn-sm btn-primary" id="how-open" target="_blank" rel="noopener">Open tool <i class="ti ti-arrow-up-right"></i></a>
     </div>
   </div>
 </dialog>
@@ -541,15 +541,15 @@ const TOOLS = [
     cat: 'tax',
     featured: true,
     isNew: true,
-    title: 'GSTR-2B vs purchase register',
-    problem: 'Matches books against GSTR-2B, identifies value & tax differences and Rule 88A offsets.',
-    stack: ['React', 'Vite', 'Tailwind', 'GSTN JSON'],
+    title: 'GST management software',
+    problem: 'Multi-GSTIN return preparation, GSTR-2B reconciliation, Rule 88A tax offset and ledger tracking.',
+    stack: ['React', 'Vite', 'GSTR-1/2B/3B', 'GSTN JSON'],
     url: 'tools/gst-reco/',
     image: '',
     how: [
-      { k: 'Input',  d: 'Purchase register Excel and official GSTR-2B JSON or Excel file.' },
-      { k: 'Logic',  d: 'Multi-criteria matching on GSTIN, invoice number and tax values with configurable tolerance.' },
-      { k: 'Output', d: 'Reconciliation report, IMS marking, Rule 88A tax optimization and GSTN offline JSON.' }
+      { k: 'Input',  d: 'Sales/purchase Excel registers, Tally exports and official GSTR-1/2B JSON files.' },
+      { k: 'Logic',  d: '2B vs books reconciliation, GSTR-1 table mapping, 3B Rule 88A tax set-off & 88C/88D checks.' },
+      { k: 'Output', d: 'Portal-ready GSTR-1 JSON, reconciliation reports, filing tracker and tax schedules.' }
     ]
   },
   {
@@ -633,7 +633,7 @@ const ROT_WORDS = ['reconciliations','depreciation','GST compliance','MIS report
    ============================================================ */
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const ext = u => /^https?:/.test(u) ? ' target="_blank" rel="noopener"' : '';
+const ext = u => (/^https?:/.test(u) || /^tools\//.test(u)) ? ' target="_blank" rel="noopener"' : '';
 const catOf = id => CATS.find(c => c.id === id) || { name: id, icon: 'ti-tool' };
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
