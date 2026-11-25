@@ -407,9 +407,16 @@ const ConfirmationStudio = {
   },
 
   removeParty(uid) {
-    this.parties = this.parties.filter((p) => p.uid !== uid);
+    const idx = this.parties.findIndex((p) => p.uid === uid);
+    if (idx === -1) return;
+    const [removed] = this.parties.splice(idx, 1);
     this.renderQueue();
     this.renderDraftPreview();
+    this.showToast(`Removed ${removed.clientId || "party"}`, "Undo", () => {
+      this.parties.splice(idx, 0, removed);
+      this.renderQueue();
+      this.renderDraftPreview();
+    });
   },
 
   clearParties() {
@@ -631,26 +638,48 @@ const ConfirmationStudio = {
     ExcelIO.downloadSummaryReport(this.parties, this.settings);
   },
 
+  previewList: [],
+  previewIndex: 0,
+
   previewSingle(uid) {
+    this.previewList = this.parties.filter((p) => p.valid).map((p) => p.uid);
+    this.previewIndex = Math.max(0, this.previewList.indexOf(uid));
+    this.renderPreviewModalLetter();
+    document.getElementById("previewModal").classList.remove("hidden");
+  },
+
+  stepPreview(delta) {
+    if (!this.previewList.length) return;
+    this.previewIndex = (this.previewIndex + delta + this.previewList.length) % this.previewList.length;
+    this.renderPreviewModalLetter();
+  },
+
+  renderPreviewModalLetter() {
+    const uid = this.previewList[this.previewIndex];
     const party = this.parties.find((p) => p.uid === uid && p.valid);
     if (!party) return;
-    const modal = document.getElementById("previewModal");
+
     const body = document.getElementById("modalLettersContainer");
     const title = document.getElementById("modalTitle");
     const sub = document.getElementById("modalSubtitle");
     const pdfBtn = document.getElementById("modalDownloadPdfBtn");
     const docxBtn = document.getElementById("modalDownloadDocxBtn");
+    const navGroup = document.getElementById("modalNavGroup");
+    const navCounter = document.getElementById("modalNavCounter");
 
     title.textContent = `${party.clientId} — ${party.clientName}`;
     sub.textContent = "Ready for PDF / Word export or A4 print (generated locally in browser)";
     body.innerHTML = `<div class="modal-sheet-wrap">${LetterTemplates.renderLetterHtml(party, this.settings)}</div>`;
 
+    if (navGroup && navCounter) {
+      navGroup.classList.remove("hidden");
+      navCounter.textContent = `${this.previewIndex + 1} / ${this.previewList.length}`;
+    }
+
     pdfBtn.classList.remove("hidden");
     docxBtn.classList.remove("hidden");
     pdfBtn.onclick = () => this.downloadSinglePdf(party.uid);
     docxBtn.onclick = () => this.downloadSingleDocx(party.uid);
-
-    modal.classList.remove("hidden");
   },
 
   openPrintAllModal() {
@@ -665,6 +694,7 @@ const ConfirmationStudio = {
     const sub = document.getElementById("modalSubtitle");
     const pdfBtn = document.getElementById("modalDownloadPdfBtn");
     const docxBtn = document.getElementById("modalDownloadDocxBtn");
+    const navGroup = document.getElementById("modalNavGroup");
 
     title.textContent = `Batch Print View (${validParties.length} Letters)`;
     sub.textContent = "Press Print to save multi-page PDF or print all letters to paper";
@@ -672,6 +702,7 @@ const ConfirmationStudio = {
       .map((p) => `<div class="modal-sheet-wrap print-page-break">${LetterTemplates.renderLetterHtml(p, this.settings)}</div>`)
       .join("");
 
+    navGroup?.classList.add("hidden");
     pdfBtn.classList.add("hidden");
     docxBtn.classList.add("hidden");
     modal.classList.remove("hidden");
@@ -681,15 +712,29 @@ const ConfirmationStudio = {
     document.getElementById(modalId)?.classList.add("hidden");
   },
 
-  showToast(message) {
+  showToast(message, actionLabel = "", actionFn = null) {
     const toast = document.getElementById("studioToast");
     if (!toast) return;
-    toast.textContent = message;
+    toast.innerHTML = "";
+    const span = document.createElement("span");
+    span.textContent = message;
+    toast.appendChild(span);
+    if (actionLabel && typeof actionFn === "function") {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "toast-undo-btn";
+      btn.textContent = actionLabel;
+      btn.onclick = () => {
+        actionFn();
+        toast.classList.add("hidden");
+      };
+      toast.appendChild(btn);
+    }
     toast.classList.remove("hidden");
     clearTimeout(this._toastTimer);
     this._toastTimer = setTimeout(() => {
       toast.classList.add("hidden");
-    }, 3600);
+    }, actionLabel ? 5500 : 3600);
   }
 };
 

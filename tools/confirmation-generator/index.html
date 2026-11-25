@@ -418,6 +418,11 @@
           <p id="modalSubtitle" class="subtitle"></p>
         </div>
         <div class="modal-actions">
+          <div id="modalNavGroup" class="modal-nav-group hidden">
+            <button type="button" id="modalPrevBtn" class="btn btn-secondary btn-sm" title="Previous letter" onclick="ConfirmationStudio.stepPreview(-1)">&#9664;</button>
+            <span id="modalNavCounter" class="modal-nav-counter">1 / 1</span>
+            <button type="button" id="modalNextBtn" class="btn btn-secondary btn-sm" title="Next letter" onclick="ConfirmationStudio.stepPreview(1)">&#9654;</button>
+          </div>
           <button type="button" id="modalDownloadPdfBtn" class="btn btn-primary btn-sm">Download PDF</button>
           <button type="button" id="modalDownloadDocxBtn" class="btn btn-soft btn-sm">Download Word (.docx)</button>
           <button type="button" class="btn btn-secondary btn-sm" onclick="window.print()">Print</button>
@@ -492,13 +497,8 @@
   <!-- Toast -->
   <div id="studioToast" class="studio-toast hidden" role="status"></div>
 
-  <!-- Local Libraries (SheetJS reused from portfolio vendor with CDN fallback) -->
-  <script src="/tools/fixed-asset-register/vendor/xlsx.full.min.js"></script>
-  <script>
-    if (typeof XLSX === "undefined") {
-      document.write('<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"><\/script>');
-    }
-  </script>
+  <!-- Self-Hosted Client-Side Libraries (Zero CDN JS calls) -->
+  <script src="/tools/confirmation-generator/vendor/xlsx.full.min.js"></script>
   <script src="/tools/confirmation-generator/vendor/jszip.min.js"></script>
   <script src="/tools/confirmation-generator/vendor/jspdf.umd.min.js"></script>
 

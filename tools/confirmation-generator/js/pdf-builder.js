@@ -24,8 +24,8 @@ const PdfBuilder = {
     this._fontPromise = (async () => {
       try {
         const [regRes, boldRes] = await Promise.all([
-          fetch("/tools/confirmation-generator/vendor/DejaVuSans.ttf"),
-          fetch("/tools/confirmation-generator/vendor/DejaVuSans-Bold.ttf")
+          fetch("/tools/confirmation-generator/fonts/DejaVuSans.ttf"),
+          fetch("/tools/confirmation-generator/fonts/DejaVuSans-Bold.ttf")
         ]);
         if (!regRes.ok || !boldRes.ok) {
           throw new Error("Font fetch failed");

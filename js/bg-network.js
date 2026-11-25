@@ -10,6 +10,7 @@
   wrapper.setAttribute('aria-hidden', 'true');
   wrapper.innerHTML = '<div class="bg-aurora"></div><div class="bg-dots"></div><canvas id="field"></canvas>';
   document.body.prepend(wrapper);
+  window.__bgNetworkActive = true;
 
   const c = document.getElementById('field');
   if (!c) return;
