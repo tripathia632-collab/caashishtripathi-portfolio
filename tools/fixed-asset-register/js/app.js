@@ -1,8 +1,8 @@
 /**
- * cajob.in - Fixed Asset Register & Depreciation Engine
+ * Fixed Asset Register & Depreciation Engine
  * Main UI Controller & Visual Dashboard
- * Architect: CA Ashish Tripathi
- * Brand: cajob.in
+ * Author / Architect: CA Ashish Tripathi
+ * Portfolio: caashishtripathi.in
  */
 
 const APP = (() => {
@@ -90,7 +90,7 @@ const APP = (() => {
     const fyDates = getFYDates(currentFY);
     const printSub = document.getElementById("printSubtitle");
     if (printSub) {
-      printSub.textContent = `${fyDates.label} (${FA_ENGINE.formatDateDisplay(fyDates.start)} to ${FA_ENGINE.formatDateDisplay(fyDates.end)}) · cajob.in · By CA Ashish Tripathi`;
+      printSub.textContent = `${fyDates.label} (${FA_ENGINE.formatDateDisplay(fyDates.start)} to ${FA_ENGINE.formatDateDisplay(fyDates.end)}) · caashishtripathi.in · By CA Ashish Tripathi`;
     }
   }
 
@@ -1171,7 +1171,7 @@ const APP = (() => {
     const blob = new Blob([jsonStr], { type: "application/json" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = `cajob_FAR_Backup_${new Date().toISOString().split("T")[0]}.json`;
+    link.download = `FAR_Backup_${new Date().toISOString().split("T")[0]}.json`;
     link.click();
   }
 

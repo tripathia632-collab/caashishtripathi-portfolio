@@ -1,8 +1,8 @@
 /**
- * cajob.in - Fixed Asset Register & Statutory Depreciation Engine
+ * Fixed Asset Register & Statutory Depreciation Engine
  * Companies Act, 2013 (Schedule II) & Income Tax Act, 1961 (Section 32, 43(6), 50)
- * Architect: CA Ashish Tripathi
- * Brand: cajob.in
+ * Author / Architect: CA Ashish Tripathi
+ * Portfolio: caashishtripathi.in
  */
 
 const FA_ENGINE = (() => {

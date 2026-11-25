@@ -3,32 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>cajob.in | Fixed Asset Register & Depreciation Engine (Companies Act & Income Tax)</title>
-  <meta name="description" content="Professional Fixed Asset Register and Depreciation calculation as per Companies Act 2013 (Schedule II) and Income Tax Act 1961 (Section 32) by CA Ashish Tripathi on cajob.in">
+  <title>Fixed Asset Register &amp; Depreciation Engine · CA Ashish Tripathi</title>
+  <meta name="description" content="Dual-compliance Fixed Asset Register and Depreciation calculation under Companies Act 2013 (Schedule II) and Income Tax Act 1961 (Section 32) by CA Ashish Tripathi.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3/dist/tabler-icons.min.css">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-  <!-- Sticky Top Bar Container (Header + Tabs flow naturally without overlapping) -->
+  <!-- Sticky Top Bar Container -->
   <div class="top-nav-wrapper">
     <!-- Top Brand Navigation Header -->
     <header class="app-header">
       <div class="brand-section">
-        <a href="../../index.html" class="brand-logo-badge" style="text-decoration: none; display: flex; align-items: center; gap: 4px;" title="Back to CA Ashish Tripathi Portfolio">← caashishtripathi.in</a>
-        <div class="brand-title-wrap">
-          <h1>Fixed Asset Register & Depreciation Engine</h1>
-          <div class="brand-sub">Companies Act 2013 · Income Tax Act 1961 · Built by <strong>CA Ashish Tripathi</strong></div>
-        </div>
+        <a href="../../index.html" class="brand-logo-badge" title="Back to CA Ashish Tripathi Portfolio">
+          <span class="logo-mark">AT</span>
+          <span style="display:flex; flex-direction:column;">
+            <span style="font-size:14px; font-weight:600; color:var(--ink); line-height:1.2;">Ashish Tripathi</span>
+            <span style="font-size:11px; color:var(--muted); font-family:var(--mono);">Fixed Asset Register</span>
+          </span>
+        </a>
+        <span class="badge badge-blue" style="margin-left: 4px;">Schedule II · Sec 32</span>
       </div>
 
       <div class="header-controls">
+        <!-- Back to portfolio link -->
+        <a href="../../index.html" class="btn btn-sm btn-soft" style="margin-right: 4px;">
+          <i class="ti ti-arrow-left"></i> All tools
+        </a>
+
         <!-- Company Switcher -->
         <div class="control-group">
           <label>Entity:</label>
           <select id="companySelector" class="control-select" onchange="APP.onCompanyChange(this.value)">
             <!-- Populated dynamically -->
           </select>
-          <button class="btn btn-sm btn-icon" title="Entity Profile & Settings" onclick="APP.openCompanyModal()">⚙️</button>
+          <button class="btn btn-sm btn-icon" title="Entity Profile & Settings" onclick="APP.openCompanyModal()"><i class="ti ti-settings"></i></button>
         </div>
 
         <!-- Financial Year Selector -->
@@ -44,8 +56,8 @@
 
         <!-- Template & Import Shortcuts -->
         <div class="header-cta-group">
-          <button class="btn btn-sm btn-secondary" onclick="APP.openTemplateModal()">📥 Template</button>
-          <button class="btn btn-sm btn-secondary" onclick="APP.openImportModal()">📤 Bulk Upload</button>
+          <button class="btn btn-sm btn-secondary" onclick="APP.openTemplateModal()"><i class="ti ti-download"></i> Template</button>
+          <button class="btn btn-sm btn-secondary" onclick="APP.openImportModal()"><i class="ti ti-upload"></i> Bulk Upload</button>
           <button class="btn btn-sm btn-emerald" onclick="APP.loadSamplePortfolio()">⚡ 1-Click Sample Data</button>
         </div>
       </div>
@@ -90,7 +102,7 @@
     <!-- Print Header (Visible only when printing) -->
     <div class="print-header">
       <h2 id="printCompanyName">Entity Name</h2>
-      <p id="printSubtitle">Fixed Asset Register & Depreciation Schedules · cajob.in · By CA Ashish Tripathi</p>
+      <p id="printSubtitle">Fixed Asset Register &amp; Depreciation Schedules · caashishtripathi.in · By CA Ashish Tripathi</p>
     </div>
 
     <!-- 1. DASHBOARD VIEW -->
@@ -621,7 +633,7 @@
         <div class="card">
           <div class="card-header"><div class="card-title">Printable CA Audit Schedule</div></div>
           <div class="card-body">
-            <p class="form-hint" style="margin-bottom: 16px;">Formatted for physical printing or saving as PDF with formal entity headers, cajob.in branding, and CA certification block.</p>
+            <p class="form-hint" style="margin-bottom: 16px;">Formatted for physical printing or saving as PDF with formal entity headers and CA certification block.</p>
             <button class="btn btn-secondary" style="width: 100%;" onclick="window.print()">🖨️ Print / Save as PDF</button>
           </div>
         </div>
@@ -634,10 +646,10 @@
   <footer class="app-footer">
     <div class="footer-inner">
       <div>
-        <strong>cajob.in</strong> · The Premier Chartered Accountant & Financial Portal
+        <strong>CA Ashish Tripathi</strong> · Finance tools &amp; automation
       </div>
       <div class="footer-credits">
-        Architected & Developed by <strong>CA Ashish Tripathi</strong> · Ready for Web Hosting on <a href="https://cajob.in" target="_blank">cajob.in</a>
+        <a href="../../index.html">caashishtripathi.in</a> · Dual-Compliance Statutory Engine
       </div>
     </div>
   </footer>

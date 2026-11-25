@@ -1,14 +1,14 @@
 /**
- * cajob.in - Fixed Asset Register & Depreciation Engine
+ * Fixed Asset Register & Depreciation Engine
  * State Management & Local Storage
- * Architect: CA Ashish Tripathi
- * Brand: cajob.in
+ * Author / Architect: CA Ashish Tripathi
+ * Portfolio: caashishtripathi.in
  */
 
 const FA_STORAGE = (() => {
   "use strict";
 
-  const STORAGE_KEY_PREFIX = "cajob_far_";
+  const STORAGE_KEY_PREFIX = "ca_far_";
   const COMPANIES_KEY = STORAGE_KEY_PREFIX + "companies";
   const ACTIVE_COMPANY_KEY = STORAGE_KEY_PREFIX + "active_company_id";
 
@@ -312,17 +312,17 @@ const FA_STORAGE = (() => {
       }
     }
     return JSON.stringify({
-      app: "cajob.in - Fixed Asset Register",
+      app: "Fixed Asset Register & Depreciation Engine",
       exported_at: new Date().toISOString(),
       creator: "CA Ashish Tripathi",
-      brand: "cajob.in",
+      domain: "caashishtripathi.in",
       state: state
     }, null, 2);
   }
 
   function importAllDataJSON(jsonStr) {
     const parsed = JSON.parse(jsonStr);
-    if (!parsed.state) throw new Error("Invalid cajob.in Fixed Asset Register backup file.");
+    if (!parsed.state) throw new Error("Invalid Fixed Asset Register backup file.");
     Object.keys(parsed.state).forEach(k => {
       localStorage.setItem(k, parsed.state[k]);
     });

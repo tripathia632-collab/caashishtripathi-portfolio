@@ -7,7 +7,8 @@
   <meta name="description" content="Generate audit-ready positive and negative balance confirmation letters for debtors and creditors as per ICAI SA 505. Built by CA Ashish Tripathi.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3/dist/tabler-icons.min.css">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -15,15 +16,18 @@
   <header class="app-header">
     <div class="header-container">
       <div class="brand-area">
-        <a href="../../index.html" class="brand-badge" title="Return to caashishtripathi.in">← caashishtripathi.in</a>
-        <div>
-          <h1>Bulk Audit Confirmation Letter Generator</h1>
-          <p class="subtitle">Standard on Auditing (SA 505) External Confirmations · ICAI Audit Automation</p>
-        </div>
+        <a href="../../index.html" class="brand-badge" style="display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--ink);" title="Return to caashishtripathi.in">
+          <span class="logo-mark">AT</span>
+          <span style="display:flex; flex-direction:column;">
+            <span style="font-size:14px; font-weight:600; line-height:1.2;">Ashish Tripathi</span>
+            <span style="font-size:11px; color:var(--muted); font-family:var(--mono);">SA 505 Audit Confirmations</span>
+          </span>
+        </a>
       </div>
       <div class="header-actions">
-        <button class="btn btn-secondary" onclick="ConfirmationApp.loadSampleData()">⚡ 1-Click Sample Parties</button>
-        <button class="btn btn-primary" onclick="ConfirmationApp.openBulkPrintModal()">📄 Generate &amp; Print Letters</button>
+        <a href="../../index.html" class="btn btn-sm btn-soft"><i class="ti ti-arrow-left"></i> All tools</a>
+        <button class="btn btn-sm btn-secondary" onclick="ConfirmationApp.loadSampleData()">⚡ 1-Click Sample Parties</button>
+        <button class="btn btn-sm btn-primary" onclick="ConfirmationApp.openBulkPrintModal()">📄 Generate &amp; Print Letters</button>
       </div>
     </div>
   </header>

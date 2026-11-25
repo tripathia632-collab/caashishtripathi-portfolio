@@ -1,7 +1,7 @@
 /**
- * cajob.in - Fixed Asset Register & Depreciation Engine
+ * Fixed Asset Register & Depreciation Engine
  * Author / Architect: CA Ashish Tripathi
- * Platform: cajob.in
+ * Portfolio: caashishtripathi.in
  */
 
 const STATUTORY_DATA = {

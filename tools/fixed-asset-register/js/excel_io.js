@@ -1,8 +1,8 @@
 /**
- * cajob.in - Fixed Asset Register & Depreciation Engine
+ * Fixed Asset Register & Depreciation Engine
  * Excel Import / Export & Template Generation using SheetJS (xlsx)
- * Architect: CA Ashish Tripathi
- * Brand: cajob.in
+ * Author / Architect: CA Ashish Tripathi
+ * Portfolio: caashishtripathi.in
  */
 
 const FA_EXCEL_IO = (() => {
@@ -108,7 +108,7 @@ const FA_EXCEL_IO = (() => {
   function downloadImportTemplateXLSX() {
     const XLSX = getXLSX();
     const wb = buildTemplateWorkbook();
-    XLSX.writeFile(wb, "cajob_fixed_asset_import_template.xlsx");
+    XLSX.writeFile(wb, "fixed_asset_import_template.xlsx");
   }
 
   function downloadImportTemplateCSV() {
@@ -119,7 +119,7 @@ const FA_EXCEL_IO = (() => {
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.setAttribute("download", "cajob_fixed_asset_import_template.csv");
+    link.setAttribute("download", "fixed_asset_import_template.csv");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -333,7 +333,7 @@ const FA_EXCEL_IO = (() => {
     const ws = XLSX.utils.json_to_sheet(rows);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Asset_Master");
-    XLSX.writeFile(wb, `cajob_Asset_Master_${company.name.replace(/[^a-zA-Z0-9]/g, "_")}.xlsx`);
+    XLSX.writeFile(wb, `Asset_Master_${company.name.replace(/[^a-zA-Z0-9]/g, "_")}.xlsx`);
   }
 
   function exportCompaniesActScheduleXLSX(bookReport, company) {
@@ -387,7 +387,7 @@ const FA_EXCEL_IO = (() => {
     const ws = XLSX.utils.json_to_sheet(rows);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Schedule_II_Depreciation");
-    XLSX.writeFile(wb, `cajob_Companies_Act_Schedule_II_${company.name.replace(/[^a-zA-Z0-9]/g, "_")}.xlsx`);
+    XLSX.writeFile(wb, `Companies_Act_Schedule_II_${company.name.replace(/[^a-zA-Z0-9]/g, "_")}.xlsx`);
   }
 
   function exportIncomeTaxScheduleXLSX(taxReport, company) {
@@ -434,7 +434,7 @@ const FA_EXCEL_IO = (() => {
     const ws = XLSX.utils.json_to_sheet(rows);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Form_3CD_Tax_Depreciation");
-    XLSX.writeFile(wb, `cajob_Income_Tax_Schedule_3CD_${company.name.replace(/[^a-zA-Z0-9]/g, "_")}.xlsx`);
+    XLSX.writeFile(wb, `Income_Tax_Schedule_3CD_${company.name.replace(/[^a-zA-Z0-9]/g, "_")}.xlsx`);
   }
 
   function exportDeferredTaxComparisonXLSX(defTax, bookReport, taxReport, company) {
@@ -468,7 +468,7 @@ const FA_EXCEL_IO = (() => {
     if (catRows.length > 0) {
       XLSX.utils.book_append_sheet(wb, wsCategory, "Category_Wise_Timing_Diffs");
     }
-    XLSX.writeFile(wb, `cajob_Deferred_Tax_Comparison_${company.name.replace(/[^a-zA-Z0-9]/g, "_")}.xlsx`);
+    XLSX.writeFile(wb, `Deferred_Tax_Comparison_${company.name.replace(/[^a-zA-Z0-9]/g, "_")}.xlsx`);
   }
 
   return {

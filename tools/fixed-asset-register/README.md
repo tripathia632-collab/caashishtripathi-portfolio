@@ -1,14 +1,14 @@
-# cajob.in | Fixed Asset Register & Depreciation Engine
+# Fixed Asset Register & Depreciation Engine
 
 > **Architect & Lead Developer:** CA Ashish Tripathi  
-> **Brand & Platform:** [cajob.in](https://cajob.in)  
+> **Portfolio:** [caashishtripathi.in](https://caashishtripathi.in)  
 > **Statutory Framework:** Companies Act, 2013 (Schedule II) & Income Tax Act, 1961 (Sections 32, 43(6), 50)
 
 ---
 
 ## 🌟 Overview
 
-The **cajob.in Fixed Asset Register & Depreciation Engine** is an enterprise-grade, audit-ready web application designed for Chartered Accountants, CFOs, corporate finance teams, and tax practitioners in India. It serves as one of the flagship tools in the **cajob.in** professional financial suite.
+The **Fixed Asset Register & Depreciation Engine** is an enterprise-grade, audit-ready web application designed for Chartered Accountants, CFOs, corporate finance teams, and tax practitioners in India.
 
 It bridges the statutory gap between **Companies Act, 2013** accounting standards (AS 10 / Ind AS 16) and **Income Tax Act, 1961** rules, automating daily pro-rata calculations, block movements, shift adjustments, 180-day rule splitting, and deferred tax computation.
 
@@ -54,7 +54,7 @@ It bridges the statutory gap between **Companies Act, 2013** accounting standard
 1. **Complete Fixed Asset Register Master:**  
    Captures Asset ID, Tag/Barcode, Name, Category, Sub-Category, Parent Asset (Component Accounting), Location, Department, Cost Centre, Custodian, Vendor, Invoice/PO numbers, Purchase Date, Ready for Use Date, Put to Use Date, and Capitalised Cost.
 2. **Built-in Excel & CSV Template Generation:**  
-   One-click download of the official pre-formatted Excel template (`cajob_fixed_asset_import_template.xlsx`) featuring an import data entry sheet and an extensive statutory guidance sheet.
+   One-click download of the official pre-formatted Excel template (`fixed_asset_import_template.xlsx`) featuring an import data entry sheet and an extensive statutory guidance sheet.
 3. **Bulk Upload with Row-by-Row Validation:**  
    Drag-and-drop Excel or CSV files. Automatically validates every single row, flags missing fields, invalid dates, negative amounts, or logic errors with exact row numbers and issue descriptions.
 4. **1-Click CA Benchmark Sample Portfolio:**  
@@ -68,61 +68,15 @@ It bridges the statutory gap between **Companies Act, 2013** accounting standard
 
 ---
 
-## 🌐 How to Host on cajob.in
+## 🌐 How to Deploy / Host
 
 This application is designed with a **100% self-contained, zero-dependency architecture**. It can be deployed in multiple flexible ways:
 
-### Option A: Static Hosting on cajob.in (Recommended)
+### Option A: Static Web Hosting (Recommended)
 Simply upload the application directory to your web server:
-- **cPanel / Apache / Nginx / Cloudflare Pages / Vercel / Netlify:**  
-  Copy all files (`index.html`, `css/`, `js/`, `templates/`, `vendor/`) to your public directory (e.g. `public_html/tools/fixed-asset-register/` or domain root).
-- **WordPress Embed:**  
-  Upload the folder to your `wp-content/` directory or embed it seamlessly inside any WordPress page using an `<iframe>`:
-  ```html
-  <iframe src="/tools/fixed-asset-register/" width="100%" height="900px" frameborder="0"></iframe>
-  ```
-
-### Option B: Local or VPS Python Server
-Run the included zero-dependency Python 3 server:
-```bash
-python3 server.py
-```
-Or specify a custom port:
-```bash
-PORT=3000 python3 server.py
-```
+- **Vercel / Netlify / Cloudflare Pages / Apache / Nginx:**  
+  All static assets (`index.html`, `css/`, `js/`, `templates/`, `vendor/`) are served directly with zero server configuration.
 
 ---
 
-## 📁 Project Structure
-
-```
-Fixed asset register/
-├── index.html                           # Single Page Application
-├── css/
-│   └── styles.css                       # Modern CA Fintech design system
-├── js/
-│   ├── statutory_data.js                # Schedule II classes, IT blocks, sample assets
-│   ├── engine.js                        # Pro-rata math, 180-day rule, block calculation
-│   ├── storage.js                       # Local persistence & multi-company manager
-│   ├── excel_io.js                      # SheetJS template builder, parser, & exporter
-│   └── app.js                           # UI controller, charts, modals, & tables
-├── templates/
-│   ├── cajob_fixed_asset_import_template.xlsx  # Pre-generated Excel template
-│   ├── cajob_fixed_asset_import_template.csv   # Pre-generated CSV template
-│   └── cajob_sample_asset_register.xlsx        # Benchmark 16-asset test register
-├── vendor/
-│   ├── xlsx.full.min.js                 # SheetJS offline bundle
-│   └── chart.umd.min.js                 # Chart.js offline bundle
-├── server.py                            # Python 3 HTTP runner
-└── README.md                            # Documentation
-```
-
----
-
-## 🔒 Data Privacy Guarantee
-All data processing and financial calculations happen **purely on the user's client device (browser)**. No sensitive corporate asset details or financial records are stored on third-party servers, ensuring complete confidentiality for Chartered Accountants and their clients.
-
----
-
-**cajob.in** · *Architected by CA Ashish Tripathi*
+**CA Ashish Tripathi** · *Portfolio: [caashishtripathi.in](https://caashishtripathi.in)*

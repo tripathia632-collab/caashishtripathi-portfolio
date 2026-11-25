@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-cajob.in - Fixed Asset Register & Depreciation Engine Web Server
+Fixed Asset Register & Depreciation Engine Web Server
 Zero external dependency Python 3 HTTP Server
-Architect & Author: CA Ashish Tripathi
-Brand: cajob.in
+Author & Architect: CA Ashish Tripathi
+Portfolio: caashishtripathi.in
 """
 
 import http.server
@@ -16,7 +16,7 @@ from pathlib import Path
 PORT = int(os.environ.get("PORT", 8080))
 DIRECTORY = Path(__file__).resolve().parent
 
-class CajobFARRequestHandler(http.server.SimpleHTTPRequestHandler):
+class AssetRegisterRequestHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(DIRECTORY), **kwargs)
 
@@ -47,12 +47,12 @@ def main():
     os.chdir(DIRECTORY)
     server_address = ("", PORT)
     socketserver.TCPServer.allow_reuse_address = True
-    with socketserver.TCPServer(server_address, CajobFARRequestHandler) as httpd:
+    with socketserver.TCPServer(server_address, AssetRegisterRequestHandler) as httpd:
         url = f"http://localhost:{PORT}"
         print("=" * 70)
-        print("  cajob.in | Fixed Asset Register & Depreciation Engine")
+        print("  Fixed Asset Register & Depreciation Engine")
         print("  Built by: CA Ashish Tripathi")
-        print("  Platform: cajob.in")
+        print("  Portfolio: caashishtripathi.in")
         print("=" * 70)
         print(f"  Web application live at: {url}")
         print(f"  Serving directory:      {DIRECTORY}")
