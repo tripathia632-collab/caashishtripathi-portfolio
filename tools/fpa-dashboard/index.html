@@ -5,19 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FP&amp;A Variance Analyzer &amp; MIS Showcase | CA Ashish Tripathi</title>
   <meta name="description" content="Executive FP&A Budget vs Actual variance analyzer, automated board commentary generator, and Power BI interactive showcase by CA Ashish Tripathi.">
+  <base href="/tools/fpa-dashboard/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3/dist/tabler-icons.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="/tools/fpa-dashboard/styles.css">
 </head>
 <body>
   <!-- Header Bar -->
   <header class="app-header">
     <div class="header-container">
       <div class="brand-area">
-        <a href="../../index.html" class="brand-badge" style="display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--ink);" title="Return to caashishtripathi.in">
+        <a href="/" class="brand-badge" style="display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--ink);" title="Return to caashishtripathi.in">
           <span class="logo-mark">AT</span>
           <span style="display:flex; flex-direction:column;">
             <span style="font-size:14px; font-weight:600; line-height:1.2;">Ashish Tripathi</span>
@@ -26,7 +27,7 @@
         </a>
       </div>
       <div class="header-actions">
-        <a href="../../index.html" class="btn btn-sm btn-soft"><i class="ti ti-arrow-left"></i> All tools</a>
+        <a href="/" class="btn btn-sm btn-soft"><i class="ti ti-arrow-left"></i> All tools</a>
         <button class="btn btn-sm btn-secondary" onclick="FpaApp.loadSampleData()">⚡ 1-Click Sample Data</button>
         <button class="btn btn-sm btn-primary" onclick="FpaApp.exportCSV()">📥 Export Variance CSV</button>
       </div>
@@ -234,6 +235,6 @@
     </div>
   </main>
 
-  <script src="script.js"></script>
+  <script src="/tools/fpa-dashboard/script.js"></script>
 </body>
 </html>
