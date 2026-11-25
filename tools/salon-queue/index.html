@@ -311,16 +311,25 @@
             <input type="number" id="bkPrice" class="mono" min="0" value="250">
           </div>
           <div class="form-group">
-            <label for="bkNotes">Notes (Optional)</label>
-            <input type="text" id="bkNotes" placeholder="Style preference...">
+            <label for="bkStatus">Status</label>
+            <select id="bkStatus">
+              <option value="booked">Booked / Waiting</option>
+              <option value="seated">In Chair Now</option>
+              <option value="completed">Completed</option>
+            </select>
           </div>
+        </div>
+
+        <div class="form-group">
+          <label for="bkNotes">Notes (Optional)</label>
+          <input type="text" id="bkNotes" placeholder="Style preference...">
         </div>
 
         <div class="modal-form-footer">
           <a id="bkWhatsAppBtn" class="btn btn-sm btn-wa hidden" target="_blank" rel="noopener">Send WhatsApp Update</a>
           <div style="margin-left:auto; display:flex; gap:8px;">
             <button type="button" class="btn btn-sm btn-secondary" onclick="SalonApp.closeModal('bookingModal')">Cancel</button>
-            <button type="submit" class="btn btn-sm btn-primary">Save Booking</button>
+            <button type="submit" id="bkSaveBtn" class="btn btn-sm btn-primary">Save Booking</button>
           </div>
         </div>
       </form>
@@ -361,7 +370,7 @@
         </div>
         <div class="modal-form-footer">
           <button type="button" class="btn btn-sm btn-secondary" onclick="SalonApp.closeModal('paymentModal')">Cancel</button>
-          <button type="submit" class="btn btn-sm btn-primary">Save Payment &amp; Mark Done</button>
+          <button type="submit" id="paySaveBtn" class="btn btn-sm btn-primary">Save Payment &amp; Mark Done</button>
         </div>
       </form>
     </div>

@@ -267,6 +267,10 @@ const SalonApp = {
       rows.push(m);
     }
 
+    const isToday = this.selectedDate === SalonScheduler.todayISO();
+    const nowD = new Date();
+    const nowTotalMin = nowD.getHours() * 60 + nowD.getMinutes();
+
     const colTemplate = `92px repeat(${visibleChairs.length}, minmax(160px, 1fr))`;
 
     let html = `<div class="grid-header-row" style="grid-template-columns:${colTemplate}">
@@ -276,17 +280,19 @@ const SalonApp = {
 
     html += `<div class="grid-body">`;
     for (const slotMin of rows) {
-      html += `<div class="grid-row" style="grid-template-columns:${colTemplate}">`;
-      html += `<div class="grid-time-label">${SalonScheduler.minsToDisplay(slotMin)}</div>`;
+      const isNowRow = isToday && nowTotalMin >= slotMin && nowTotalMin < slotMin + 30;
+      html += `<div class="grid-row ${isNowRow ? "is-now-row" : ""}" style="grid-template-columns:${colTemplate}">`;
+      html += `<div class="grid-time-label">${SalonScheduler.minsToDisplay(slotMin)}${isNowRow ? '<span class="now-badge">NOW</span>' : ""}</div>`;
 
       for (const chair of visibleChairs) {
-        // Find bookings starting within [slotMin, slotMin + 30) OR spanning into this row
         const startingHere = dayBookings.filter(
           (b) => b.chair_id === chair.id && b.start_min >= slotMin && b.start_min < slotMin + 30
         );
-        const occupied = dayBookings.some(
-          (b) => b.chair_id === chair.id && b.start_min < slotMin + 30 && (b.start_min + b.duration_min) > slotMin
+        const spanningHere = dayBookings.filter(
+          (b) => b.chair_id === chair.id && b.start_min < slotMin && (b.start_min + b.duration_min) > slotMin
         );
+        const occupied = startingHere.length > 0 || spanningHere.length > 0;
+        const primaryOccupyingId = startingHere[0]?.id || spanningHere[0]?.id || null;
 
         const cardsHtml = startingHere.map((b) => {
           const isPhone = b.booking_source === "phone";
@@ -309,13 +315,25 @@ const SalonApp = {
             </div>`;
         }).join("");
 
+        const contHtml = spanningHere.map((b) => `
+          <div class="slot-cont st-${b.status}"
+            onclick="event.stopPropagation(); SalonApp.openBookingModal('${b.id}')"
+            title="Continuation of ${this.esc(b.customer_name)}">
+            <span>&#8627; ${this.esc(b.customer_name)} (contd.)</span>
+          </div>`).join("");
+
+        const cellClick = occupied && primaryOccupyingId
+          ? `SalonApp.openBookingModal('${primaryOccupyingId}')`
+          : `SalonApp.openBookingModal(null, { chair_id: '${this.esc(chair.id)}', start_min: ${slotMin} })`;
+
         html += `
           <div class="grid-cell ${occupied ? "is-busy" : "is-open"}"
             ondragover="event.preventDefault(); this.classList.add('drag-hover');"
             ondragleave="this.classList.remove('drag-hover');"
             ondrop="SalonApp.onDropSlot(event, '${this.esc(chair.id)}', ${slotMin}); this.classList.remove('drag-hover');"
-            onclick="SalonApp.openBookingModal(null, { chair_id: '${this.esc(chair.id)}', start_min: ${slotMin} })">
+            onclick="${cellClick}">
             ${cardsHtml}
+            ${contHtml}
             ${!occupied ? `<span class="slot-plus-hint">+ Book</span>` : ""}
           </div>`;
       }
@@ -355,34 +373,46 @@ const SalonApp = {
       return;
     }
 
-    const prevSnapshot = { ...existing };
-    await SyncStore.saveBooking({
-      ...existing,
-      chair_id: targetChairId,
-      start_min: targetMin
-    });
+    try {
+      const prevSnapshot = { ...existing };
+      await SyncStore.saveBooking({
+        ...existing,
+        chair_id: targetChairId,
+        start_min: targetMin
+      });
 
-    const newTimeStr = SalonScheduler.minsToDisplay(targetMin);
-    this.showToast(`Moved ${existing.customer_name} to ${newTimeStr}`, "Undo", async () => {
-      await SyncStore.saveBooking(prevSnapshot);
-    });
+      const newTimeStr = SalonScheduler.minsToDisplay(targetMin);
+      this.showToast(`Moved ${existing.customer_name} to ${newTimeStr}`, "Undo", async () => {
+        try { await SyncStore.saveBooking(prevSnapshot); } catch (_) {}
+      });
+    } catch (err) {
+      this.showToast(`Sync error: ${err.message || "Could not move slot"}`);
+    }
   },
 
   async quickSetStatus(id, newStatus) {
     const b = SyncStore.bookings.find((x) => x.id === id);
     if (!b) return;
-    await SyncStore.saveBooking({ ...b, status: newStatus });
-    this.showToast(`${b.customer_name} marked ${newStatus === "seated" ? "In Chair" : newStatus}.`);
+    try {
+      await SyncStore.saveBooking({ ...b, status: newStatus });
+      this.showToast(`${b.customer_name} marked ${newStatus === "seated" ? "In Chair" : newStatus}.`);
+    } catch (err) {
+      this.showToast(`Sync error: ${err.message || "Could not update status"}`);
+    }
   },
 
   async cancelBooking(id) {
     const b = SyncStore.bookings.find((x) => x.id === id);
     if (!b) return;
     const prevStatus = b.status;
-    await SyncStore.saveBooking({ ...b, status: "cancelled" });
-    this.showToast(`Cancelled booking for ${b.customer_name}`, "Undo", async () => {
-      await SyncStore.saveBooking({ ...b, status: prevStatus });
-    });
+    try {
+      await SyncStore.saveBooking({ ...b, status: "cancelled" });
+      this.showToast(`Cancelled booking for ${b.customer_name}`, "Undo", async () => {
+        try { await SyncStore.saveBooking({ ...b, status: prevStatus }); } catch (_) {}
+      });
+    } catch (err) {
+      this.showToast(`Sync error: ${err.message || "Could not cancel"}`);
+    }
   },
 
   // =========================================================
@@ -414,6 +444,7 @@ const SalonApp = {
     document.getElementById("bkDate").value = existing ? existing.booking_date : this.selectedDate;
     document.getElementById("bkTime").value = SalonScheduler.minsToTimeInput(existing ? existing.start_min : defaultStart);
     chairSel.value = existing ? existing.chair_id : (prefill.chair_id || SyncStore.settings.chairs[0]?.id || "c1");
+    document.getElementById("bkStatus").value = existing ? (existing.status === "cancelled" ? "booked" : existing.status) : "booked";
     document.getElementById("bkNotes").value = existing ? (existing.notes || "") : "";
 
     // Show quick action footer buttons only when editing an existing slot
@@ -470,6 +501,9 @@ const SalonApp = {
 
   async saveBookingModal(ev) {
     ev.preventDefault();
+    const btn = document.getElementById("bkSaveBtn");
+    if (btn?.disabled) return;
+
     const id = document.getElementById("bkId").value || null;
     const existing = id ? SyncStore.bookings.find((b) => b.id === id) : null;
     const startMin = SalonScheduler.timeInputToMins(document.getElementById("bkTime").value);
@@ -484,24 +518,32 @@ const SalonApp = {
       }
     }
 
-    const record = await SyncStore.saveBooking({
-      ...(existing || {}),
-      id: id || undefined,
-      booking_date: dateStr,
-      start_min: startMin,
-      duration_min: dur,
-      chair_id: chairId,
-      customer_name: document.getElementById("bkName").value.trim(),
-      customer_phone: document.getElementById("bkPhone").value.trim(),
-      service_name: document.getElementById("bkService").value,
-      service_price: Number(document.getElementById("bkPrice").value || 0),
-      booking_source: document.getElementById("bkSource").value,
-      notes: document.getElementById("bkNotes").value.trim()
-    });
+    if (btn) btn.disabled = true;
+    try {
+      const record = await SyncStore.saveBooking({
+        ...(existing || {}),
+        id: id || undefined,
+        booking_date: dateStr,
+        start_min: startMin,
+        duration_min: dur,
+        chair_id: chairId,
+        customer_name: document.getElementById("bkName").value.trim(),
+        customer_phone: document.getElementById("bkPhone").value.trim(),
+        service_name: document.getElementById("bkService").value,
+        service_price: Number(document.getElementById("bkPrice").value || 0),
+        booking_source: document.getElementById("bkSource").value,
+        status: document.getElementById("bkStatus").value || "booked",
+        notes: document.getElementById("bkNotes").value.trim()
+      });
 
-    this.selectedDate = dateStr;
-    this.closeModal("bookingModal");
-    this.showToast(existing ? `Updated slot for ${record.customer_name}` : `Booked ${record.customer_name} at ${SalonScheduler.minsToDisplay(record.start_min)}`);
+      this.selectedDate = dateStr;
+      this.closeModal("bookingModal");
+      this.showToast(existing ? `Updated slot for ${record.customer_name}` : `Booked ${record.customer_name} at ${SalonScheduler.minsToDisplay(record.start_min)}`);
+    } catch (err) {
+      alert(`Could not save booking: ${err.message || err}`);
+    } finally {
+      if (btn) btn.disabled = false;
+    }
   },
 
   // =========================================================
@@ -522,6 +564,8 @@ const SalonApp = {
 
   async savePaymentModal(ev) {
     ev.preventDefault();
+    const btn = document.getElementById("paySaveBtn");
+    if (btn?.disabled) return;
     const id = document.getElementById("payBookingId").value;
     const b = SyncStore.bookings.find((x) => x.id === id);
     if (!b) return;
@@ -530,16 +574,23 @@ const SalonApp = {
     const mode = document.getElementById("payMode").value;
     const notes = document.getElementById("payNotes").value.trim();
 
-    await SyncStore.saveBooking({
-      ...b,
-      status: "completed",
-      amount_paid: paidAmt,
-      payment_mode: mode,
-      notes
-    });
+    if (btn) btn.disabled = true;
+    try {
+      await SyncStore.saveBooking({
+        ...b,
+        status: "completed",
+        amount_paid: paidAmt,
+        payment_mode: mode,
+        notes
+      });
 
-    this.closeModal("paymentModal");
-    this.showToast(`Recorded ${SalonScheduler.formatINR(paidAmt)} (${mode}) for ${b.customer_name}`);
+      this.closeModal("paymentModal");
+      this.showToast(`Recorded ${SalonScheduler.formatINR(paidAmt)} (${mode}) for ${b.customer_name}`);
+    } catch (err) {
+      alert(`Could not save payment: ${err.message || err}`);
+    } finally {
+      if (btn) btn.disabled = false;
+    }
   },
 
   // =========================================================
@@ -600,12 +651,18 @@ const SalonApp = {
             <td>${this.esc(c.lastService)} <span class="sub-date">(${this.esc(c.lastDate)})</span></td>
             <td class="right mono"><strong>${SalonScheduler.formatINR(c.totalSpent)}</strong></td>
             <td class="right">
-              <button type="button" class="btn btn-xs btn-secondary" onclick="SalonApp.openCustomerHistory('${this.esc(c.key)}')">History</button>
-              <button type="button" class="btn btn-xs btn-soft" onclick="SalonApp.openBookingModal(null, { customer_name: '${this.esc(c.name)}', customer_phone: '${this.esc(c.phone)}' })">Book Again</button>
+              <button type="button" class="btn btn-xs btn-secondary" data-key="${this.esc(c.key)}" onclick="SalonApp.openCustomerHistory(this.getAttribute('data-key'))">History</button>
+              <button type="button" class="btn btn-xs btn-soft" data-key="${this.esc(c.key)}" onclick="SalonApp.openBookAgain(this.getAttribute('data-key'))">Book Again</button>
             </td>
           </tr>`).join("");
       }
     }
+  },
+
+  openBookAgain(custKey) {
+    const cust = SalonScheduler.buildCustomerDiary(SyncStore.bookings).find((c) => c.key === custKey);
+    if (!cust) return;
+    this.openBookingModal(null, { customer_name: cust.name, customer_phone: cust.phone });
   },
 
   openCustomerHistory(custKey) {

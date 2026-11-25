@@ -7,16 +7,16 @@ create table if not exists public.salon_bookings (
   id uuid primary key default gen_random_uuid(),
   shop_code text not null default 'DEFAULT-SALON',
   booking_date text not null,          -- YYYY-MM-DD
-  start_min integer not null,          -- Minutes from midnight (e.g. 1140 = 7:00 PM)
-  duration_min integer not null default 30,
+  start_min integer not null check (start_min >= 0 and start_min < 1440),
+  duration_min integer not null default 30 check (duration_min between 5 and 480),
   chair_id text not null,
   customer_name text not null,
   customer_phone text not null default '',
   service_name text not null,
-  service_price numeric not null default 0,
-  booking_source text not null default 'walkin', -- 'walkin' | 'phone'
-  status text not null default 'booked',         -- 'booked' | 'seated' | 'completed' | 'cancelled'
-  amount_paid numeric,
+  service_price numeric not null default 0 check (service_price >= 0),
+  booking_source text not null default 'walkin' check (booking_source in ('walkin', 'phone')),
+  status text not null default 'booked' check (status in ('booked', 'seated', 'completed', 'cancelled')),
+  amount_paid numeric check (amount_paid is null or amount_paid >= 0),
   payment_mode text default '',                  -- 'Cash' | 'UPI' | 'Card'
   notes text default '',
   updated_by text default 'reception',           -- 'owner' | 'reception'

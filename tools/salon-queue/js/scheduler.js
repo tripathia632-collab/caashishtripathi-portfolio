@@ -57,7 +57,10 @@ const SalonScheduler = {
   },
 
   normalizePhone(phone) {
-    const digits = String(phone || "").replace(/\D/g, "");
+    let digits = String(phone || "").replace(/\D/g, "");
+    if (digits.length === 11 && digits.startsWith("0")) {
+      digits = digits.slice(1);
+    }
     if (digits.length >= 10) return digits.slice(-10);
     return digits;
   },
@@ -95,7 +98,11 @@ const SalonScheduler = {
 
       for (const b of chairBookings) {
         const bStart = Number(b.start_min);
-        const bEnd = bStart + Number(b.duration_min);
+        let bEnd = bStart + Number(b.duration_min);
+        // If customer is physically seated right now and ran past scheduled end, chair isn't free immediately
+        if (isToday && b.status === "seated" && bEnd <= earliestBase) {
+          bEnd = earliestBase + 15;
+        }
         if (candidate + durationMin <= bStart) {
           break; // Fits cleanly before this booking
         }
@@ -178,7 +185,10 @@ const SalonScheduler = {
   },
 
   buildWhatsAppUrl(booking, salonName, chairs, messageType = "confirm") {
-    const clean = String(booking.customer_phone || "").replace(/\D/g, "");
+    let clean = String(booking.customer_phone || "").replace(/\D/g, "");
+    if (clean.length === 11 && clean.startsWith("0")) {
+      clean = clean.slice(1);
+    }
     const targetPhone = clean.length === 10 ? `91${clean}` : clean;
     const chair = chairs.find((c) => c.id === booking.chair_id)?.name || "Assigned Chair";
     const timeStr = this.minsToDisplay(booking.start_min);

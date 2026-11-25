@@ -325,7 +325,7 @@ body {
 
 .date-inp, .tb-select, .search-inp {
   height: 35px;
-  line-height: 33px;
+  line-height: 1.35;
   border: 1px solid var(--line-2);
   border-radius: 8px;
   padding: 0 10px;
@@ -460,12 +460,48 @@ body {
   min-height: 54px;
 }
 
+.grid-row.is-now-row {
+  background: rgba(15, 118, 110, 0.045);
+  box-shadow: inset 3px 0 0 var(--brand);
+}
+
 .grid-time-label {
   padding: 8px 10px;
   font: 600 11.5px var(--mono);
   color: var(--muted);
   background: rgba(248, 250, 252, 0.7);
   border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.now-badge {
+  display: inline-block;
+  width: fit-content;
+  font: 700 9.5px var(--mono);
+  background: var(--brand);
+  color: #fff;
+  padding: 1px 5px;
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+}
+
+.slot-cont {
+  border-radius: 7px;
+  padding: 6px 9px;
+  font-size: 11.5px;
+  font-weight: 600;
+  background: rgba(241, 245, 249, 0.85);
+  border: 1px dashed #CBD5E1;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.slot-cont.st-seated {
+  background: rgba(236, 253, 245, 0.75);
+  border-color: #6EE7B7;
+  color: var(--ok);
 }
 
 .grid-cell {
@@ -730,6 +766,12 @@ body {
 }
 
 @media (max-width: 720px) {
-  .top-kpi-grid, .cash-kpis, .form-grid-2, .form-grid-3 { grid-template-columns: 1fr; }
+  .workspace-shell { padding: 0 0.85rem; }
+  .top-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.65rem; }
+  .top-kpi-grid .kpi-wide { grid-column: span 2; }
+  .kpi-card { padding: 0.75rem 0.9rem; }
+  .kpi-v { font-size: 1.25rem; }
+  .cash-kpis, .form-grid-2, .form-grid-3 { grid-template-columns: 1fr; }
   .search-inp { min-width: 0; width: 100%; }
+  .tb-right, .tb-right .btn { width: 100%; }
 }
