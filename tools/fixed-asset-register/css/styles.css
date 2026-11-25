@@ -880,7 +880,7 @@ body {
   border: 1px solid var(--line-2);
   border-radius: 18px;
   box-shadow: var(--shadow-lg);
-  max-width: 680px;
+  max-width: min(680px, 100%);
   width: 100%;
   max-height: 90vh;
   display: flex;
@@ -894,7 +894,7 @@ body {
 }
 
 .modal-dialog-lg {
-  max-width: 1040px;
+  max-width: min(980px, 100%);
 }
 
 .modal-header {
@@ -926,8 +926,9 @@ body {
 }
 
 .modal-body {
-  padding: 24px;
+  padding: 20px 24px;
   overflow-y: auto;
+  overflow-x: hidden;
   flex: 1;
 }
 
@@ -938,6 +939,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
@@ -956,21 +958,24 @@ body {
 
 .form-grid-3 {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
   margin-bottom: 16px;
 }
 
 .form-grid-2 {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
   margin-bottom: 16px;
 }
 
 @media (max-width: 768px) {
   .form-grid-3, .form-grid-2 {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .form-grid-3 > *, .form-grid-2 > * {
+    grid-column: span 1 !important;
   }
 }
 
@@ -978,6 +983,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  min-width: 0;
 }
 
 .form-group label {
@@ -991,6 +997,9 @@ body {
 }
 
 .form-control {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   padding: 8px 12px;
   border: 1px solid var(--line-2);
   border-radius: var(--radius-sm);
@@ -999,6 +1008,7 @@ body {
   color: var(--ink);
   outline: none;
   font-family: var(--sans);
+  text-overflow: ellipsis;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
