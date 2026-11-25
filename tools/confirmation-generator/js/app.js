@@ -278,7 +278,7 @@ const ConfirmationStudio = {
       this.renderQueue();
     });
 
-    ["previewModal", "partyModal", "uploadModal", "letterheadModal"].forEach((modalId) => {
+    ["previewModal", "partyModal", "uploadModal", "letterheadModal", "privacyModal"].forEach((modalId) => {
       document.getElementById(modalId)?.addEventListener("click", (e) => {
         if (e.target.id === modalId) this.closeModal(modalId);
       });
@@ -286,7 +286,7 @@ const ConfirmationStudio = {
 
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
-        ["previewModal", "partyModal", "uploadModal", "letterheadModal"].forEach((m) => this.closeModal(m));
+        ["previewModal", "partyModal", "uploadModal", "letterheadModal", "privacyModal"].forEach((m) => this.closeModal(m));
       }
     });
   },

@@ -41,10 +41,12 @@
       </nav>
 
       <div class="header-actions">
-        <span class="privacy-pill" title="All Excel parsing, PDF/Word rendering, and ZIP packaging happen strictly inside your browser memory. Zero data leaves your computer.">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          Data Never Leaves Your Computer
-        </span>
+        <button type="button" class="privacy-trust-btn" onclick="ConfirmationStudio.openModal('privacyModal')" title="Click to see how your financial data stays 100% safe and local">
+          <span class="trust-pulse" aria-hidden="true"></span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          <span>Data Never Leaves Your Computer</span>
+          <span class="trust-cta">Why safe &rsaquo;</span>
+        </button>
       </div>
     </div>
   </header>
@@ -58,20 +60,20 @@
 
       <!-- Quick 3-Step Visual Guide Bar for First-Time Visitors -->
       <div class="guide-strip card">
-        <div class="guide-step">
+        <button type="button" class="guide-step guide-step-btn" onclick="ConfirmationStudio.openModal('letterheadModal')">
           <span class="guide-badge">A</span>
-          <div><strong>Pick Style &amp; Letterhead</strong><span>Set Corporate / SA 505 &amp; company header</span></div>
-        </div>
-        <span class="guide-arrow">&rarr;</span>
-        <div class="guide-step">
+          <div><strong>Style &amp; Letterhead</strong><span>Pick Corporate / SA 505 &amp; company header</span></div>
+        </button>
+        <span class="guide-arrow" aria-hidden="true">&rarr;</span>
+        <button type="button" class="guide-step guide-step-btn" onclick="ConfirmationStudio.openModal('uploadModal')">
           <span class="guide-badge">B</span>
-          <div><strong>Download Template &amp; Upload Excel</strong><span>Use 5 required columns (processed 100% locally)</span></div>
-        </div>
-        <span class="guide-arrow">&rarr;</span>
-        <div class="guide-step">
+          <div><strong>Template &amp; Excel Upload</strong><span>5 required columns · processed offline</span></div>
+        </button>
+        <span class="guide-arrow" aria-hidden="true">&rarr;</span>
+        <button type="button" class="guide-step guide-step-btn" onclick="ConfirmationStudio.switchTab('output')">
           <span class="guide-badge">C</span>
-          <div><strong>Download PDF / Word ZIP</strong><span>Review output in Tab 2 &amp; export in 1 click</span></div>
-        </div>
+          <div><strong>Download PDF / Word ZIP</strong><span>Review &amp; batch export in Tab 2</span></div>
+        </button>
       </div>
 
       <div class="draft-workbench">
@@ -148,30 +150,33 @@
           <!-- Card 3: Upload Data & Download Excel Template -->
           <div class="card panel-card upload-launch-card">
             <div class="panel-head">
-              <h3>3. Excel Template &amp; Data Upload</h3>
-              <span class="privacy-mini-badge">Local Only</span>
+              <h3>3. Client Ledger Upload</h3>
+              <button type="button" class="privacy-mini-btn" onclick="ConfirmationStudio.openModal('privacyModal')" title="Learn how your client data stays private">
+                <span class="trust-pulse sm" aria-hidden="true"></span>
+                100% Safe &middot; Info
+              </button>
             </div>
             <p class="panel-helper">
-              Download our Excel template (5 required columns), fill your party balances, and upload it here. <strong>Your file never leaves your computer.</strong>
+              Upload your Excel ledger to generate all letters in seconds.
             </p>
 
-            <button type="button" class="btn btn-primary btn-full" onclick="ConfirmationStudio.openModal('uploadModal')">
+            <button type="button" class="btn btn-primary btn-cta-lg btn-full" onclick="ConfirmationStudio.openModal('uploadModal')">
               Upload Excel Data (.xlsx / .csv)
             </button>
 
             <div class="btn-split-2">
-              <button type="button" class="btn btn-secondary btn-sm" onclick="ExcelIO.downloadExcelTemplate()">
-                Download Template (.xlsx)
+              <button type="button" class="btn btn-secondary btn-md" onclick="ExcelIO.downloadExcelTemplate()">
+                Download Template
               </button>
-              <button type="button" class="btn btn-soft btn-sm" onclick="ConfirmationStudio.loadSampleData(true, true)">
+              <button type="button" class="btn btn-soft btn-md" onclick="ConfirmationStudio.loadSampleData(true, true)">
                 Load 24 Samples
               </button>
             </div>
 
             <div id="inlineUploadStatus" class="inline-dataset-pill">
-              <span id="tab1DatasetSummary">Sample dataset active (24 clients ready)</span>
+              <span class="status-dot-label"><i class="status-dot-green"></i><span id="tab1DatasetSummary">24 of 24 parties ready</span></span>
               <button type="button" class="link-go-btn" onclick="ConfirmationStudio.switchTab('output')">
-                Open Output &rarr;
+                View Output &rarr;
               </button>
             </div>
           </div>
@@ -555,6 +560,61 @@
           <button type="submit" class="btn btn-primary btn-sm">Save Party</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       MODAL 0: CLIENT PRIVACY & LOCAL SECURITY ARCHITECTURE
+       ========================================================= -->
+  <div id="privacyModal" class="modal-overlay hidden">
+    <div class="modal-dialog modal-privacy">
+      <div class="modal-header privacy-modal-hdr">
+        <div class="privacy-hdr-title">
+          <span class="privacy-shield-lg">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          </span>
+          <div>
+            <h2>100% Safe &amp; Confidential</h2>
+            <p class="subtitle">Your financial data never leaves your computer</p>
+          </div>
+        </div>
+        <button type="button" class="btn btn-xs btn-secondary" onclick="ConfirmationStudio.closeModal('privacyModal')">Close</button>
+      </div>
+
+      <div class="privacy-modal-body">
+        <p class="privacy-lead">
+          Balance confirmations contain sensitive client names, GSTINs, and exact balances. This tool is engineered so <strong>zero data is ever uploaded</strong>.
+        </p>
+
+        <div class="privacy-points-grid">
+          <div class="privacy-point-card">
+            <div class="pp-badge">1</div>
+            <div>
+              <strong>Zero Server Upload</strong>
+              <p>Your Excel file is read strictly inside your own browser&rsquo;s temporary memory. Nothing travels over the internet.</p>
+            </div>
+          </div>
+          <div class="privacy-point-card">
+            <div class="pp-badge">2</div>
+            <div>
+              <strong>Zero Database or Tracking</strong>
+              <p>No server logs, analytics, or cloud storage ever touch your uploaded parties, balances, or generated PDF/Word letters.</p>
+            </div>
+          </div>
+          <div class="privacy-point-card">
+            <div class="pp-badge">3</div>
+            <div>
+              <strong>Auto-Wiped on Tab Close</strong>
+              <p>Refresh or close this tab and all uploaded records vanish instantly. Once loaded, the tool even works offline.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="privacy-modal-foot">
+          <span class="privacy-verify-note">CA-grade local processing &middot; PDF, Word &amp; ZIP built directly on your device</span>
+          <button type="button" class="btn btn-primary btn-sm" onclick="ConfirmationStudio.closeModal('privacyModal')">Got It</button>
+        </div>
+      </div>
     </div>
   </div>
 
