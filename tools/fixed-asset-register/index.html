@@ -70,25 +70,25 @@
     <nav class="sub-nav">
       <div class="nav-tabs">
         <button class="nav-tab active" data-tab="dashboard" onclick="APP.switchTab('dashboard')">
-          📊 Overview & Dashboard
+          <i class="ti ti-layout-dashboard"></i> Overview
         </button>
         <button class="nav-tab" data-tab="operations" onclick="APP.switchTab('operations')">
-          ⚡ Asset Operations & Lifecycle Hub <span class="tab-badge" id="tabTxnCount">0</span>
+          <i class="ti ti-bolt"></i> Operations Hub <span class="tab-badge" id="tabTxnCount">0</span>
         </button>
         <button class="nav-tab" data-tab="assets" onclick="APP.switchTab('assets')">
-          📋 Fixed Asset Register <span class="tab-badge" id="tabAssetCount">0</span>
+          <i class="ti ti-list-details"></i> Asset Register <span class="tab-badge" id="tabAssetCount">0</span>
         </button>
         <button class="nav-tab" data-tab="companies-act" onclick="APP.switchTab('companies-act')">
-          🏢 Companies Act (Schedule II)
+          <i class="ti ti-building"></i> Schedule II (Books)
         </button>
         <button class="nav-tab" data-tab="income-tax" onclick="APP.switchTab('income-tax')">
-          📑 Income Tax Act (Section 32)
+          <i class="ti ti-receipt-tax"></i> Section 32 (Tax)
         </button>
         <button class="nav-tab" data-tab="deferred-tax" onclick="APP.switchTab('deferred-tax')">
-          ⚖️ Tax vs Book (Deferred Tax)
+          <i class="ti ti-scale"></i> Deferred Tax
         </button>
         <button class="nav-tab" data-tab="reports" onclick="APP.switchTab('reports')">
-          📑 Audit Reports & Export
+          <i class="ti ti-file-export"></i> Audit Reports
         </button>
       </div>
 
@@ -551,7 +551,7 @@
               <div class="alert alert-info" style="margin-top: 10px;">
                 <span>📘</span>
                 <div>
-                  <strong>Auditor Note:</strong> If Book Depr > Tax Depr, timing difference is positive $\rightarrow$ <em>Deferred Tax Asset (DTA)</em> created. If Tax Depr > Book Depr $\rightarrow$ <em>Deferred Tax Liability (DTL)</em> created.
+                  <strong>Auditor Note:</strong> If Book Depr &gt; Tax Depr, timing difference is positive → <em>Deferred Tax Asset (DTA)</em> created. If Tax Depr &gt; Book Depr → <em>Deferred Tax Liability (DTL)</em> created.
                 </div>
               </div>
             </div>
