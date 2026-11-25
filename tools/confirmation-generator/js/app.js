@@ -18,6 +18,7 @@ const ConfirmationStudio = {
     this.bindSettingsToInputs();
     this.loadSampleData(false, false);
     this.bindEvents();
+    this.renderLetterheadSummary();
     this.renderDraftPreview();
     this.renderQueue();
     this.switchTab("draft");
@@ -42,6 +43,7 @@ const ConfirmationStudio = {
       localStorage.removeItem(this.SENDER_STORAGE_KEY);
     } catch (_) {}
     this.bindSettingsToInputs();
+    this.renderLetterheadSummary();
     this.renderDraftPreview();
     this.showToast("Letterhead settings reset to default.");
   },
@@ -66,10 +68,41 @@ const ConfirmationStudio = {
     document.querySelectorAll(".ws-tab").forEach((btn) => {
       btn.classList.toggle("active", btn.dataset.tab === tabName);
     });
-    ["draft", "upload", "output"].forEach((name) => {
+    ["draft", "output"].forEach((name) => {
       document.getElementById(`view-${name}`)?.classList.toggle("active", name === tabName);
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
+  },
+
+  openModal(modalId) {
+    document.getElementById(modalId)?.classList.remove("hidden");
+  },
+
+  renderLetterheadSummary() {
+    const s = this.settings;
+    const badge = document.getElementById("summaryCoBadge");
+    if (badge) {
+      if (s.logoDataUrl) {
+        badge.innerHTML = `<img src="${s.logoDataUrl}" alt="Logo">`;
+      } else {
+        badge.textContent = (s.companyName || "CO").slice(0, 2).toUpperCase();
+      }
+    }
+    const nameEl = document.getElementById("summaryCoName");
+    if (nameEl) nameEl.textContent = s.companyName || "Your Company Name";
+    const subEl = document.getElementById("summaryCoDeptEmail");
+    if (subEl) subEl.textContent = [s.companyDept, s.companyEmail].filter(Boolean).join(" · ");
+    const refEl = document.getElementById("summaryRefPrefix");
+    if (refEl) refEl.textContent = s.refPrefix || "AR/CONF";
+    const sigEl = document.getElementById("summarySignatory");
+    if (sigEl) sigEl.textContent = s.signatoryName || "Authorized Signatory";
+
+    const audLine = document.getElementById("summaryAuditorLine");
+    const audName = document.getElementById("summaryAuditor");
+    if (audLine && audName) {
+      audLine.classList.toggle("hidden", s.templateMode !== "sa505");
+      audName.textContent = s.auditorName || "Statutory Auditors";
+    }
   },
 
   bindSettingsToInputs() {
@@ -150,6 +183,7 @@ const ConfirmationStudio = {
         this.settings[id] = el.value;
         if (id === "templateMode") this.toggleAuditorFields();
         this.persistSenderIfEnabled();
+        this.renderLetterheadSummary();
         this.renderDraftPreview();
         this.renderQueue();
       };
@@ -180,6 +214,7 @@ const ConfirmationStudio = {
         this.settings.logoDataUrl = ev.target.result;
         this.updateLogoStatus();
         this.persistSenderIfEnabled();
+        this.renderLetterheadSummary();
         this.renderDraftPreview();
       };
       reader.readAsDataURL(file);
@@ -191,6 +226,7 @@ const ConfirmationStudio = {
       if (inp) inp.value = "";
       this.updateLogoStatus();
       this.persistSenderIfEnabled();
+      this.renderLetterheadSummary();
       this.renderDraftPreview();
     });
 
@@ -242,7 +278,7 @@ const ConfirmationStudio = {
       this.renderQueue();
     });
 
-    ["previewModal", "partyModal"].forEach((modalId) => {
+    ["previewModal", "partyModal", "uploadModal", "letterheadModal"].forEach((modalId) => {
       document.getElementById(modalId)?.addEventListener("click", (e) => {
         if (e.target.id === modalId) this.closeModal(modalId);
       });
@@ -250,8 +286,7 @@ const ConfirmationStudio = {
 
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
-        this.closeModal("previewModal");
-        this.closeModal("partyModal");
+        ["previewModal", "partyModal", "uploadModal", "letterheadModal"].forEach((m) => this.closeModal(m));
       }
     });
   },
@@ -304,6 +339,7 @@ const ConfirmationStudio = {
       this.showToast("Loaded 24 sample clients locally in your browser.");
     }
     if (openOutputTab) {
+      this.closeModal("uploadModal");
       this.switchTab("output");
     }
   },
@@ -323,6 +359,7 @@ const ConfirmationStudio = {
       this.renderDraftPreview();
       this.renderQueue();
       this.showToast(`Parsed ${result.rows.length} rows locally. Data never left your device.`);
+      this.closeModal("uploadModal");
       this.switchTab("output");
     } catch (err) {
       this.updateUploadBanner(err.message, false);
@@ -443,8 +480,12 @@ const ConfirmationStudio = {
 
     const badge = document.getElementById("navOutputBadge");
     if (badge) badge.textContent = valid.length;
-    const nextCnt = document.getElementById("uploadNextCount");
-    if (nextCnt) nextCnt.textContent = valid.length;
+    const tab1Sum = document.getElementById("tab1DatasetSummary");
+    if (tab1Sum) {
+      tab1Sum.textContent = total === 0
+        ? "No data loaded yet"
+        : `${valid.length} of ${total} parties ready`;
+    }
   },
 
   renderQueue() {
