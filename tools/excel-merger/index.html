@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Excel &amp; CSV Consolidator Studio — CA Ashish Tripathi</title>
-  <meta name="description" content="Merge 2 to 2,000 branch Excel &amp; CSV files into one master workbook locally in your browser. Aligns mismatched columns, strips repeated headers, flags duplicates &amp; prepares branch totals.">
+  <title>Excel &amp; CSV Merger — CA Ashish Tripathi</title>
+  <meta name="description" content="Merge 2 to 2,000+ Excel &amp; CSV files into one clean workbook offline in your browser. Auto-aligns extra columns, tracks source filenames, strips repeated headers &amp; flags duplicates.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
 </head>
 <body>
 
-  <!-- Sticky Studio Header -->
+  <!-- Clean Slim Header -->
   <header class="app-header">
     <div class="header-container">
       <div class="brand-area">
@@ -25,14 +25,13 @@
         <div class="brand-divider"></div>
         <div class="logo-mark">EM</div>
         <div class="brand-title-wrap">
-          <h1>Excel &amp; CSV Consolidator Studio</h1>
-          <p class="subtitle">Merge 2–2,000+ branch files cleanly · Zero template needed</p>
+          <h1>Excel &amp; CSV Merger</h1>
+          <p class="subtitle">Combine branch files into one clean sheet</p>
         </div>
       </div>
 
       <div class="header-actions">
-        <button type="button" id="topSampleBtn" class="btn btn-soft btn-sm">Try 5 Sample Branch Files</button>
-        <button type="button" id="privacyBtn" class="privacy-trust-btn" title="Click to see why your financial files stay 100% safe">
+        <button type="button" id="privacyBtn" class="privacy-trust-btn" title="Click to see why your files stay 100% private">
           <span class="trust-pulse" aria-hidden="true"></span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
           <span>Data Never Leaves Your Computer</span>
@@ -44,363 +43,364 @@
 
   <main class="workspace-shell">
 
-    <!-- First-Time Visitor Quick Guide Strip -->
-    <section class="guide-strip card" aria-label="Quick workflow guide">
-      <div class="guide-step">
-        <span class="guide-badge">1</span>
-        <div>
-          <strong>Drop Any Branch Excel / CSV Files</strong>
-          <span>Select 20 or 2,000 files or pick an entire folder</span>
+    <!-- Shared hidden file inputs -->
+    <input type="file" id="fileInput" class="hidden" multiple accept=".xlsx,.xls,.xlsm,.xlsb,.csv,.tsv,.ods">
+    <input type="file" id="folderInput" class="hidden" webkitdirectory directory multiple>
+
+    <!-- =========================================================
+         VIEW 1: CALM "ILOVEPDF-STYLE" LANDING UPLOAD SCREEN
+         Shown first so new users see ONE clear action, zero clutter.
+         ========================================================= -->
+    <section id="landingView" class="landing-wrap">
+      <div id="heroDropzone" class="hero-card card">
+        <div class="hero-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M12 18v-6"/><path d="m9 15 3-3 3 3"/></svg>
         </div>
-      </div>
-      <span class="guide-arrow" aria-hidden="true">&rarr;</span>
-      <div class="guide-step">
-        <span class="guide-badge">2</span>
-        <div>
-          <strong>Smart Headers &amp; Extra Columns</strong>
-          <span>Skips banners, removes repeat headers &amp; adds new branch columns</span>
+        <h2>Merge Excel &amp; CSV files in seconds</h2>
+        <p class="hero-sub">Drop <strong>2 to 2,000+</strong> branch files here—no fixed template needed. Matching columns stack automatically, and any extra branch column is added cleanly.</p>
+
+        <div class="hero-cta-row">
+          <button type="button" id="heroSelectFilesBtn" class="btn btn-primary btn-lg">
+            Select Excel / CSV Files
+          </button>
+          <button type="button" id="heroSelectFolderBtn" class="btn btn-lg">
+            Select Folder
+          </button>
         </div>
-      </div>
-      <span class="guide-arrow" aria-hidden="true">&rarr;</span>
-      <div class="guide-step">
-        <span class="guide-badge">3</span>
-        <div>
-          <strong>Sort, Check Totals &amp; Export</strong>
-          <span>Live sheet preview + Branch Summary &amp; Duplicate Check workbook</span>
+
+        <p class="hero-drop-hint">or drag &amp; drop files anywhere on this box</p>
+
+        <div class="hero-sample-row">
+          <span>Just exploring?</span>
+          <button type="button" id="heroSampleBtn" class="link-btn">Try with 5 sample branch files &rarr;</button>
+        </div>
+
+        <div class="hero-trust-strip">
+          <span>&#10003; Works with messy headers</span>
+          <span>&#10003; Tracks source filename on left</span>
+          <span>&#10003; 100% offline in browser</span>
         </div>
       </div>
     </section>
 
-    <div class="workbench">
+    <!-- Progress strip (shown only while reading large batches) -->
+    <section id="importProgress" class="import-progress card hidden">
+      <div class="progress-top">
+        <span id="importProgressText">Reading files...</span>
+        <button type="button" id="cancelImportBtn" class="btn btn-xs">Stop</button>
+      </div>
+      <div class="progress-track">
+        <div id="importProgressFill" class="progress-fill"></div>
+      </div>
+    </section>
 
-      <!-- =========================================================
-           LEFT SIDEBAR: FILE IMPORTER & REAL-TIME MERGE RULES
-           ========================================================= -->
-      <aside class="sidebar-col">
+    <!-- =========================================================
+         VIEW 2: SIMPLE LIVE WORKSPACE (Shown right after upload)
+         ========================================================= -->
+    <section id="studioView" class="studio-wrap hidden">
 
-        <!-- Card 1: Dropzone & Imported Files -->
-        <section class="card panel-card">
-          <div class="panel-head">
-            <h2>1. Import Branch Files</h2>
-            <span class="panel-tag">.xlsx · .xls · .csv</span>
-          </div>
+      <div class="workbench">
 
-          <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop Excel or CSV files here">
-            <div class="drop-icon" aria-hidden="true">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            </div>
-            <h3>Drop Excel / CSV files here</h3>
-            <p>Supports mixed column layouts across 2 to 2,000+ files</p>
-            <div class="drop-actions">
-              <button type="button" id="pickFilesBtn" class="btn btn-primary btn-sm">Select Files</button>
-              <button type="button" id="pickFolderBtn" class="btn btn-sm" title="Pick an entire folder containing branch Excels">Select Folder</button>
-            </div>
-            <input type="file" id="fileInput" class="hidden" multiple accept=".xlsx,.xls,.xlsm,.xlsb,.csv,.tsv,.ods">
-            <input type="file" id="folderInput" class="hidden" webkitdirectory directory multiple>
-          </div>
+        <!-- LEFT: Essential Controls Only + Collapsible Advanced -->
+        <aside class="sidebar-col">
 
-          <div class="sample-bar">
-            <span class="hint-text">New here? Test messy headers &amp; extra columns:</span>
-            <button type="button" id="loadSampleBtn" class="btn btn-soft btn-xs">Load 5 Samples</button>
-          </div>
-
-          <!-- Progress bar for bulk batches -->
-          <div id="importProgress" class="import-progress hidden">
-            <div class="progress-top">
-              <span id="importProgressText">Reading 0 / 0 files...</span>
-              <button type="button" id="cancelImportBtn" class="btn btn-xs">Stop</button>
-            </div>
-            <div class="progress-track">
-              <div id="importProgressFill" class="progress-fill"></div>
-            </div>
-          </div>
-
-          <!-- Imported Files List -->
-          <div id="fileInvWrap" class="file-inv-wrap hidden">
-            <div class="file-inv-bar">
-              <span id="fileInvMeta" class="inv-meta">0 files loaded</span>
-              <div class="file-inv-actions">
-                <button type="button" id="toggleAllFilesBtn" class="btn btn-xs">Uncheck All</button>
-                <button type="button" id="clearFilesBtn" class="btn btn-xs">Clear</button>
+          <!-- 1. Loaded Files Summary -->
+          <div class="card panel-card">
+            <div class="panel-head">
+              <div>
+                <h2>Your Files</h2>
+                <span id="fileInvMeta" class="panel-sub">0 files loaded</span>
+              </div>
+              <div class="head-actions">
+                <button type="button" id="addMoreBtn" class="btn btn-soft btn-xs">+ Add More</button>
+                <button type="button" id="clearFilesBtn" class="btn btn-xs">Reset</button>
               </div>
             </div>
-            <input type="search" id="fileSearchInput" class="inp file-search hidden" placeholder="Filter imported files...">
+
+            <input type="search" id="fileSearchInput" class="inp file-search hidden" placeholder="Find a file...">
             <div id="fileList" class="file-list"></div>
           </div>
-        </section>
 
-        <!-- Card 2: Live Merge Rules -->
-        <section class="card panel-card">
-          <div class="panel-head">
-            <h2>2. Columns &amp; Header Rules</h2>
-            <span class="panel-tag">Live Preview</span>
-          </div>
-
-          <div class="control-group">
-            <label class="check-row">
-              <input type="checkbox" id="optSourceFile" checked>
-              <span>
-                Add <strong>Source File</strong> column on left
-                <span class="hint-text">Tracks which branch file each row came from</span>
-              </span>
-            </label>
-
-            <div id="sourceSubOpts" class="check-sub">
-              <label class="check-row">
-                <input type="checkbox" id="optStripExt">
-                <span>Hide file extension (.xlsx / .csv)</span>
-              </label>
-              <label class="check-row">
-                <input type="checkbox" id="optSheetName">
-                <span>Also add <strong>Sheet Name</strong> column</span>
-              </label>
+          <!-- 2. Three Simple Everyday Switches (With [?] Explanations) -->
+          <div class="card panel-card">
+            <div class="panel-head">
+              <h2>Quick Options</h2>
+              <span class="live-dot-pill">Live preview</span>
             </div>
 
-            <div class="divider"></div>
-
-            <div class="form-group">
-              <label for="optHeaderMode">Header Row Detection</label>
-              <select id="optHeaderMode" class="sel">
-                <option value="auto">Has Headers · Auto-detect row (Recommended)</option>
-                <option value="row1">Has Headers · Always Row 1</option>
-                <option value="custom">Has Headers · Custom Row #</option>
-                <option value="none">No Header Row (Combine by Column 1, 2, 3...)</option>
-              </select>
-              <span class="hint-text">Auto-detect skips ERP/Tally title banners before headers</span>
-            </div>
-
-            <div id="customRowWrap" class="form-group hidden">
-              <label for="optCustomHeaderRow">Header Row Number (1-based)</label>
-              <input type="number" id="optCustomHeaderRow" class="inp" min="1" max="100" value="1">
-            </div>
-
-            <label id="repeatHeaderWrap" class="check-row">
-              <input type="checkbox" id="optRemoveRepeated" checked>
-              <span>
-                Remove repeated header rows in data
-                <span class="hint-text">Strips duplicate heading rows pasted inside sheets</span>
-              </span>
-            </label>
-
-            <label id="smartMatchWrap" class="check-row">
-              <input type="checkbox" id="optSmartMatch" checked>
-              <span>
-                Smart match column names
-                <span class="hint-text">Matches <code>Net Sales</code>, <code>net sales </code> &amp; <code>Invoice No.</code></span>
-              </span>
-            </label>
-
-            <div class="form-row-2">
-              <div class="form-group">
-                <label for="optSheetMode">Multi-Sheet Files</label>
-                <select id="optSheetMode" class="sel">
-                  <option value="first">First Sheet Only</option>
-                  <option value="all">All Sheets Stacked</option>
-                </select>
-              </div>
-              <div class="form-group" style="justify-content:flex-end;">
-                <label class="check-row" style="padding-bottom:6px;">
-                  <input type="checkbox" id="optSkipBlank" checked>
-                  <span>Skip blank rows</span>
+            <div class="switch-list">
+              <!-- Option 1: Left Source Column -->
+              <div class="switch-item">
+                <label class="switch-label" for="optSourceFile">
+                  <input type="checkbox" id="optSourceFile" class="toggle-inp" checked>
+                  <span class="switch-text">Keep <strong>Source File</strong> column on left</span>
                 </label>
+                <button type="button" class="help-q" aria-label="Help about Source File column"
+                  data-title="Left Source File Column"
+                  data-help="Adds a column on the far left showing which file each row came from (e.g. Mumbai_Oct.xlsx). Turn OFF if you only want the raw merged columns.">?</button>
               </div>
-            </div>
-          </div>
-        </section>
 
-        <!-- Card 3: Duplicate Check & Summary -->
-        <section class="card panel-card">
-          <div class="panel-head">
-            <h2>3. Audit &amp; Branch Totals</h2>
-            <span class="panel-tag">Optional</span>
-          </div>
-
-          <div class="control-group">
-            <div class="form-row-2">
-              <div class="form-group">
-                <label for="optDupKey">Repeat / Duplicate Check</label>
-                <select id="optDupKey" class="sel">
-                  <option value="">Off (Keep all rows)</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="optDupAction">Duplicate Action</label>
-                <select id="optDupAction" class="sel">
-                  <option value="flag">Keep &amp; Flag</option>
-                  <option value="drop">Keep First Only</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="optSummaryGroup">Branch Summary Grouped By</label>
-              <select id="optSummaryGroup" class="sel">
-                <option value="__source_file">Source File</option>
-              </select>
-            </div>
-          </div>
-        </section>
-
-      </aside>
-
-      <!-- =========================================================
-           RIGHT STAGE: KPI STRIP, EXPORT & REAL-TIME SHEET PREVIEW
-           ========================================================= -->
-      <section class="stage-col">
-
-        <!-- 4 KPI Cards -->
-        <div class="kpi-grid">
-          <div class="kpi-card">
-            <div class="kpi-label">Files Merged</div>
-            <div id="kpiFiles" class="kpi-val">0 / 0</div>
-            <div id="kpiFilesSub" class="kpi-sub">Drop files to begin</div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-label">Combined Rows</div>
-            <div id="kpiRows" class="kpi-val">0</div>
-            <div id="kpiRowsSub" class="kpi-sub">0 repeated headers stripped</div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-label">Unified Columns</div>
-            <div id="kpiCols" class="kpi-val">0</div>
-            <div id="kpiColsSub" class="kpi-sub">0 branch-only extra cols</div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-label">Repeated Records</div>
-            <div id="kpiDups" class="kpi-val is-ok">0</div>
-            <div id="kpiDupsSub" class="kpi-sub">Select key column on left</div>
-          </div>
-        </div>
-
-        <!-- Export Action Bar -->
-        <div class="card export-bar">
-          <div class="export-name-wrap">
-            <label for="exportFilename">Output File:</label>
-            <input type="text" id="exportFilename" class="inp" value="Consolidated_Master_MIS" placeholder="Consolidated_Master_MIS">
-          </div>
-          <div class="export-btns">
-            <button type="button" id="exportCsvBtn" class="btn" disabled>Download .csv</button>
-            <button type="button" id="exportXlsxBtn" class="btn btn-primary" disabled>Download Master .xlsx</button>
-          </div>
-        </div>
-
-        <!-- Real-Time Sheet / Schema / Summary Card -->
-        <div class="card stage-card">
-          <div class="stage-head">
-            <div class="stage-tabs" role="tablist">
-              <button type="button" class="stage-tab active" data-stage="preview">
-                Live Sheet Preview <span id="tabPreviewBadge" class="tab-pill">0</span>
-              </button>
-              <button type="button" class="stage-tab" data-stage="schema">
-                Columns &amp; Order <span id="tabSchemaBadge" class="tab-pill">0</span>
-              </button>
-              <button type="button" class="stage-tab" data-stage="summary">
-                Branch Summary &amp; Audit
-              </button>
-            </div>
-            <span id="liveSyncHint" class="hint-text" style="margin:0;">Updates live as you change settings</span>
-          </div>
-
-          <!-- Stage A: Live Sheet Preview -->
-          <div id="stage-preview">
-            <div id="previewToolbar" class="preview-toolbar hidden">
-              <div class="sort-controls">
-                <label for="sortColSelect">Sort Order:</label>
-                <select id="sortColSelect" class="sel">
-                  <option value="">Original File Order</option>
-                </select>
-                <button type="button" id="sortDirBtn" class="btn btn-sm">Asc &uarr;</button>
-                <button type="button" id="clearSortBtn" class="btn btn-xs hidden">Reset</button>
-              </div>
-              <div class="filter-controls">
-                <label id="dupFilterLabel" class="check-row hidden" style="font-size:12px;">
-                  <input type="checkbox" id="optOnlyDups">
-                  <span>Duplicates only</span>
+              <!-- Option 2: Files Have Header Row -->
+              <div class="switch-item">
+                <label class="switch-label" for="optHasHeaders">
+                  <input type="checkbox" id="optHasHeaders" class="toggle-inp" checked>
+                  <span class="switch-text">Each file has a <strong>Header row</strong></span>
                 </label>
-                <input type="search" id="tableSearchInput" class="inp" placeholder="Search merged rows...">
+                <button type="button" class="help-q" aria-label="Help about Header row"
+                  data-title="Do Your Files Have Headers?"
+                  data-help="Keep ON when row 1 (or a top row) has column names like Date, Invoice No, Net Sales. Turn OFF if your files have no column names at all—we will stack by Column 1, Column 2, Column 3.">?</button>
+              </div>
+
+              <!-- Option 3: Remove Repeated Headers -->
+              <div id="repeatHeaderWrap" class="switch-item is-indented">
+                <label class="switch-label" for="optRemoveRepeated">
+                  <input type="checkbox" id="optRemoveRepeated" class="toggle-inp" checked>
+                  <span class="switch-text">Remove repeated headers inside data</span>
+                </label>
+                <button type="button" class="help-q" aria-label="Help about removing repeated headers"
+                  data-title="Remove Repeated Headers"
+                  data-help="Automatically removes duplicate heading rows found inside a sheet (for example when someone pastes two pages into one Excel sheet). Recommended ON.">?</button>
               </div>
             </div>
 
-            <div id="emptyStage" class="empty-stage">
-              <h3>Ready to merge your branch Excel &amp; CSV files</h3>
-              <p>Drop multiple branch files on the left—or click below to load 5 realistic sample branch files showing extra columns, title banner skipping, repeated headers, and duplicate invoice detection.</p>
-              <button type="button" id="emptySampleBtn" class="btn btn-primary">Load 5 Sample Branch Files</button>
-            </div>
+            <!-- Collapsible Advanced Options (Hidden by default so screen stays calm!) -->
+            <details id="advancedBox" class="adv-details">
+              <summary class="adv-summary">
+                <span>More options (banner skip, duplicates, multi-sheet)</span>
+                <span class="adv-chev">&rsaquo;</span>
+              </summary>
 
-            <div id="sheetScroll" class="sheet-scroll hidden">
-              <table class="sheet-table">
-                <thead id="previewThead"></thead>
-                <tbody id="previewTbody"></tbody>
-              </table>
-            </div>
+              <div class="adv-body">
+                <div class="adv-row">
+                  <label class="switch-label" for="optStripExt">
+                    <input type="checkbox" id="optStripExt" class="toggle-inp">
+                    <span>Hide <code>.xlsx / .csv</code> in Source File</span>
+                  </label>
+                  <button type="button" class="help-q" aria-label="Help" data-title="Hide File Extension" data-help="Shows 'Mumbai_Oct' instead of 'Mumbai_Oct.xlsx' in the Source File column.">?</button>
+                </div>
 
-            <div id="sheetFooter" class="sheet-footer hidden">
-              <span id="pagerInfo">Showing 0–0 of 0 rows</span>
-              <div class="pager-btns">
-                <select id="pageSizeSelect" class="sel" style="width:auto;height:28px;font-size:11.5px;">
-                  <option value="50">50 rows / page</option>
-                  <option value="100" selected>100 rows / page</option>
-                  <option value="250">250 rows / page</option>
-                </select>
-                <button type="button" id="prevPageBtn" class="btn btn-xs">&larr; Prev</button>
-                <span id="pageNumText" style="font-family:var(--mono);font-size:11.5px;">1 / 1</span>
-                <button type="button" id="nextPageBtn" class="btn btn-xs">Next &rarr;</button>
+                <div class="adv-row">
+                  <label class="switch-label" for="optSheetName">
+                    <input type="checkbox" id="optSheetName" class="toggle-inp">
+                    <span>Also add Sheet Name column</span>
+                  </label>
+                  <button type="button" class="help-q" aria-label="Help" data-title="Sheet Name Column" data-help="Useful when files have multiple tabs (e.g. Jan, Feb) and you want to see which tab each row came from.">?</button>
+                </div>
+
+                <div id="headerDetectRowWrap" class="form-group">
+                  <div class="label-with-q">
+                    <label for="optHeaderRowMode">Where is the header row?</label>
+                    <button type="button" class="help-q" aria-label="Help" data-title="Header Row Detection" data-help="Auto-detect skips company title banners (like 'ACME Pvt Ltd' on rows 1–2) and finds the real header row automatically.">?</button>
+                  </div>
+                  <select id="optHeaderRowMode" class="sel">
+                    <option value="auto">Auto-detect (skips title banners)</option>
+                    <option value="row1">Always Row 1</option>
+                    <option value="custom">Custom Row #</option>
+                  </select>
+                </div>
+
+                <div id="customRowWrap" class="form-group hidden">
+                  <label for="optCustomHeaderRow">Header Row Number (1-based)</label>
+                  <input type="number" id="optCustomHeaderRow" class="inp" min="1" max="100" value="1">
+                </div>
+
+                <div id="smartMatchWrap" class="adv-row">
+                  <label class="switch-label" for="optSmartMatch">
+                    <input type="checkbox" id="optSmartMatch" class="toggle-inp" checked>
+                    <span>Smart match column names</span>
+                  </label>
+                  <button type="button" class="help-q" aria-label="Help" data-title="Smart Column Matching" data-help="Treats 'Net Sales', 'net sales ', and 'Invoice No.' vs 'Invoice No' as the same column instead of splitting them.">?</button>
+                </div>
+
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <div class="label-with-q">
+                      <label for="optSheetMode">Tabs per file</label>
+                      <button type="button" class="help-q" aria-label="Help" data-title="Multi-Sheet Excel Files" data-help="Choose whether to read only the first worksheet of each Excel file, or stack every worksheet inside it.">?</button>
+                    </div>
+                    <select id="optSheetMode" class="sel">
+                      <option value="first">First Sheet Only</option>
+                      <option value="all">All Sheets Stacked</option>
+                    </select>
+                  </div>
+                  <div class="form-group" style="justify-content:flex-end;">
+                    <label class="switch-label" style="padding-bottom:6px;" for="optSkipBlank">
+                      <input type="checkbox" id="optSkipBlank" class="toggle-inp" checked>
+                      <span>Skip blank rows</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <div class="label-with-q">
+                      <label for="optDupKey">Check duplicates</label>
+                      <button type="button" class="help-q" aria-label="Help" data-title="Find Repeated Records" data-help="Pick a column like 'Invoice No' to spot the same invoice appearing twice across branches or files.">?</button>
+                    </div>
+                    <select id="optDupKey" class="sel">
+                      <option value="">Off</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="optDupAction">When found</label>
+                    <select id="optDupAction" class="sel">
+                      <option value="flag">Keep &amp; Highlight</option>
+                      <option value="drop">Remove Extras</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <div class="label-with-q">
+                    <label for="optSummaryGroup">Branch summary by</label>
+                    <button type="button" class="help-q" aria-label="Help" data-title="Branch Summary Sheet" data-help="Creates a second Excel sheet ('Branch_Summary') totaling rows and numeric columns grouped by this column.">?</button>
+                  </div>
+                  <select id="optSummaryGroup" class="sel">
+                    <option value="__source_file">Source File</option>
+                  </select>
+                </div>
+              </div>
+            </details>
+          </div>
+
+        </aside>
+
+        <!-- RIGHT: Clean Action Bar + Real-Time Merged Preview -->
+        <section class="stage-col">
+
+          <!-- One Clean Top Result & Download Bar -->
+          <div class="card result-bar">
+            <div class="result-stats">
+              <div class="stat-headline">
+                <strong id="summaryStatMain">0 rows merged from 0 files</strong>
+                <span id="summaryStatChips" class="stat-chips"></span>
               </div>
             </div>
-          </div>
 
-          <!-- Stage B: Columns & Order (Schema Union Manager) -->
-          <div id="stage-schema" class="schema-wrap hidden">
-            <p class="schema-intro">
-              Reorder columns in your final workbook, rename headers, hide unwanted columns, or <strong>Merge Into</strong> to combine two mismatched column names (for example <code>Net Amt</code> &rarr; <code>Net Sales</code>).
-            </p>
-            <div style="overflow-x:auto;">
-              <table class="schema-table">
-                <thead>
-                  <tr>
-                    <th>Include</th>
-                    <th>Final Column Name</th>
-                    <th>Found In</th>
-                    <th>Merge Synonym Into</th>
-                    <th>Order</th>
-                  </tr>
-                </thead>
-                <tbody id="schemaTbody"></tbody>
-              </table>
+            <div class="export-controls">
+              <input type="text" id="exportFilename" class="inp filename-inp" value="Consolidated_Master_MIS" aria-label="Output filename" title="Output filename">
+              <button type="button" id="exportCsvBtn" class="btn btn-sm" disabled>Download CSV</button>
+              <button type="button" id="exportXlsxBtn" class="btn btn-primary" disabled>Download Master Excel (.xlsx)</button>
             </div>
           </div>
 
-          <!-- Stage C: Branch Summary & Duplicate Audit -->
-          <div id="stage-summary" class="summary-wrap hidden">
-            <div class="summary-section-title">
-              <span>Branch / Group Totals (Exported as <code>Branch_Summary</code> sheet)</span>
-              <span id="summaryGroupBadge" class="mini-pill">Grouped by Source File</span>
-            </div>
-            <div style="overflow-x:auto;">
-              <table class="schema-table">
-                <thead id="summaryThead"></thead>
-                <tbody id="summaryTbody"></tbody>
-              </table>
+          <!-- Real-Time Preview Card -->
+          <div class="card stage-card">
+            <div class="stage-head">
+              <div class="stage-tabs" role="tablist">
+                <button type="button" class="stage-tab active" data-stage="preview">
+                  Live Sheet Preview <span id="tabPreviewBadge" class="tab-pill">0</span>
+                </button>
+                <button type="button" class="stage-tab" data-stage="schema">
+                  Columns &amp; Order <span id="tabSchemaBadge" class="tab-pill">0</span>
+                </button>
+                <button type="button" class="stage-tab" data-stage="summary">
+                  Branch Totals <span id="tabDupBadge" class="tab-pill warn hidden">0 dup</span>
+                </button>
+              </div>
             </div>
 
-            <div id="dupAuditBox" class="dup-box">
+            <!-- Stage A: Live Sheet Preview -->
+            <div id="stage-preview">
+              <div class="preview-toolbar">
+                <div class="sort-controls">
+                  <label for="sortColSelect">Sort by:</label>
+                  <select id="sortColSelect" class="sel">
+                    <option value="">Original Order</option>
+                  </select>
+                  <button type="button" id="sortDirBtn" class="btn btn-sm">Asc &uarr;</button>
+                  <button type="button" id="clearSortBtn" class="btn btn-xs hidden">Reset</button>
+                </div>
+                <div class="filter-controls">
+                  <label id="dupFilterLabel" class="switch-label hidden" style="font-size:12px;">
+                    <input type="checkbox" id="optOnlyDups" class="toggle-inp">
+                    <span>Duplicates only</span>
+                  </label>
+                  <input type="search" id="tableSearchInput" class="inp" placeholder="Search rows...">
+                </div>
+              </div>
+
+              <div class="sheet-scroll">
+                <table class="sheet-table">
+                  <thead id="previewThead"></thead>
+                  <tbody id="previewTbody"></tbody>
+                </table>
+              </div>
+
+              <div class="sheet-footer">
+                <span id="pagerInfo">Showing 0–0 of 0 rows</span>
+                <div class="pager-btns">
+                  <select id="pageSizeSelect" class="sel" style="width:auto;height:28px;font-size:11.5px;">
+                    <option value="50">50 / page</option>
+                    <option value="100" selected>100 / page</option>
+                    <option value="250">250 / page</option>
+                  </select>
+                  <button type="button" id="prevPageBtn" class="btn btn-xs">&larr; Prev</button>
+                  <span id="pageNumText" style="font-family:var(--mono);font-size:11.5px;">1 / 1</span>
+                  <button type="button" id="nextPageBtn" class="btn btn-xs">Next &rarr;</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stage B: Columns & Order -->
+            <div id="stage-schema" class="schema-wrap hidden">
+              <p class="schema-intro">
+                Rename any column, uncheck to hide it, move columns left/right (<code>&uarr; / &darr;</code>), or combine two differently named columns using <strong>Merge Into</strong>.
+              </p>
+              <div style="overflow-x:auto;">
+                <table class="schema-table">
+                  <thead>
+                    <tr>
+                      <th>Keep</th>
+                      <th>Column Name</th>
+                      <th>In Files</th>
+                      <th>Merge Into Another Column</th>
+                      <th>Order</th>
+                    </tr>
+                  </thead>
+                  <tbody id="schemaTbody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Stage C: Branch Summary & Duplicates -->
+            <div id="stage-summary" class="summary-wrap hidden">
               <div class="summary-section-title">
-                <span>Repeated Record Check (Exported as <code>Duplicate_Check</code> sheet)</span>
+                <span>Branch / File Totals (included as <code>Branch_Summary</code> sheet)</span>
+                <span id="summaryGroupBadge" class="mini-pill">Grouped by Source File</span>
               </div>
-              <div id="dupAuditContent" style="font-size:12.5px;color:var(--muted);">
-                Pick a key column like <strong>Invoice No</strong> under <em>3. Audit &amp; Branch Totals</em> on the left to check repeated records across branches.
+              <div style="overflow-x:auto;">
+                <table class="schema-table">
+                  <thead id="summaryThead"></thead>
+                  <tbody id="summaryTbody"></tbody>
+                </table>
+              </div>
+
+              <div class="dup-box">
+                <div class="summary-section-title">
+                  <span>Repeated Record Check</span>
+                </div>
+                <div id="dupAuditContent" style="font-size:12.5px;color:var(--muted);"></div>
               </div>
             </div>
+
           </div>
+        </section>
 
-        </div>
+      </div>
+    </section>
 
-      </section>
-
-    </div>
   </main>
 
-  <!-- Privacy Explanation Modal -->
+  <!-- Floating Tooltip Popover for [?] Help Buttons -->
+  <div id="helpPopover" class="help-popover hidden" role="tooltip">
+    <div id="helpPopTitle" class="help-pop-title"></div>
+    <div id="helpPopBody" class="help-pop-body"></div>
+  </div>
+
+  <!-- Privacy Modal -->
   <div id="privacyModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="privacyModalTitle">
     <div class="modal-box">
       <div class="modal-head">
@@ -409,9 +409,9 @@
       </div>
       <div class="modal-body">
         <ul class="privacy-list">
-          <li><strong>Zero Server Uploads:</strong> Every Excel and CSV file you select is read inside your own browser memory using SheetJS.</li>
-          <li><strong>No Network Calls:</strong> Your branch sales, invoice numbers, and customer details never leave your laptop.</li>
-          <li><strong>Handles 20 to 2,000+ Files Locally:</strong> Parsing, header alignment, sorting, and Excel export run offline in JavaScript without touching any cloud database.</li>
+          <li><strong>Zero Server Uploads:</strong> Every Excel and CSV file you select stays inside your own browser memory.</li>
+          <li><strong>No Network Calls:</strong> Your branch sales, invoice numbers, and customer records never leave your laptop.</li>
+          <li><strong>Works Offline:</strong> Merging, sorting, duplicate checks, and Excel export run locally via SheetJS.</li>
         </ul>
       </div>
       <div class="modal-foot">

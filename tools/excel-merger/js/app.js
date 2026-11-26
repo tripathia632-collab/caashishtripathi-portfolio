@@ -1,5 +1,5 @@
 /**
- * Excel & CSV Consolidator Studio — UI Controller
+ * Excel & CSV Merger — Simple Progressive-Disclosure UI Controller
  */
 (function () {
   'use strict';
@@ -7,7 +7,7 @@
   const ACCEPTED_EXT = /\.(xlsx|xls|xlsm|xlsb|csv|tsv|ods)$/i;
 
   const state = {
-    files: [],            // [{ id, name, sizeBytes, enabled, error, sheets }]
+    files: [],
     dataset: null,
     activeStage: 'preview',
     importing: false,
@@ -17,11 +17,14 @@
     searchQuery: '',
     onlyDups: false,
     fileSearch: '',
+    pinnedHelpBtn: null,
+    savedNamedDupKey: '',
+    savedNamedSummaryKey: '',
     options: {
       includeSourceFile: true,
       stripExtension: false,
       includeSheetName: false,
-      headerMode: 'auto',
+      headerMode: 'auto',      // 'auto' | 'row1' | 'custom' | 'none'
       customHeaderRow: 1,
       removeRepeatedHeaders: true,
       smartHeaderMatch: true,
@@ -71,30 +74,37 @@
 
   function cacheElements() {
     [
-      'dropzone', 'pickFilesBtn', 'pickFolderBtn', 'fileInput', 'folderInput',
-      'loadSampleBtn', 'topSampleBtn', 'emptySampleBtn', 'importProgress',
-      'importProgressText', 'importProgressFill', 'cancelImportBtn',
-      'fileInvWrap', 'fileInvMeta', 'toggleAllFilesBtn', 'clearFilesBtn',
-      'fileSearchInput', 'fileList', 'optSourceFile', 'sourceSubOpts',
-      'optStripExt', 'optSheetName', 'optHeaderMode', 'customRowWrap',
-      'optCustomHeaderRow', 'repeatHeaderWrap', 'optRemoveRepeated',
-      'smartMatchWrap', 'optSmartMatch', 'optSheetMode', 'optSkipBlank',
-      'optDupKey', 'optDupAction', 'optSummaryGroup', 'kpiFiles', 'kpiFilesSub',
-      'kpiRows', 'kpiRowsSub', 'kpiCols', 'kpiColsSub', 'kpiDups', 'kpiDupsSub',
-      'exportFilename', 'exportCsvBtn', 'exportXlsxBtn', 'tabPreviewBadge',
-      'tabSchemaBadge', 'previewToolbar', 'sortColSelect', 'sortDirBtn',
-      'clearSortBtn', 'dupFilterLabel', 'optOnlyDups', 'tableSearchInput',
-      'emptyStage', 'sheetScroll', 'previewThead', 'previewTbody', 'sheetFooter',
+      'fileInput', 'folderInput', 'landingView', 'studioView', 'heroDropzone',
+      'heroSelectFilesBtn', 'heroSelectFolderBtn', 'heroSampleBtn',
+      'importProgress', 'importProgressText', 'importProgressFill', 'cancelImportBtn',
+      'fileInvMeta', 'addMoreBtn', 'clearFilesBtn', 'fileSearchInput', 'fileList',
+      'optSourceFile', 'optHasHeaders', 'repeatHeaderWrap', 'optRemoveRepeated',
+      'optStripExt', 'optSheetName', 'headerDetectRowWrap', 'optHeaderRowMode',
+      'customRowWrap', 'optCustomHeaderRow', 'smartMatchWrap', 'optSmartMatch',
+      'optSheetMode', 'optSkipBlank', 'optDupKey', 'optDupAction', 'optSummaryGroup',
+      'summaryStatMain', 'summaryStatChips', 'exportFilename', 'exportCsvBtn',
+      'exportXlsxBtn', 'tabPreviewBadge', 'tabSchemaBadge', 'tabDupBadge',
+      'sortColSelect', 'sortDirBtn', 'clearSortBtn', 'dupFilterLabel',
+      'optOnlyDups', 'tableSearchInput', 'previewThead', 'previewTbody',
       'pagerInfo', 'pageSizeSelect', 'prevPageBtn', 'nextPageBtn', 'pageNumText',
       'schemaTbody', 'summaryGroupBadge', 'summaryThead', 'summaryTbody',
-      'dupAuditContent', 'privacyBtn', 'privacyModal', 'toast'
+      'dupAuditContent', 'helpPopover', 'helpPopTitle', 'helpPopBody',
+      'privacyBtn', 'privacyModal', 'toast'
     ].forEach((id) => { els[id] = $(id); });
   }
 
+  function switchLandingOrStudio() {
+    const hasFiles = state.files.length > 0;
+    els.landingView.classList.toggle('hidden', hasFiles);
+    els.studioView.classList.toggle('hidden', !hasFiles);
+  }
+
   function rebuildAndRender() {
+    switchLandingOrStudio();
+    if (!state.files.length) return;
     state.dataset = window.MergerEngine.buildMergedDataset(state.files, state.options);
     syncOptionSelects();
-    renderKpis();
+    renderSummaryBar();
     renderFileList();
     renderActiveStage();
   }
@@ -106,7 +116,7 @@
 
     // Sort Column Select
     const prevSort = state.options.sortColId;
-    let sortHtml = '<option value="">Original File Order</option>';
+    let sortHtml = '<option value="">Original Order</option>';
     cols.forEach((c) => {
       sortHtml += `<option value="${escapeHtml(c.id)}">${escapeHtml(c.label)}</option>`;
     });
@@ -120,9 +130,9 @@
     els.sortDirBtn.textContent = state.options.sortDir === 'desc' ? 'Desc ↓' : 'Asc ↑';
     els.clearSortBtn.classList.toggle('hidden', !state.options.sortColId);
 
-    // Duplicate Check Select (auto-suggest Invoice No only if unchanged? No, keep user in full control!)
+    // Duplicate Check Select
     const prevDup = state.options.duplicateKeyColId;
-    let dupHtml = '<option value="">Off (Keep all rows)</option>';
+    let dupHtml = '<option value="">Off</option>';
     nonSystemCols.forEach((c) => {
       dupHtml += `<option value="${escapeHtml(c.id)}">${escapeHtml(c.label)}</option>`;
     });
@@ -154,34 +164,33 @@
     }
   }
 
-  function renderKpis() {
+  function renderSummaryBar() {
     const ds = state.dataset;
-    const totalFiles = state.files.length;
-    const enabledOk = state.files.filter((f) => f.enabled && !f.error).length;
+    const st = ds.stats;
+    const enabledCount = st.enabledFileCount;
+
+    els.summaryStatMain.textContent = `${formatInt(st.totalRowCount)} rows merged from ${enabledCount} file${enabledCount === 1 ? '' : 's'} · ${st.visibleColCount} columns`;
+
+    let chips = '';
+    if (st.repeatedRemoved > 0) {
+      chips += `<span class="mini-pill cleaned">${st.repeatedRemoved} repeated header(s) removed</span>`;
+    }
+    if (st.extraColCount > 0) {
+      chips += `<span class="mini-pill extra">${st.extraColCount} extra branch column(s) aligned</span>`;
+    }
+    if (st.duplicateCount > 0) {
+      chips += `<span class="mini-pill extra">${st.duplicateCount} duplicate row(s) flagged</span>`;
+    }
     const errCount = state.files.filter((f) => f.error).length;
-
-    els.kpiFiles.textContent = `${enabledOk} / ${totalFiles}`;
-    els.kpiFilesSub.textContent = errCount > 0
-      ? `${errCount} unreadable file(s) skipped`
-      : (totalFiles ? 'Ready to consolidate' : 'Drop files to begin');
-
-    const st = ds ? ds.stats : { totalRowCount: 0, visibleColCount: 0, extraColCount: 0, repeatedRemoved: 0, duplicateCount: 0 };
-    els.kpiRows.textContent = formatInt(st.totalRowCount);
-    els.kpiRowsSub.textContent = `${formatInt(st.repeatedRemoved)} repeated header(s) stripped`;
-
-    els.kpiCols.textContent = formatInt(st.visibleColCount);
-    els.kpiColsSub.textContent = st.extraColCount > 0
-      ? `${st.extraColCount} extra branch col(s) aligned`
-      : 'All common columns aligned';
-
-    els.kpiDups.textContent = formatInt(st.duplicateCount);
-    els.kpiDups.className = st.duplicateCount > 0 ? 'kpi-val is-warn' : 'kpi-val is-ok';
-    els.kpiDupsSub.textContent = state.options.duplicateKeyColId
-      ? (state.options.dedupeMode === 'drop' ? 'Auto-removed extras' : 'Flagged in preview & Excel')
-      : 'Select key column on left';
+    if (errCount > 0) {
+      chips += `<span class="mini-pill err">${errCount} file(s) unreadable</span>`;
+    }
+    els.summaryStatChips.innerHTML = chips;
 
     els.tabPreviewBadge.textContent = formatInt(st.totalRowCount);
-    els.tabSchemaBadge.textContent = formatInt(ds ? ds.allSchemaCols.length : 0);
+    els.tabSchemaBadge.textContent = formatInt(ds.allSchemaCols.length);
+    els.tabDupBadge.textContent = `${st.duplicateCount} dup`;
+    els.tabDupBadge.classList.toggle('hidden', st.duplicateCount === 0);
 
     const hasRows = st.totalRowCount > 0 && st.visibleColCount > 0;
     els.exportXlsxBtn.disabled = !hasRows;
@@ -189,13 +198,8 @@
   }
 
   function renderFileList() {
-    const hasFiles = state.files.length > 0;
-    els.fileInvWrap.classList.toggle('hidden', !hasFiles);
-    if (!hasFiles) return;
-
     const enabledCount = state.files.filter((f) => f.enabled && !f.error).length;
-    els.fileInvMeta.textContent = `${enabledCount} of ${state.files.length} file(s) active`;
-    els.toggleAllFilesBtn.textContent = enabledCount === state.files.length ? 'Uncheck All' : 'Check All';
+    els.fileInvMeta.textContent = `${enabledCount} of ${state.files.length} active`;
     els.fileSearchInput.classList.toggle('hidden', state.files.length < 6);
 
     const q = state.fileSearch.trim().toLowerCase();
@@ -204,15 +208,12 @@
       : state.files;
 
     const ds = state.dataset;
-    const rawCols = ds ? ds.rawCols : [];
-    const extraSet = new Set(rawCols.filter((c) => c.isExtra && !c.mergeInto).map((c) => c.id));
-
+    const extraSet = new Set(ds.rawCols.filter((c) => c.isExtra && !c.mergeInto).map((c) => c.id));
     const maxRender = 200;
-    const slice = visibleFiles.slice(0, maxRender);
     let html = '';
 
-    slice.forEach((f) => {
-      const fStat = ds && ds.perFileStats ? ds.perFileStats.get(f.id) : null;
+    visibleFiles.slice(0, maxRender).forEach((f) => {
+      const fStat = ds.perFileStats ? ds.perFileStats.get(f.id) : null;
       let extraInFile = 0;
       if (fStat && fStat.colKeys) {
         fStat.colKeys.forEach((ck) => { if (extraSet.has(ck)) extraInFile++; });
@@ -225,9 +226,6 @@
         badges += `<span class="mini-pill">${formatInt(fStat.rowCount)} rows</span>`;
         if (fStat.detectedHeaderRow > 1) {
           badges += `<span class="mini-pill cleaned">Header R${fStat.detectedHeaderRow}</span>`;
-        }
-        if (fStat.repeatedRemoved > 0) {
-          badges += `<span class="mini-pill cleaned">-${fStat.repeatedRemoved} rep hdr</span>`;
         }
         if (extraInFile > 0) {
           badges += `<span class="mini-pill extra">+${extraInFile} extra col</span>`;
@@ -245,12 +243,12 @@
             <div class="file-name" title="${escapeHtml(f.name)}">${escapeHtml(f.name)}</div>
             <div class="file-sub">${badges}</div>
           </div>
-          <button type="button" class="icon-del file-remove" title="Remove file" aria-label="Remove ${escapeHtml(f.name)}">&times;</button>
+          <button type="button" class="icon-del file-remove" title="Remove file">&times;</button>
         </div>`;
     });
 
     if (visibleFiles.length > maxRender) {
-      html += `<div class="hint-text" style="text-align:center;padding:6px;">Showing first ${maxRender} of ${visibleFiles.length} matching files. All ${state.files.length} files still merge!</div>`;
+      html += `<div style="font-size:11px;color:var(--muted);text-align:center;padding:4px;">Showing first ${maxRender} of ${visibleFiles.length} files (all merge).</div>`;
     }
 
     els.fileList.innerHTML = html;
@@ -291,19 +289,10 @@
 
   function renderPreviewTable() {
     const ds = state.dataset;
-    const hasData = ds && ds.rows.length > 0 && ds.visibleCols.length > 0;
-
-    els.emptyStage.classList.toggle('hidden', hasData);
-    els.previewToolbar.classList.toggle('hidden', !hasData);
-    els.sheetScroll.classList.toggle('hidden', !hasData);
-    els.sheetFooter.classList.toggle('hidden', !hasData);
-
-    if (!hasData) return;
-
+    const cols = ds.visibleCols;
     const dupAvailable = Boolean(state.options.duplicateKeyColId && ds.duplicateGroups.length > 0);
     els.dupFilterLabel.classList.toggle('hidden', !dupAvailable);
 
-    const cols = ds.visibleCols;
     const filtered = getFilteredRows();
     const total = filtered.length;
     const totalPages = Math.max(1, Math.ceil(total / state.pageSize));
@@ -313,27 +302,24 @@
     const startIdx = (state.page - 1) * state.pageSize;
     const pageRows = filtered.slice(startIdx, startIdx + state.pageSize);
 
-    // Header
     let thead = '<tr><th class="col-rownum">#</th>';
     cols.forEach((col) => {
       const cls = [];
       if (col.isSystem) cls.push('col-source');
       else if (col.isExtra) cls.push('col-extra');
-
       const isSorted = state.options.sortColId === col.id;
       const sortArrow = isSorted ? (state.options.sortDir === 'desc' ? ' ↓' : ' ↑') : '';
       const extraTag = col.isExtra
         ? `<span class="extra-tag" title="Present in ${col.fileCoverage} of ${col.totalFiles} files">${col.fileCoverage}/${col.totalFiles}</span>`
         : '';
 
-      thead += `<th class="${cls.join(' ')}" data-sort-col="${escapeHtml(col.id)}" title="Click to sort by ${escapeHtml(col.label)}">
+      thead += `<th class="${cls.join(' ')}" data-sort-col="${escapeHtml(col.id)}" title="Click to sort">
         <span class="th-inner">${escapeHtml(col.label)}${extraTag}<span class="sort-arrow">${sortArrow}</span></span>
       </th>`;
     });
     thead += '</tr>';
     els.previewThead.innerHTML = thead;
 
-    // Body
     let tbody = '';
     if (!pageRows.length) {
       tbody = `<tr><td colspan="${cols.length + 1}" style="text-align:center;padding:28px;color:var(--muted);">No rows match your current filter.</td></tr>`;
@@ -351,14 +337,13 @@
           if (isEmpty) tdCls.push('col-empty');
           else if (typeof val === 'number') tdCls.push('col-num');
 
-          let display = isEmpty
+          const display = isEmpty
             ? '—'
             : (typeof val === 'number' ? formatNum(val) : window.MergerEngine.cellToString(val));
+          const dupHtml = (isDup && cIdx === 0)
+            ? `<span class="dup-badge">DUP &times;${row.__dupCount}</span>`
+            : '';
 
-          let dupHtml = '';
-          if (isDup && cIdx === 0) {
-            dupHtml = `<span class="dup-badge">DUP &times;${row.__dupCount}</span>`;
-          }
           tbody += `<td class="${tdCls.join(' ')}" title="${escapeHtml(display)}">${escapeHtml(display)}${dupHtml}</td>`;
         });
         tbody += '</tr>';
@@ -366,7 +351,6 @@
     }
     els.previewTbody.innerHTML = tbody;
 
-    // Pager
     const fromNum = total === 0 ? 0 : startIdx + 1;
     const toNum = Math.min(total, startIdx + state.pageSize);
     els.pagerInfo.textContent = `Showing ${formatInt(fromNum)}–${formatInt(toNum)} of ${formatInt(total)} row(s)`;
@@ -377,27 +361,22 @@
 
   function renderSchemaTable() {
     const ds = state.dataset;
-    const cols = ds ? ds.allSchemaCols : [];
-    if (!cols.length) {
-      els.schemaTbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--muted);">Import files to manage unified columns &amp; order.</td></tr>';
-      return;
-    }
-
+    const cols = ds.allSchemaCols;
     const mergeTargets = cols.filter((c) => !c.isSystem);
     let html = '';
 
-    cols.forEach((col, idx) => {
+    cols.forEach((col) => {
       const covBadge = col.isSystem
         ? '<span class="mini-pill cleaned">Tracking Col</span>'
         : (col.isExtra
           ? `<span class="mini-pill extra">${col.fileCoverage} / ${col.totalFiles} files (Extra)</span>`
           : `<span class="mini-pill">${col.fileCoverage} / ${col.totalFiles} files</span>`);
 
-      let mergeHtml = '<span class="hint-text">—</span>';
+      let mergeHtml = '<span style="color:var(--faint);font-size:12px;">—</span>';
       if (!col.isSystem) {
         const curMerge = (state.options.colOverrides[col.id] && state.options.colOverrides[col.id].mergeInto) || '';
         mergeHtml = `<select class="sel schema-merge" data-col-id="${escapeHtml(col.id)}" style="height:30px;font-size:11.5px;">
-          <option value="">Keep separate column</option>`;
+          <option value="">Keep separate</option>`;
         mergeTargets.forEach((t) => {
           if (t.id === col.id) return;
           mergeHtml += `<option value="${escapeHtml(t.id)}" ${curMerge === t.id ? 'selected' : ''}>Merge into: ${escapeHtml(t.label)}</option>`;
@@ -405,13 +384,12 @@
         mergeHtml += '</select>';
       }
 
-      const canMove = !col.isSystem;
       const nonSysIdx = cols.filter((c) => !c.isSystem).findIndex((c) => c.id === col.id);
       const nonSysLen = cols.filter((c) => !c.isSystem).length;
 
-      html += `<tr data-schema-col="${escapeHtml(col.id)}">
+      html += `<tr>
         <td>
-          <input type="checkbox" class="schema-vis" data-col-id="${escapeHtml(col.id)}" ${!col.hidden ? 'checked' : ''} ${col.isSystem ? 'disabled' : ''}>
+          <input type="checkbox" class="schema-vis toggle-inp" data-col-id="${escapeHtml(col.id)}" ${!col.hidden ? 'checked' : ''} ${col.isSystem ? 'disabled' : ''}>
         </td>
         <td>
           <input type="text" class="inp schema-rename" data-col-id="${escapeHtml(col.id)}" value="${escapeHtml(col.label)}" style="height:30px;font-size:12px;">
@@ -419,7 +397,7 @@
         <td>${covBadge}</td>
         <td>${mergeHtml}</td>
         <td>
-          ${canMove ? `<div class="order-btns">
+          ${!col.isSystem ? `<div class="order-btns">
             <button type="button" class="btn btn-xs schema-up" data-col-id="${escapeHtml(col.id)}" ${nonSysIdx <= 0 ? 'disabled' : ''}>&uarr;</button>
             <button type="button" class="btn btn-xs schema-down" data-col-id="${escapeHtml(col.id)}" ${nonSysIdx >= nonSysLen - 1 ? 'disabled' : ''}>&darr;</button>
           </div>` : '<span class="mini-pill cleaned">Left Fixed</span>'}
@@ -432,14 +410,14 @@
 
   function renderSummaryAndDups() {
     const ds = state.dataset;
-    const sumColObj = ds && ds.allSchemaCols.find((c) => c.id === ds.summaryColId);
+    const sumColObj = ds.allSchemaCols.find((c) => c.id === ds.summaryColId);
     els.summaryGroupBadge.textContent = `Grouped by: ${sumColObj ? sumColObj.label : 'Source File'}`;
 
-    if (!ds || !ds.summaryRows.length) {
+    if (!ds.summaryRows.length) {
       els.summaryThead.innerHTML = '';
-      els.summaryTbody.innerHTML = '<tr><td style="text-align:center;padding:24px;color:var(--muted);">Import files to view automatic branch/file totals.</td></tr>';
+      els.summaryTbody.innerHTML = '<tr><td style="text-align:center;padding:24px;color:var(--muted);">No rows to summarize.</td></tr>';
     } else {
-      let th = '<tr><th>Group / Source</th><th>Rows</th><th>Flagged Duplicates</th>';
+      let th = '<tr><th>Group / Source</th><th>Rows</th><th>Duplicates</th>';
       ds.numericCols.forEach((nc) => {
         th += `<th style="text-align:right;">Total ${escapeHtml(nc.label)}</th>`;
       });
@@ -476,14 +454,13 @@
       els.summaryTbody.innerHTML = tb;
     }
 
-    // Duplicate Audit Content
     if (!state.options.duplicateKeyColId) {
-      els.dupAuditContent.innerHTML = 'Pick a key column like <strong>Invoice No</strong> under <em>3. Audit &amp; Branch Totals</em> on the left to check repeated records across branches.';
-    } else if (!ds || !ds.duplicateGroups.length) {
-      els.dupAuditContent.innerHTML = '<span style="color:var(--ok);font-weight:600;">No repeated records found for the selected key column.</span>';
+      els.dupAuditContent.innerHTML = 'Open <strong>More options</strong> on the left and pick a column under <em>Check duplicates</em> (such as <strong>Invoice No</strong>) to flag repeated records.';
+    } else if (!ds.duplicateGroups.length) {
+      els.dupAuditContent.innerHTML = '<span style="color:var(--ok);font-weight:600;">No repeated records found for this column.</span>';
     } else {
       let dHtml = `<p style="margin-bottom:8px;color:var(--warn);font-weight:600;">Found ${ds.duplicateGroups.length} repeated key value(s):</p>`;
-      dHtml += '<table class="schema-table"><thead><tr><th>Repeated Key</th><th>Occurrences</th><th>Appears In Files</th></tr></thead><tbody>';
+      dHtml += '<table class="schema-table"><thead><tr><th>Repeated Value</th><th>Count</th><th>Files</th></tr></thead><tbody>';
       ds.duplicateGroups.slice(0, 100).forEach((grp) => {
         const filesSet = Array.from(new Set(grp.rows.map((r) => r.__source_file)));
         dHtml += `<tr>
@@ -497,14 +474,10 @@
     }
   }
 
-  /**
-   * Chunked async ingestion supporting 2 to 2,000+ Excel/CSV files cleanly
-   * without blocking UI responsiveness.
-   */
   async function ingestFileList(fileListObj) {
     const rawFiles = Array.from(fileListObj || []).filter((f) => ACCEPTED_EXT.test(f.name) && !f.name.startsWith('~$'));
     if (!rawFiles.length) {
-      showToast('No supported Excel (.xlsx/.xls) or CSV files found in selection.', true);
+      showToast('Please select Excel (.xlsx / .xls) or CSV files.', true);
       return;
     }
 
@@ -547,7 +520,6 @@
         errors++;
       }
 
-      // Yield to UI thread every 6 files (or every large file) so browser never hangs
       if (i % 6 === 5) {
         await new Promise((res) => setTimeout(res, 0));
       }
@@ -559,32 +531,30 @@
     rebuildAndRender();
 
     if (errors > 0) {
-      showToast(`Imported ${added} file(s); ${errors} unreadable file(s) skipped.`, true);
+      showToast(`Added ${added} file(s); ${errors} unreadable file(s) skipped.`, true);
     } else {
-      showToast(`Merged ${added} file(s) successfully.`);
+      showToast(`Merged ${added} file(s) — ready to review & download.`);
     }
   }
 
   function loadSamples() {
     try {
-      const sampleFiles = window.MergerEngine.generateSampleFiles();
-      state.files = sampleFiles;
+      state.files = window.MergerEngine.generateSampleFiles();
       state.options.colOverrides = {};
       state.options.sortColId = '';
       state.options.duplicateKeyColId = '';
       state.page = 1;
       rebuildAndRender();
 
-      // Auto-select Invoice No for duplicate check in sample mode if present so users see it immediately!
       const invCol = state.dataset.allSchemaCols.find((c) => /invoice\s*no/i.test(c.label));
       if (invCol) {
         state.options.duplicateKeyColId = invCol.id;
         els.optDupKey.value = invCol.id;
         rebuildAndRender();
       }
-      showToast('Loaded 5 sample branch files (with extra cols, banner skip & repeated header).');
+      showToast('Loaded 5 sample branch files.');
     } catch (err) {
-      showToast('Could not generate sample files: ' + err.message, true);
+      showToast('Sample load failed: ' + err.message, true);
     }
   }
 
@@ -595,35 +565,67 @@
     const targetIdx = idx + direction;
     if (idx < 0 || targetIdx < 0 || targetIdx >= dataCols.length) return;
 
-    // Assign explicit clean sequential orders before swapping
     dataCols.forEach((c, i) => {
       if (!state.options.colOverrides[c.id]) state.options.colOverrides[c.id] = {};
       state.options.colOverrides[c.id].order = i * 10;
     });
-    const aOrder = state.options.colOverrides[dataCols[idx].id].order;
-    const bOrder = state.options.colOverrides[dataCols[targetIdx].id].order;
-    state.options.colOverrides[dataCols[idx].id].order = bOrder;
-    state.options.colOverrides[dataCols[targetIdx].id].order = aOrder;
+    const tmp = state.options.colOverrides[dataCols[idx].id].order;
+    state.options.colOverrides[dataCols[idx].id].order = state.options.colOverrides[dataCols[targetIdx].id].order;
+    state.options.colOverrides[dataCols[targetIdx].id].order = tmp;
     rebuildAndRender();
   }
 
+  function showHelpPopover(btn) {
+    const title = btn.dataset.title || '';
+    const help = btn.dataset.help || '';
+    if (!help) return;
+    els.helpPopTitle.textContent = title;
+    els.helpPopBody.textContent = help;
+    els.helpPopover.classList.remove('hidden');
+
+    const rect = btn.getBoundingClientRect();
+    const popRect = els.helpPopover.getBoundingClientRect();
+    const margin = 10;
+    let left = rect.left + (rect.width / 2) - (popRect.width / 2);
+    left = Math.max(margin, Math.min(window.innerWidth - popRect.width - margin, left));
+    let top = rect.bottom + 8;
+    if (top + popRect.height > window.innerHeight - margin) {
+      top = Math.max(margin, rect.top - popRect.height - 8);
+    }
+    els.helpPopover.style.left = `${left}px`;
+    els.helpPopover.style.top = `${top}px`;
+  }
+
+  function hideHelpPopover() {
+    els.helpPopover.classList.add('hidden');
+  }
+
   function bindEvents() {
-    // Dropzone & Pickers
-    els.pickFilesBtn.addEventListener('click', (e) => { e.stopPropagation(); els.fileInput.click(); });
-    els.pickFolderBtn.addEventListener('click', (e) => { e.stopPropagation(); els.folderInput.click(); });
-    els.dropzone.addEventListener('click', () => els.fileInput.click());
-    els.dropzone.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); els.fileInput.click(); }
-    });
-    els.dropzone.addEventListener('dragover', (e) => {
+    // Landing Dropzone & Pickers
+    els.heroSelectFilesBtn.addEventListener('click', () => els.fileInput.click());
+    els.heroSelectFolderBtn.addEventListener('click', () => els.folderInput.click());
+    els.heroSampleBtn.addEventListener('click', loadSamples);
+    els.addMoreBtn.addEventListener('click', () => els.fileInput.click());
+
+    els.heroDropzone.addEventListener('dragover', (e) => {
       e.preventDefault();
-      els.dropzone.classList.add('drag-over');
+      els.heroDropzone.classList.add('drag-over');
     });
-    els.dropzone.addEventListener('dragleave', () => els.dropzone.classList.remove('drag-over'));
-    els.dropzone.addEventListener('drop', (e) => {
+    els.heroDropzone.addEventListener('dragleave', () => els.heroDropzone.classList.remove('drag-over'));
+    els.heroDropzone.addEventListener('drop', (e) => {
       e.preventDefault();
-      els.dropzone.classList.remove('drag-over');
+      els.heroDropzone.classList.remove('drag-over');
       if (e.dataTransfer && e.dataTransfer.files) ingestFileList(e.dataTransfer.files);
+    });
+
+    // Also allow dropping onto the whole studio window once files are loaded!
+    document.body.addEventListener('dragover', (e) => e.preventDefault());
+    document.body.addEventListener('drop', (e) => {
+      e.preventDefault();
+      if (e.target.closest('#heroDropzone')) return;
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
+        ingestFileList(e.dataTransfer.files);
+      }
     });
 
     els.fileInput.addEventListener('change', (e) => {
@@ -636,28 +638,26 @@
     });
     els.cancelImportBtn.addEventListener('click', () => { state.cancelImport = true; });
 
-    // Samples
-    els.loadSampleBtn.addEventListener('click', loadSamples);
-    els.topSampleBtn.addEventListener('click', loadSamples);
-    els.emptySampleBtn.addEventListener('click', loadSamples);
-
     // File Inventory
     els.fileSearchInput.addEventListener('input', (e) => {
       state.fileSearch = e.target.value;
       renderFileList();
     });
-    els.toggleAllFilesBtn.addEventListener('click', () => {
-      const valid = state.files.filter((f) => !f.error);
-      const allOn = valid.every((f) => f.enabled);
-      valid.forEach((f) => { f.enabled = !allOn; });
-      state.page = 1;
-      rebuildAndRender();
-    });
     els.clearFilesBtn.addEventListener('click', () => {
       state.files = [];
       state.options.colOverrides = {};
       state.options.sortColId = '';
+      state.options.sortDir = 'asc';
       state.options.duplicateKeyColId = '';
+      state.options.summaryGroupColId = '__source_file';
+      state.savedNamedDupKey = '';
+      state.savedNamedSummaryKey = '';
+      state.searchQuery = '';
+      state.onlyDups = false;
+      els.tableSearchInput.value = '';
+      els.optOnlyDups.checked = false;
+      const scroller = document.querySelector('.sheet-scroll');
+      if (scroller) scroller.scrollTop = 0;
       state.page = 1;
       rebuildAndRender();
     });
@@ -679,29 +679,36 @@
       rebuildAndRender();
     });
 
-    // Live Options
+    // Quick Options + Advanced Options
     els.optSourceFile.addEventListener('change', () => {
       state.options.includeSourceFile = els.optSourceFile.checked;
-      els.sourceSubOpts.classList.toggle('hidden', !state.options.includeSourceFile);
       rebuildAndRender();
     });
-    els.optStripExt.addEventListener('change', () => {
-      state.options.stripExtension = els.optStripExt.checked;
-      rebuildAndRender();
-    });
-    els.optSheetName.addEventListener('change', () => {
-      state.options.includeSheetName = els.optSheetName.checked;
-      rebuildAndRender();
-    });
-    els.optHeaderMode.addEventListener('change', () => {
-      const mode = els.optHeaderMode.value;
-      state.options.headerMode = mode;
-      els.customRowWrap.classList.toggle('hidden', mode !== 'custom');
-      const hasHeaders = mode !== 'none';
-      els.repeatHeaderWrap.classList.toggle('hidden', !hasHeaders);
-      els.smartMatchWrap.classList.toggle('hidden', !hasHeaders);
+    els.optHasHeaders.addEventListener('change', () => {
+      const hasHdr = els.optHasHeaders.checked;
+      if (!hasHdr) {
+        state.savedNamedDupKey = state.options.duplicateKeyColId;
+        state.savedNamedSummaryKey = state.options.summaryGroupColId;
+      } else {
+        if (state.savedNamedDupKey) state.options.duplicateKeyColId = state.savedNamedDupKey;
+        if (state.savedNamedSummaryKey) state.options.summaryGroupColId = state.savedNamedSummaryKey;
+      }
+      els.repeatHeaderWrap.classList.toggle('hidden', !hasHdr);
+      els.headerDetectRowWrap.classList.toggle('hidden', !hasHdr);
+      els.smartMatchWrap.classList.toggle('hidden', !hasHdr);
+      els.customRowWrap.classList.toggle('hidden', !hasHdr || els.optHeaderRowMode.value !== 'custom');
+      state.options.headerMode = hasHdr ? els.optHeaderRowMode.value : 'none';
       state.page = 1;
       rebuildAndRender();
+    });
+    els.optHeaderRowMode.addEventListener('change', () => {
+      const mode = els.optHeaderRowMode.value;
+      els.customRowWrap.classList.toggle('hidden', mode !== 'custom');
+      if (els.optHasHeaders.checked) {
+        state.options.headerMode = mode;
+        state.page = 1;
+        rebuildAndRender();
+      }
     });
     els.optCustomHeaderRow.addEventListener('input', () => {
       state.options.customHeaderRow = Math.max(1, parseInt(els.optCustomHeaderRow.value, 10) || 1);
@@ -711,6 +718,14 @@
     els.optRemoveRepeated.addEventListener('change', () => {
       state.options.removeRepeatedHeaders = els.optRemoveRepeated.checked;
       state.page = 1;
+      rebuildAndRender();
+    });
+    els.optStripExt.addEventListener('change', () => {
+      state.options.stripExtension = els.optStripExt.checked;
+      rebuildAndRender();
+    });
+    els.optSheetName.addEventListener('change', () => {
+      state.options.includeSheetName = els.optSheetName.checked;
       rebuildAndRender();
     });
     els.optSmartMatch.addEventListener('change', () => {
@@ -743,15 +758,13 @@
       rebuildAndRender();
     });
 
-    // Stage Tabs
+    // Tabs, Sorting & Filter
     document.querySelectorAll('.stage-tab').forEach((btn) => {
       btn.addEventListener('click', () => {
         state.activeStage = btn.dataset.stage;
         renderActiveStage();
       });
     });
-
-    // Sorting & Table Filter
     els.sortColSelect.addEventListener('change', () => {
       state.options.sortColId = els.sortColSelect.value;
       state.page = 1;
@@ -806,7 +819,7 @@
       renderPreviewTable();
     });
 
-    // Schema Table interactions (Rename / Hide / Merge / Reorder)
+    // Schema Table interactions
     els.schemaTbody.addEventListener('change', (e) => {
       const colId = e.target.dataset.colId;
       if (!colId) return;
@@ -849,6 +862,31 @@
       }
     });
 
+    // [?] Help tooltips (clean hover + click pin without focus/click race)
+    document.querySelectorAll('.help-q').forEach((btn) => {
+      btn.addEventListener('mouseenter', () => showHelpPopover(btn));
+      btn.addEventListener('mouseleave', () => {
+        if (state.pinnedHelpBtn !== btn) hideHelpPopover();
+      });
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (state.pinnedHelpBtn === btn) {
+          state.pinnedHelpBtn = null;
+          hideHelpPopover();
+        } else {
+          state.pinnedHelpBtn = btn;
+          showHelpPopover(btn);
+        }
+      });
+    });
+    document.addEventListener('click', (e) => {
+      if (!e.target.classList.contains('help-q')) {
+        state.pinnedHelpBtn = null;
+        hideHelpPopover();
+      }
+    });
+
     // Privacy Modal
     els.privacyBtn.addEventListener('click', () => els.privacyModal.classList.remove('hidden'));
     document.querySelectorAll('[data-close-modal]').forEach((btn) => {
@@ -862,6 +900,6 @@
   document.addEventListener('DOMContentLoaded', () => {
     cacheElements();
     bindEvents();
-    rebuildAndRender();
+    switchLandingOrStudio();
   });
 })();
