@@ -6,7 +6,8 @@
     { "source": "/tools/gst-reco", "destination": "/tools/gst-reco/", "permanent": true },
     { "source": "/tools/confirmation-generator", "destination": "/tools/confirmation-generator/", "permanent": true },
     { "source": "/tools/fpa-dashboard", "destination": "/tools/fpa-dashboard/", "permanent": true },
-    { "source": "/tools/salon-queue", "destination": "/tools/salon-queue/", "permanent": true }
+    { "source": "/tools/salon-queue", "destination": "/tools/salon-queue/", "permanent": true },
+    { "source": "/tools/excel-merger", "destination": "/tools/excel-merger/", "permanent": true }
   ],
   "headers": [
     {
