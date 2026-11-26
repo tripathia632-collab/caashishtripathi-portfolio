@@ -1,5 +1,7 @@
 /**
- * Excel & CSV Merger — Simple Progressive-Disclosure UI Controller
+ * Excel & CSV Consolidator Studio — Full-Feature Clarity Controller
+ * Pre-loads 5 realistic sample branch files on launch (auto-replaced on first real upload)
+ * so every capability is immediately visible, understandable, and zero-learning.
  */
 (function () {
   'use strict';
@@ -8,6 +10,7 @@
 
   const state = {
     files: [],
+    isSampleMode: true,
     dataset: null,
     activeStage: 'preview',
     importing: false,
@@ -74,34 +77,28 @@
 
   function cacheElements() {
     [
-      'fileInput', 'folderInput', 'landingView', 'studioView', 'heroDropzone',
-      'heroSelectFilesBtn', 'heroSelectFolderBtn', 'heroSampleBtn',
-      'importProgress', 'importProgressText', 'importProgressFill', 'cancelImportBtn',
-      'fileInvMeta', 'addMoreBtn', 'clearFilesBtn', 'fileSearchInput', 'fileList',
-      'optSourceFile', 'optHasHeaders', 'repeatHeaderWrap', 'optRemoveRepeated',
-      'optStripExt', 'optSheetName', 'headerDetectRowWrap', 'optHeaderRowMode',
-      'customRowWrap', 'optCustomHeaderRow', 'smartMatchWrap', 'optSmartMatch',
-      'optSheetMode', 'optSkipBlank', 'optDupKey', 'optDupAction', 'optSummaryGroup',
+      'fileInput', 'folderInput', 'guidePickBtn', 'dropzone', 'dropSubHint',
+      'pickFilesBtn', 'pickFolderBtn', 'loadSampleBtn', 'emptySampleBtn',
+      'modeBadge', 'importProgress', 'importProgressText', 'importProgressFill',
+      'cancelImportBtn', 'fileInvWrap', 'fileInvMeta', 'toggleAllFilesBtn',
+      'clearFilesBtn', 'fileSearchInput', 'fileList', 'optSourceFile',
+      'sourceSubOpts', 'optStripExt', 'optSheetName', 'optHeaderMode',
+      'customRowWrap', 'optCustomHeaderRow', 'repeatHeaderWrap',
+      'optRemoveRepeated', 'smartMatchWrap', 'optSmartMatch', 'optSheetMode',
+      'optSkipBlank', 'optDupKey', 'optDupAction', 'optSummaryGroup',
       'summaryStatMain', 'summaryStatChips', 'exportFilename', 'exportCsvBtn',
       'exportXlsxBtn', 'tabPreviewBadge', 'tabSchemaBadge', 'tabDupBadge',
-      'sortColSelect', 'sortDirBtn', 'clearSortBtn', 'dupFilterLabel',
-      'optOnlyDups', 'tableSearchInput', 'previewThead', 'previewTbody',
-      'pagerInfo', 'pageSizeSelect', 'prevPageBtn', 'nextPageBtn', 'pageNumText',
+      'previewToolbar', 'sortColSelect', 'sortDirBtn', 'clearSortBtn',
+      'dupFilterLabel', 'optOnlyDups', 'tableSearchInput', 'emptyStage',
+      'sheetScroll', 'previewThead', 'previewTbody', 'sheetFooter', 'pagerInfo',
+      'pageSizeSelect', 'prevPageBtn', 'nextPageBtn', 'pageNumText',
       'schemaTbody', 'summaryGroupBadge', 'summaryThead', 'summaryTbody',
       'dupAuditContent', 'helpPopover', 'helpPopTitle', 'helpPopBody',
       'privacyBtn', 'privacyModal', 'toast'
     ].forEach((id) => { els[id] = $(id); });
   }
 
-  function switchLandingOrStudio() {
-    const hasFiles = state.files.length > 0;
-    els.landingView.classList.toggle('hidden', hasFiles);
-    els.studioView.classList.toggle('hidden', !hasFiles);
-  }
-
   function rebuildAndRender() {
-    switchLandingOrStudio();
-    if (!state.files.length) return;
     state.dataset = window.MergerEngine.buildMergedDataset(state.files, state.options);
     syncOptionSelects();
     renderSummaryBar();
@@ -114,9 +111,9 @@
     const cols = ds ? ds.allSchemaCols.filter((c) => !c.hidden) : [];
     const nonSystemCols = ds ? ds.allSchemaCols.filter((c) => !c.isSystem && !c.hidden) : [];
 
-    // Sort Column Select
+    // Sort Order
     const prevSort = state.options.sortColId;
-    let sortHtml = '<option value="">Original Order</option>';
+    let sortHtml = '<option value="">Original File Order</option>';
     cols.forEach((c) => {
       sortHtml += `<option value="${escapeHtml(c.id)}">${escapeHtml(c.label)}</option>`;
     });
@@ -130,9 +127,9 @@
     els.sortDirBtn.textContent = state.options.sortDir === 'desc' ? 'Desc ↓' : 'Asc ↑';
     els.clearSortBtn.classList.toggle('hidden', !state.options.sortColId);
 
-    // Duplicate Check Select
+    // Duplicate Check
     const prevDup = state.options.duplicateKeyColId;
-    let dupHtml = '<option value="">Off</option>';
+    let dupHtml = '<option value="">Off (Keep all)</option>';
     nonSystemCols.forEach((c) => {
       dupHtml += `<option value="${escapeHtml(c.id)}">${escapeHtml(c.label)}</option>`;
     });
@@ -144,7 +141,7 @@
       els.optDupKey.value = '';
     }
 
-    // Summary Group By Select
+    // Branch Summary Group
     const prevGrp = state.options.summaryGroupColId;
     let grpHtml = '';
     if (state.options.includeSourceFile) {
@@ -167,9 +164,14 @@
   function renderSummaryBar() {
     const ds = state.dataset;
     const st = ds.stats;
-    const enabledCount = st.enabledFileCount;
+    const totalFiles = state.files.length;
 
-    els.summaryStatMain.textContent = `${formatInt(st.totalRowCount)} rows merged from ${enabledCount} file${enabledCount === 1 ? '' : 's'} · ${st.visibleColCount} columns`;
+    if (!totalFiles) {
+      els.summaryStatMain.textContent = 'Ready to merge branch files';
+    } else {
+      const prefix = state.isSampleMode ? 'Sample Preview · ' : '';
+      els.summaryStatMain.textContent = `${prefix}${formatInt(st.totalRowCount)} rows merged from ${st.enabledFileCount} file${st.enabledFileCount === 1 ? '' : 's'} · ${st.visibleColCount} columns`;
+    }
 
     let chips = '';
     if (st.repeatedRemoved > 0) {
@@ -183,7 +185,7 @@
     }
     const errCount = state.files.filter((f) => f.error).length;
     if (errCount > 0) {
-      chips += `<span class="mini-pill err">${errCount} file(s) unreadable</span>`;
+      chips += `<span class="mini-pill err">${errCount} unreadable file(s) skipped</span>`;
     }
     els.summaryStatChips.innerHTML = chips;
 
@@ -195,11 +197,31 @@
     const hasRows = st.totalRowCount > 0 && st.visibleColCount > 0;
     els.exportXlsxBtn.disabled = !hasRows;
     els.exportCsvBtn.disabled = !hasRows;
+
+    // Mode Badge & Drop hint
+    if (!totalFiles) {
+      els.modeBadge.textContent = 'Empty';
+      els.modeBadge.className = 'panel-tag';
+      els.dropSubHint.textContent = 'Supports 2 to 2,000+ .xlsx / .xls / .csv files';
+    } else if (state.isSampleMode) {
+      els.modeBadge.textContent = 'Sample Preview';
+      els.modeBadge.className = 'panel-tag is-demo';
+      els.dropSubHint.textContent = 'Replaces sample preview automatically';
+    } else {
+      els.modeBadge.textContent = `${st.enabledFileCount} Real File(s)`;
+      els.modeBadge.className = 'panel-tag is-real';
+      els.dropSubHint.textContent = 'Drop more files anytime to append';
+    }
   }
 
   function renderFileList() {
+    const hasFiles = state.files.length > 0;
+    els.fileInvWrap.classList.toggle('hidden', !hasFiles);
+    if (!hasFiles) return;
+
     const enabledCount = state.files.filter((f) => f.enabled && !f.error).length;
     els.fileInvMeta.textContent = `${enabledCount} of ${state.files.length} active`;
+    els.toggleAllFilesBtn.textContent = enabledCount === state.files.length ? 'Uncheck All' : 'Check All';
     els.fileSearchInput.classList.toggle('hidden', state.files.length < 6);
 
     const q = state.fileSearch.trim().toLowerCase();
@@ -227,6 +249,9 @@
         if (fStat.detectedHeaderRow > 1) {
           badges += `<span class="mini-pill cleaned">Header R${fStat.detectedHeaderRow}</span>`;
         }
+        if (fStat.repeatedRemoved > 0) {
+          badges += `<span class="mini-pill cleaned">-${fStat.repeatedRemoved} rep hdr</span>`;
+        }
         if (extraInFile > 0) {
           badges += `<span class="mini-pill extra">+${extraInFile} extra col</span>`;
         }
@@ -238,7 +263,7 @@
 
       html += `
         <div class="${cls.join(' ')}" data-file-id="${escapeHtml(f.id)}">
-          <input type="checkbox" class="file-toggle" ${f.enabled ? 'checked' : ''} ${f.error ? 'disabled' : ''} aria-label="Include ${escapeHtml(f.name)}">
+          <input type="checkbox" class="file-toggle toggle-inp" ${f.enabled ? 'checked' : ''} ${f.error ? 'disabled' : ''} aria-label="Include ${escapeHtml(f.name)}">
           <div style="min-width:0;">
             <div class="file-name" title="${escapeHtml(f.name)}">${escapeHtml(f.name)}</div>
             <div class="file-sub">${badges}</div>
@@ -289,10 +314,18 @@
 
   function renderPreviewTable() {
     const ds = state.dataset;
-    const cols = ds.visibleCols;
+    const hasData = ds && ds.rows.length > 0 && ds.visibleCols.length > 0;
+
+    els.emptyStage.classList.toggle('hidden', hasData);
+    els.previewToolbar.classList.toggle('hidden', !hasData);
+    els.sheetScroll.classList.toggle('hidden', !hasData);
+    els.sheetFooter.classList.toggle('hidden', !hasData);
+    if (!hasData) return;
+
     const dupAvailable = Boolean(state.options.duplicateKeyColId && ds.duplicateGroups.length > 0);
     els.dupFilterLabel.classList.toggle('hidden', !dupAvailable);
 
+    const cols = ds.visibleCols;
     const filtered = getFilteredRows();
     const total = filtered.length;
     const totalPages = Math.max(1, Math.ceil(total / state.pageSize));
@@ -362,6 +395,11 @@
   function renderSchemaTable() {
     const ds = state.dataset;
     const cols = ds.allSchemaCols;
+    if (!cols.length) {
+      els.schemaTbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--muted);">Load or drop files to reorder, rename, or merge columns.</td></tr>';
+      return;
+    }
+
     const mergeTargets = cols.filter((c) => !c.isSystem);
     let html = '';
 
@@ -415,9 +453,9 @@
 
     if (!ds.summaryRows.length) {
       els.summaryThead.innerHTML = '';
-      els.summaryTbody.innerHTML = '<tr><td style="text-align:center;padding:24px;color:var(--muted);">No rows to summarize.</td></tr>';
+      els.summaryTbody.innerHTML = '<tr><td style="text-align:center;padding:24px;color:var(--muted);">No data loaded to summarize.</td></tr>';
     } else {
-      let th = '<tr><th>Group / Source</th><th>Rows</th><th>Duplicates</th>';
+      let th = '<tr><th>Group / Source</th><th>Rows</th><th>Flagged Duplicates</th>';
       ds.numericCols.forEach((nc) => {
         th += `<th style="text-align:right;">Total ${escapeHtml(nc.label)}</th>`;
       });
@@ -455,12 +493,12 @@
     }
 
     if (!state.options.duplicateKeyColId) {
-      els.dupAuditContent.innerHTML = 'Open <strong>More options</strong> on the left and pick a column under <em>Check duplicates</em> (such as <strong>Invoice No</strong>) to flag repeated records.';
+      els.dupAuditContent.innerHTML = 'Pick a column like <strong>Invoice No</strong> under <em>3. Duplicate Check &amp; Totals</em> on the left to check repeated records across branches.';
     } else if (!ds.duplicateGroups.length) {
       els.dupAuditContent.innerHTML = '<span style="color:var(--ok);font-weight:600;">No repeated records found for this column.</span>';
     } else {
       let dHtml = `<p style="margin-bottom:8px;color:var(--warn);font-weight:600;">Found ${ds.duplicateGroups.length} repeated key value(s):</p>`;
-      dHtml += '<table class="schema-table"><thead><tr><th>Repeated Value</th><th>Count</th><th>Files</th></tr></thead><tbody>';
+      dHtml += '<table class="schema-table"><thead><tr><th>Repeated Key</th><th>Count</th><th>Appears In Files</th></tr></thead><tbody>';
       ds.duplicateGroups.slice(0, 100).forEach((grp) => {
         const filesSet = Array.from(new Set(grp.rows.map((r) => r.__source_file)));
         dHtml += `<tr>
@@ -479,6 +517,16 @@
     if (!rawFiles.length) {
       showToast('Please select Excel (.xlsx / .xls) or CSV files.', true);
       return;
+    }
+
+    // Automatically clear initial sample preview on the user's first real file upload
+    if (state.isSampleMode) {
+      state.files = [];
+      state.isSampleMode = false;
+      state.options.colOverrides = {};
+      state.options.sortColId = '';
+      state.options.duplicateKeyColId = '';
+      state.options.summaryGroupColId = '__source_file';
     }
 
     state.importing = true;
@@ -531,18 +579,25 @@
     rebuildAndRender();
 
     if (errors > 0) {
-      showToast(`Added ${added} file(s); ${errors} unreadable file(s) skipped.`, true);
+      showToast(`Imported ${added} file(s); ${errors} unreadable file(s) skipped.`, true);
     } else {
-      showToast(`Merged ${added} file(s) — ready to review & download.`);
+      showToast(`Merged ${added} file(s) locally.`);
     }
   }
 
-  function loadSamples() {
+  function loadSamples(silent) {
     try {
       state.files = window.MergerEngine.generateSampleFiles();
+      state.isSampleMode = true;
       state.options.colOverrides = {};
       state.options.sortColId = '';
+      state.options.sortDir = 'asc';
       state.options.duplicateKeyColId = '';
+      state.options.summaryGroupColId = '__source_file';
+      state.searchQuery = '';
+      state.onlyDups = false;
+      els.tableSearchInput.value = '';
+      els.optOnlyDups.checked = false;
       state.page = 1;
       rebuildAndRender();
 
@@ -552,9 +607,9 @@
         els.optDupKey.value = invCol.id;
         rebuildAndRender();
       }
-      showToast('Loaded 5 sample branch files.');
+      if (!silent) showToast('Loaded 5 sample branch files.');
     } catch (err) {
-      showToast('Sample load failed: ' + err.message, true);
+      showToast('Could not load samples: ' + err.message, true);
     }
   }
 
@@ -601,31 +656,23 @@
   }
 
   function bindEvents() {
-    // Landing Dropzone & Pickers
-    els.heroSelectFilesBtn.addEventListener('click', () => els.fileInput.click());
-    els.heroSelectFolderBtn.addEventListener('click', () => els.folderInput.click());
-    els.heroSampleBtn.addEventListener('click', loadSamples);
-    els.addMoreBtn.addEventListener('click', () => els.fileInput.click());
-
-    els.heroDropzone.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      els.heroDropzone.classList.add('drag-over');
+    // Upload controls
+    els.guidePickBtn.addEventListener('click', () => els.fileInput.click());
+    els.pickFilesBtn.addEventListener('click', (e) => { e.stopPropagation(); els.fileInput.click(); });
+    els.pickFolderBtn.addEventListener('click', (e) => { e.stopPropagation(); els.folderInput.click(); });
+    els.dropzone.addEventListener('click', () => els.fileInput.click());
+    els.dropzone.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); els.fileInput.click(); }
     });
-    els.heroDropzone.addEventListener('dragleave', () => els.heroDropzone.classList.remove('drag-over'));
-    els.heroDropzone.addEventListener('drop', (e) => {
+    els.dropzone.addEventListener('dragover', (e) => {
       e.preventDefault();
-      els.heroDropzone.classList.remove('drag-over');
+      els.dropzone.classList.add('drag-over');
+    });
+    els.dropzone.addEventListener('dragleave', () => els.dropzone.classList.remove('drag-over'));
+    els.dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      els.dropzone.classList.remove('drag-over');
       if (e.dataTransfer && e.dataTransfer.files) ingestFileList(e.dataTransfer.files);
-    });
-
-    // Also allow dropping onto the whole studio window once files are loaded!
-    document.body.addEventListener('dragover', (e) => e.preventDefault());
-    document.body.addEventListener('drop', (e) => {
-      e.preventDefault();
-      if (e.target.closest('#heroDropzone')) return;
-      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
-        ingestFileList(e.dataTransfer.files);
-      }
     });
 
     els.fileInput.addEventListener('change', (e) => {
@@ -638,26 +685,35 @@
     });
     els.cancelImportBtn.addEventListener('click', () => { state.cancelImport = true; });
 
+    // Samples
+    els.loadSampleBtn.addEventListener('click', () => loadSamples(false));
+    els.emptySampleBtn.addEventListener('click', () => loadSamples(false));
+
     // File Inventory
     els.fileSearchInput.addEventListener('input', (e) => {
       state.fileSearch = e.target.value;
       renderFileList();
     });
+    els.toggleAllFilesBtn.addEventListener('click', () => {
+      const valid = state.files.filter((f) => !f.error);
+      const allOn = valid.every((f) => f.enabled);
+      valid.forEach((f) => { f.enabled = !allOn; });
+      state.page = 1;
+      rebuildAndRender();
+    });
     els.clearFilesBtn.addEventListener('click', () => {
       state.files = [];
+      state.isSampleMode = false;
       state.options.colOverrides = {};
       state.options.sortColId = '';
       state.options.sortDir = 'asc';
       state.options.duplicateKeyColId = '';
       state.options.summaryGroupColId = '__source_file';
-      state.savedNamedDupKey = '';
-      state.savedNamedSummaryKey = '';
       state.searchQuery = '';
       state.onlyDups = false;
       els.tableSearchInput.value = '';
       els.optOnlyDups.checked = false;
-      const scroller = document.querySelector('.sheet-scroll');
-      if (scroller) scroller.scrollTop = 0;
+      els.sheetScroll.scrollTop = 0;
       state.page = 1;
       rebuildAndRender();
     });
@@ -679,36 +735,37 @@
       rebuildAndRender();
     });
 
-    // Quick Options + Advanced Options
+    // Live Merge & Header Options
     els.optSourceFile.addEventListener('change', () => {
       state.options.includeSourceFile = els.optSourceFile.checked;
+      els.sourceSubOpts.classList.toggle('hidden', !state.options.includeSourceFile);
       rebuildAndRender();
     });
-    els.optHasHeaders.addEventListener('change', () => {
-      const hasHdr = els.optHasHeaders.checked;
-      if (!hasHdr) {
+    els.optStripExt.addEventListener('change', () => {
+      state.options.stripExtension = els.optStripExt.checked;
+      rebuildAndRender();
+    });
+    els.optSheetName.addEventListener('change', () => {
+      state.options.includeSheetName = els.optSheetName.checked;
+      rebuildAndRender();
+    });
+    els.optHeaderMode.addEventListener('change', () => {
+      const prevMode = state.options.headerMode;
+      const mode = els.optHeaderMode.value;
+      if (prevMode !== 'none' && mode === 'none') {
         state.savedNamedDupKey = state.options.duplicateKeyColId;
         state.savedNamedSummaryKey = state.options.summaryGroupColId;
-      } else {
+      } else if (prevMode === 'none' && mode !== 'none') {
         if (state.savedNamedDupKey) state.options.duplicateKeyColId = state.savedNamedDupKey;
         if (state.savedNamedSummaryKey) state.options.summaryGroupColId = state.savedNamedSummaryKey;
       }
-      els.repeatHeaderWrap.classList.toggle('hidden', !hasHdr);
-      els.headerDetectRowWrap.classList.toggle('hidden', !hasHdr);
-      els.smartMatchWrap.classList.toggle('hidden', !hasHdr);
-      els.customRowWrap.classList.toggle('hidden', !hasHdr || els.optHeaderRowMode.value !== 'custom');
-      state.options.headerMode = hasHdr ? els.optHeaderRowMode.value : 'none';
+      state.options.headerMode = mode;
+      els.customRowWrap.classList.toggle('hidden', mode !== 'custom');
+      const hasHeaders = mode !== 'none';
+      els.repeatHeaderWrap.classList.toggle('hidden', !hasHeaders);
+      els.smartMatchWrap.classList.toggle('hidden', !hasHeaders);
       state.page = 1;
       rebuildAndRender();
-    });
-    els.optHeaderRowMode.addEventListener('change', () => {
-      const mode = els.optHeaderRowMode.value;
-      els.customRowWrap.classList.toggle('hidden', mode !== 'custom');
-      if (els.optHasHeaders.checked) {
-        state.options.headerMode = mode;
-        state.page = 1;
-        rebuildAndRender();
-      }
     });
     els.optCustomHeaderRow.addEventListener('input', () => {
       state.options.customHeaderRow = Math.max(1, parseInt(els.optCustomHeaderRow.value, 10) || 1);
@@ -718,14 +775,6 @@
     els.optRemoveRepeated.addEventListener('change', () => {
       state.options.removeRepeatedHeaders = els.optRemoveRepeated.checked;
       state.page = 1;
-      rebuildAndRender();
-    });
-    els.optStripExt.addEventListener('change', () => {
-      state.options.stripExtension = els.optStripExt.checked;
-      rebuildAndRender();
-    });
-    els.optSheetName.addEventListener('change', () => {
-      state.options.includeSheetName = els.optSheetName.checked;
       rebuildAndRender();
     });
     els.optSmartMatch.addEventListener('change', () => {
@@ -758,7 +807,7 @@
       rebuildAndRender();
     });
 
-    // Tabs, Sorting & Filter
+    // Stage Tabs, Sort & Filter
     document.querySelectorAll('.stage-tab').forEach((btn) => {
       btn.addEventListener('click', () => {
         state.activeStage = btn.dataset.stage;
@@ -805,7 +854,7 @@
       renderPreviewTable();
     });
 
-    // Pagination
+    // Pager
     els.pageSizeSelect.addEventListener('change', () => {
       state.pageSize = parseInt(els.pageSizeSelect.value, 10) || 100;
       state.page = 1;
@@ -819,7 +868,7 @@
       renderPreviewTable();
     });
 
-    // Schema Table interactions
+    // Columns & Order interactions
     els.schemaTbody.addEventListener('change', (e) => {
       const colId = e.target.dataset.colId;
       if (!colId) return;
@@ -862,7 +911,7 @@
       }
     });
 
-    // [?] Help tooltips (clean hover + click pin without focus/click race)
+    // [?] Help tooltips (hover + click pin, zero race)
     document.querySelectorAll('.help-q').forEach((btn) => {
       btn.addEventListener('mouseenter', () => showHelpPopover(btn));
       btn.addEventListener('mouseleave', () => {
@@ -900,6 +949,8 @@
   document.addEventListener('DOMContentLoaded', () => {
     cacheElements();
     bindEvents();
-    switchLandingOrStudio();
+    // Pre-load 5 sample branch files (just like Balance Confirmation Studio)
+    // so first-time visitors immediately see how everything works.
+    loadSamples(true);
   });
 })();
