@@ -78,10 +78,10 @@
 
   function cacheElements() {
     [
-      'fileInput', 'folderInput', 'guidePickBtn', 'dropzone', 'dropSubHint',
+      'fileInput', 'folderInput', 'dropzone', 'dropSubHint',
       'pickFilesBtn', 'pickFolderBtn', 'loadSampleBtn', 'emptySampleBtn',
       'modeBadge', 'importProgress', 'importProgressText', 'importProgressFill',
-      'cancelImportBtn', 'fileInvWrap', 'fileInvMeta', 'manageFilesBtn', 'fileManagerPanel',
+      'cancelImportBtn', 'fileInvWrap', 'fileCountHeading', 'fileInvMeta',
       'toggleAllFilesBtn',
       'clearFilesBtn', 'fileSearchInput', 'fileList', 'optSourceFile',
       'sourceSubOpts', 'optStripExt', 'optSheetName', 'optHeaderMode',
@@ -198,29 +198,31 @@
     const totalFiles = state.files.length;
 
     if (!totalFiles) {
-      els.summaryStatMain.textContent = 'Ready to merge branch files';
+      els.summaryStatMain.innerHTML = 'No files loaded yet';
     } else {
-      const prefix = state.isSampleMode ? 'Sample Preview · ' : '';
-      els.summaryStatMain.textContent = `${prefix}${formatInt(st.totalRowCount)} rows merged from ${st.enabledFileCount} file${st.enabledFileCount === 1 ? '' : 's'} · ${st.visibleColCount} columns`;
+      els.summaryStatMain.innerHTML = `<strong>${formatInt(st.totalRowCount)}</strong> rows &middot; <strong>${st.enabledFileCount}</strong> file${st.enabledFileCount === 1 ? '' : 's'} &middot; <strong>${st.visibleColCount}</strong> columns`;
     }
 
     let chips = '';
+    if (totalFiles && state.isSampleMode) {
+      chips += '<span class="sample-label">Sample data</span>';
+    }
     if (st.repeatedRemoved > 0) {
-      chips += `<span class="mini-pill cleaned">${st.repeatedRemoved} repeated header(s) removed</span>`;
+      chips += `<span class="mini-pill cleaned">${st.repeatedRemoved} rep hdr removed</span>`;
     }
     if (st.blankSkipped > 0) {
-      chips += `<span class="mini-pill cleaned">${st.blankSkipped} blank row(s) skipped</span>`;
+      chips += `<span class="mini-pill cleaned">${st.blankSkipped} blank skipped</span>`;
     }
     if (st.extraColCount > 0) {
-      chips += `<span class="mini-pill extra">${st.extraColCount} extra branch column(s) aligned</span>`;
+      chips += `<span class="mini-pill extra">${st.extraColCount} extra cols</span>`;
     }
     if (st.duplicateCount > 0) {
       const verb = state.options.dedupeMode === 'drop' ? 'eliminated' : 'flagged';
-      chips += `<span class="mini-pill extra">${st.duplicateCount} duplicate row(s) ${verb}</span>`;
+      chips += `<span class="mini-pill extra">${st.duplicateCount} dup ${verb}</span>`;
     }
     const errCount = state.files.filter((f) => f.error).length;
     if (errCount > 0) {
-      chips += `<span class="mini-pill err">${errCount} unreadable file(s) skipped</span>`;
+      chips += `<span class="mini-pill err">${errCount} unreadable</span>`;
     }
     els.summaryStatChips.innerHTML = chips;
 
@@ -235,15 +237,15 @@
     if (!totalFiles) {
       els.modeBadge.textContent = 'Empty';
       els.modeBadge.className = 'panel-tag';
-      els.dropSubHint.textContent = 'Supports 2 to 2,000+ .xlsx / .xls / .csv files';
+      els.dropSubHint.textContent = 'Excel & CSV · 2 to 2,000+ files';
     } else if (state.isSampleMode) {
-      els.modeBadge.textContent = 'Sample Preview';
+      els.modeBadge.textContent = 'Sample files';
       els.modeBadge.className = 'panel-tag is-demo';
-      els.dropSubHint.textContent = 'Replaces sample preview automatically';
+      els.dropSubHint.textContent = 'Replaces samples on upload';
     } else {
-      els.modeBadge.textContent = `${st.enabledFileCount} Real File(s)`;
+      els.modeBadge.textContent = `${st.enabledFileCount} real file(s)`;
       els.modeBadge.className = 'panel-tag is-real';
-      els.dropSubHint.textContent = 'Drop more files anytime to append';
+      els.dropSubHint.textContent = 'Drop more files to append';
     }
   }
 
@@ -253,8 +255,9 @@
     if (!hasFiles) return;
 
     const enabledCount = state.files.filter((f) => f.enabled && !f.error).length;
-    els.fileInvMeta.textContent = `${enabledCount} of ${state.files.length} active`;
-    els.toggleAllFilesBtn.textContent = enabledCount === state.files.length ? 'Uncheck All' : 'Check All';
+    if (els.fileCountHeading) els.fileCountHeading.textContent = `(${state.files.length})`;
+    els.fileInvMeta.textContent = `${enabledCount} of ${state.files.length} included`;
+    els.toggleAllFilesBtn.textContent = enabledCount === state.files.length ? 'Uncheck all' : 'Check all';
     els.fileSearchInput.classList.toggle('hidden', state.files.length < 6);
 
     const q = state.fileSearch.trim().toLowerCase();
@@ -280,16 +283,10 @@
       } else if (fStat) {
         badges += `<span class="mini-pill">${formatInt(fStat.rowCount)} rows</span>`;
         if (f.sheets && f.sheets.length > 1) {
-          badges += `<span class="mini-pill cleaned">${f.sheets.length} sheets</span>`;
-        }
-        if (fStat.detectedHeaderRow > 1) {
-          badges += `<span class="mini-pill cleaned">Header R${fStat.detectedHeaderRow}</span>`;
-        }
-        if (fStat.repeatedRemoved > 0) {
-          badges += `<span class="mini-pill cleaned">-${fStat.repeatedRemoved} rep hdr</span>`;
+          badges += `<span class="mini-pill cleaned">${f.sheets.length}sh</span>`;
         }
         if (extraInFile > 0) {
-          badges += `<span class="mini-pill extra">+${extraInFile} extra col</span>`;
+          badges += `<span class="mini-pill extra">+${extraInFile}</span>`;
         }
       }
 
@@ -299,10 +296,10 @@
 
       html += `
         <div class="${cls.join(' ')}" data-file-id="${escapeHtml(f.id)}">
-          <input type="checkbox" class="file-toggle toggle-inp" ${f.enabled ? 'checked' : ''} ${f.error ? 'disabled' : ''} aria-label="Include ${escapeHtml(f.name)}">
-          <div style="min-width:0;">
-            <div class="file-name" title="${escapeHtml(f.name)}">${escapeHtml(f.name)}</div>
-            <div class="file-sub">${badges}</div>
+          <input type="checkbox" class="file-toggle" ${f.enabled ? 'checked' : ''} ${f.error ? 'disabled' : ''} aria-label="Include ${escapeHtml(f.name)}">
+          <div class="file-row-inner">
+            <span class="file-name" title="${escapeHtml(f.name)}">${escapeHtml(f.name)}</span>
+            <span class="file-badges">${badges}</span>
           </div>
           <button type="button" class="icon-del file-remove" title="Remove file">&times;</button>
         </div>`;
