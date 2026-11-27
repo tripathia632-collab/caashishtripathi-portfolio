@@ -81,7 +81,8 @@
       'fileInput', 'folderInput', 'guidePickBtn', 'dropzone', 'dropSubHint',
       'pickFilesBtn', 'pickFolderBtn', 'loadSampleBtn', 'emptySampleBtn',
       'modeBadge', 'importProgress', 'importProgressText', 'importProgressFill',
-      'cancelImportBtn', 'fileInvWrap', 'fileInvMeta', 'toggleAllFilesBtn',
+      'cancelImportBtn', 'fileInvWrap', 'fileInvMeta', 'manageFilesBtn', 'fileManagerPanel',
+      'toggleAllFilesBtn',
       'clearFilesBtn', 'fileSearchInput', 'fileList', 'optSourceFile',
       'sourceSubOpts', 'optStripExt', 'optSheetName', 'optHeaderMode',
       'customRowWrap', 'optCustomHeaderRow', 'repeatHeaderWrap',
@@ -628,7 +629,22 @@
   }
 
   function bindEvents() {
-    els.guidePickBtn.addEventListener('click', () => els.fileInput.click());
+    if (els.guidePickBtn) {
+      els.guidePickBtn.addEventListener('click', () => els.fileInput.click());
+    }
+    if (els.manageFilesBtn && els.fileManagerPanel) {
+      els.manageFilesBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isHidden = els.fileManagerPanel.classList.toggle('hidden');
+        els.manageFilesBtn.setAttribute('aria-expanded', String(!isHidden));
+      });
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('#fileInvWrap') && !els.fileManagerPanel.classList.contains('hidden')) {
+          els.fileManagerPanel.classList.add('hidden');
+          els.manageFilesBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
     els.pickFilesBtn.addEventListener('click', (e) => { e.stopPropagation(); els.fileInput.click(); });
     els.pickFolderBtn.addEventListener('click', (e) => { e.stopPropagation(); els.folderInput.click(); });
     els.dropzone.addEventListener('click', () => els.fileInput.click());

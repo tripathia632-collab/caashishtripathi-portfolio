@@ -39,26 +39,6 @@
   </header>
 
   <main class="workspace-shell">
-    <section class="guide-strip card" aria-label="Quick workflow">
-      <button type="button" id="guidePickBtn" class="guide-step guide-step-btn">
-        <span class="guide-badge">1</span>
-        <div><strong>Add your files</strong><span>2 to 2,000+ Excel or CSV files</span></div>
-        <span class="guide-link" aria-hidden="true">&rarr;</span>
-      </button>
-      <span class="guide-arrow" aria-hidden="true">&rarr;</span>
-      <a class="guide-step guide-jump" href="#optSourceFile">
-        <span class="guide-badge">2</span>
-        <div><strong>Choose your settings</strong><span>Defaults work for most files</span></div>
-        <span class="guide-link" aria-hidden="true">&darr;</span>
-      </a>
-      <span class="guide-arrow" aria-hidden="true">&rarr;</span>
-      <a class="guide-step guide-jump" href="#summaryStatMain">
-        <span class="guide-badge">3</span>
-        <div><strong>Review &amp; download</strong><span>Check rows and export</span></div>
-        <span class="guide-link" aria-hidden="true">&darr;</span>
-      </a>
-    </section>
-
     <input type="file" id="fileInput" class="hidden" multiple accept=".xlsx,.xls,.xlsm,.xlsb,.csv,.tsv,.ods">
     <input type="file" id="folderInput" class="hidden" webkitdirectory directory multiple>
 
@@ -74,7 +54,7 @@
           <span id="modeBadge" class="panel-tag is-demo">Sample Preview</span>
         </div>
 
-        <p class="panel-description">Import files or an entire folder.</p>
+        <p class="panel-description">Choose files individually or import a whole folder.</p>
         <div id="dropzone" class="drop-bar" tabindex="0" role="button" aria-label="Drop Excel or CSV files here">
           <div class="drop-text">
             <span class="upload-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m-5 5 5-5 5 5M4 16v4h16v-4"/></svg></span>
@@ -96,15 +76,24 @@
         </div>
 
         <div id="fileInvWrap" class="file-inv-wrap">
-          <div class="file-inv-bar">
+          <div class="file-inv-trigger-row">
             <span id="fileInvMeta" class="inv-meta">5 of 5 active</span>
-            <div class="file-inv-actions">
-              <button type="button" id="toggleAllFilesBtn" class="btn btn-xs">Uncheck All</button>
-              <button type="button" id="clearFilesBtn" class="btn btn-xs">Clear</button>
-            </div>
+            <button type="button" id="manageFilesBtn" class="btn btn-sm manage-files-btn" aria-expanded="false" aria-controls="fileManagerPanel">
+              <span>Manage files</span>
+              <span class="caret" aria-hidden="true">&#9662;</span>
+            </button>
           </div>
-          <input type="search" id="fileSearchInput" class="inp file-search hidden" placeholder="Filter files..." aria-label="Filter files">
-          <div id="fileList" class="file-list"></div>
+          <div id="fileManagerPanel" class="file-manager-panel hidden" role="region" aria-label="Manage uploaded files">
+            <div class="file-inv-bar">
+              <span class="inv-panel-title">Toggle or remove files</span>
+              <div class="file-inv-actions">
+                <button type="button" id="toggleAllFilesBtn" class="btn btn-xs">Uncheck All</button>
+                <button type="button" id="clearFilesBtn" class="btn btn-xs">Clear</button>
+              </div>
+            </div>
+            <input type="search" id="fileSearchInput" class="inp file-search hidden" placeholder="Filter files..." aria-label="Filter files">
+            <div id="fileList" class="file-list"></div>
+          </div>
         </div>
       </section>
 
@@ -115,7 +104,7 @@
           <span class="live-pill">Updates live</span>
         </div>
 
-        <p class="panel-description">Defaults work for most files.</p>
+        <p class="panel-description">Keep the defaults for most files. Changes apply instantly.</p>
         <div class="settings-split">
           <div class="settings-group">
             <h3 class="group-title">Track source</h3>
@@ -210,7 +199,7 @@
           <button type="button" class="help-q" aria-label="About Duplicate Check & Branch Totals" data-title="Audit &amp; Summary Sheets" data-help="Identify repeated invoices (matching invoice no &amp; amount) to flag or eliminate them, and choose how Branch Totals are grouped in the summary tab.">?</button>
         </div>
 
-        <p class="panel-description">Optional duplicate checks and totals.</p>
+        <p class="panel-description">Optional checks and grouped numeric totals.</p>
         <div class="control-group">
           <div class="settings-group">
             <h3 class="group-title">Duplicate records</h3>
@@ -273,7 +262,7 @@
       <div class="card stage-card">
         <div class="stage-head">
           <div class="stage-heading">
-            <h2>Results</h2>
+            <h2>Your consolidated data</h2>
             <span class="live-hint"><span aria-hidden="true" class="status-dot"></span> Updates live</span>
           </div>
           <div class="stage-tabs" role="tablist" aria-label="Result views">
