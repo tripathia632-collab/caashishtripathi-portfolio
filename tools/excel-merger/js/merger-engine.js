@@ -725,72 +725,112 @@
 
   /**
    * Generate 5 realistic branch Excel/CSV files cleanly in-memory using SheetJS
-   * demonstrating banner rows, extra branch columns, repeated mid-file headers,
-   * and duplicate invoices.
+   * demonstrating: blank rows, multi-sheet workbook tabs, banner rows,
+   * extra branch columns, repeated mid-file headers, smart casing match,
+   * and an exact duplicate invoice record (matching branch, invoice & amount).
    */
   function generateSampleFiles() {
     if (!global.XLSX) return [];
     const defs = [
       {
         name: 'Mumbai_Main_Oct2026.xlsx',
-        aoa: [
-          ['Branch', 'Invoice No', 'Invoice Date', 'Customer Name', 'Net Sales', 'GST Amount'],
-          ['Mumbai Main', 'INV-MUM-101', '2026-10-02', 'Reliance Retail Ltd', 145000, 26100],
-          ['Mumbai Main', 'INV-MUM-102', '2026-10-05', 'Apex Distributors', 82500, 14850],
-          ['Mumbai Main', 'INV-MUM-103', '2026-10-11', 'Horizon Logistics', 112000, 20160],
-          ['Mumbai Main', 'INV-MUM-104', '2026-10-18', 'Metro Traders', 64000, 11520]
+        // Contains 1 blank row mid-sheet so "Skip blank rows" can be tested live
+        sheets: [
+          {
+            sheetName: 'Sales_Oct',
+            aoa: [
+              ['Branch', 'Invoice No', 'Invoice Date', 'Customer Name', 'Net Sales', 'GST Amount'],
+              ['Mumbai Main', 'INV-MUM-101', '2026-10-02', 'Reliance Retail Ltd', 145000, 26100],
+              ['Mumbai Main', 'INV-MUM-102', '2026-10-05', 'Apex Distributors', 82500, 14850],
+              ['', '', '', '', '', ''],
+              ['Mumbai Main', 'INV-MUM-103', '2026-10-11', 'Horizon Logistics', 112000, 20160],
+              ['Mumbai Main', 'INV-MUM-104', '2026-10-18', 'Metro Traders', 64000, 11520]
+            ]
+          }
         ]
       },
       {
         name: 'Delhi_NCR_Oct2026.xlsx',
-        // Tally/ERP style title banner rows at top — Auto-header detects Row 3 automatically!
-        aoa: [
-          ['ACME TRADING CO. - DELHI NCR BRANCH'],
-          ['Monthly Sales Register (01-Oct-2026 to 31-Oct-2026)'],
-          [],
-          ['Branch', 'Invoice No', 'Invoice Date', 'Customer Name', 'Net Sales', 'GST Amount'],
-          ['Delhi NCR', 'INV-DEL-201', '2026-10-03', 'NorthStar Infra', 198000, 35640],
-          ['Delhi NCR', 'INV-DEL-202', '2026-10-09', 'Kaveri Hardware', 54000, 9720],
-          ['Delhi NCR', 'INV-DEL-203', '2026-10-14', 'Capital Builders', 129500, 23310]
+        // Sheet 1 has ERP title banners (Auto-header detects Row 4);
+        // Sheet 2 adds multi-sheet data so "First sheet only" vs "All sheets stacked" works live!
+        sheets: [
+          {
+            sheetName: 'Sales_Oct',
+            aoa: [
+              ['ACME TRADING CO. - DELHI NCR BRANCH'],
+              ['Monthly Sales Register (01-Oct-2026 to 31-Oct-2026)'],
+              [],
+              ['Branch', 'Invoice No', 'Invoice Date', 'Customer Name', 'Net Sales', 'GST Amount'],
+              ['Delhi NCR', 'INV-DEL-201', '2026-10-03', 'NorthStar Infra', 198000, 35640],
+              ['Delhi NCR', 'INV-DEL-202', '2026-10-09', 'Kaveri Hardware', 54000, 9720],
+              ['Delhi NCR', 'INV-DEL-203', '2026-10-14', 'Capital Builders', 129500, 23310]
+            ]
+          },
+          {
+            sheetName: 'Week4_Extra',
+            aoa: [
+              ['Branch', 'Invoice No', 'Invoice Date', 'Customer Name', 'Net Sales', 'GST Amount'],
+              ['Delhi NCR', 'INV-DEL-204', '2026-10-26', 'Yamuna Logistics', 91000, 16380],
+              ['Delhi NCR', 'INV-DEL-205', '2026-10-29', 'NCR Steel Corp', 136000, 24480]
+            ]
+          }
         ]
       },
       {
         name: 'Pune_Retail_Oct2026.xlsx',
-        // Contains a repeated header row mid-file + 1 repeated invoice number from Mumbai
-        aoa: [
-          ['Branch', 'Invoice No', 'Invoice Date', 'Customer Name', 'Net Sales', 'GST Amount'],
-          ['Pune Retail', 'INV-PUN-301', '2026-10-04', 'Sahyadri Enterprises', 76000, 13680],
-          ['Pune Retail', 'INV-PUN-302', '2026-10-12', 'Deccan Motors', 94500, 17010],
-          ['Branch', 'Invoice No', 'Invoice Date', 'Customer Name', 'Net Sales', 'GST Amount'],
-          ['Pune Retail', 'INV-MUM-102', '2026-10-05', 'Apex Distributors', 82500, 14850],
-          ['Pune Retail', 'INV-PUN-304', '2026-10-21', 'Bajaj Auto Ancillary', 158000, 28440]
+        // Contains a repeated header row mid-file + exact accidental duplicate of Mumbai's INV-MUM-102 (matching branch & amount)
+        sheets: [
+          {
+            sheetName: 'Sales_Oct',
+            aoa: [
+              ['Branch', 'Invoice No', 'Invoice Date', 'Customer Name', 'Net Sales', 'GST Amount'],
+              ['Pune Retail', 'INV-PUN-301', '2026-10-04', 'Sahyadri Enterprises', 76000, 13680],
+              ['Pune Retail', 'INV-PUN-302', '2026-10-12', 'Deccan Motors', 94500, 17010],
+              ['Branch', 'Invoice No', 'Invoice Date', 'Customer Name', 'Net Sales', 'GST Amount'],
+              ['Mumbai Main', 'INV-MUM-102', '2026-10-05', 'Apex Distributors', 82500, 14850],
+              ['Pune Retail', 'INV-PUN-304', '2026-10-21', 'Bajaj Auto Ancillary', 158000, 28440]
+            ]
+          }
         ]
       },
       {
         name: 'Bengaluru_Hub_Oct2026.xlsx',
         // Has TWO extra branch-only columns: Discount % and Sales Executive!
-        aoa: [
-          ['Branch', 'Invoice No', 'Invoice Date', 'Customer Name', 'Net Sales', 'GST Amount', 'Discount %', 'Sales Executive'],
-          ['Bengaluru Hub', 'INV-BLR-401', '2026-10-06', 'TechPark Solutions', 225000, 40500, 5, 'Karthik R'],
-          ['Bengaluru Hub', 'INV-BLR-402', '2026-10-16', 'Mysore Silks & Crafts', 89000, 16020, 2.5, 'Ananya M'],
-          ['Bengaluru Hub', 'INV-BLR-403', '2026-10-24', 'Indiranagar Cafe Co', 41500, 7470, 0, 'Karthik R']
+        sheets: [
+          {
+            sheetName: 'Sales_Oct',
+            aoa: [
+              ['Branch', 'Invoice No', 'Invoice Date', 'Customer Name', 'Net Sales', 'GST Amount', 'Discount %', 'Sales Executive'],
+              ['Bengaluru Hub', 'INV-BLR-401', '2026-10-06', 'TechPark Solutions', 225000, 40500, 5, 'Karthik R'],
+              ['Bengaluru Hub', 'INV-BLR-402', '2026-10-16', 'Mysore Silks & Crafts', 89000, 16020, 2.5, 'Ananya M'],
+              ['Bengaluru Hub', 'INV-BLR-403', '2026-10-24', 'Indiranagar Cafe Co', 41500, 7470, 0, 'Karthik R']
+            ]
+          }
         ]
       },
       {
         name: 'Ahmedabad_West_Oct2026.csv',
-        // Slightly different casing/spacing ("invoice no.", "net sales ") -> Smart Match aligns automatically!
-        aoa: [
-          ['branch', 'invoice no.', 'invoice date', 'customer name', 'net sales ', 'gst amount'],
-          ['Ahmedabad West', 'INV-AMD-501', '2026-10-07', 'Sabarmati Chemicals', 173000, 31140],
-          ['Ahmedabad West', 'INV-AMD-502', '2026-10-19', 'Gujarat Textile Mill', 118500, 21330]
+        // Lowercase / dotted / trailing-space headings -> aligned via "Match similar column headings"
+        sheets: [
+          {
+            sheetName: 'Sales_Oct',
+            aoa: [
+              ['branch', 'invoice no.', 'invoice date', 'customer name', 'net sales ', 'gst amount'],
+              ['Ahmedabad West', 'INV-AMD-501', '2026-10-07', 'Sabarmati Chemicals', 173000, 31140],
+              ['Ahmedabad West', 'INV-AMD-502', '2026-10-19', 'Gujarat Textile Mill', 118500, 21330]
+            ]
+          }
         ]
       }
     ];
 
     return defs.map((def, idx) => {
-      const ws = global.XLSX.utils.aoa_to_sheet(def.aoa);
       const wb = global.XLSX.utils.book_new();
-      global.XLSX.utils.book_append_sheet(wb, ws, 'Sales_Oct');
+      def.sheets.forEach((sh) => {
+        const ws = global.XLSX.utils.aoa_to_sheet(sh.aoa);
+        global.XLSX.utils.book_append_sheet(wb, ws, sh.sheetName);
+      });
+
       const isCsv = def.name.endsWith('.csv');
       let buf;
       if (isCsv) {

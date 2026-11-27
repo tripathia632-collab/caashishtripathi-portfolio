@@ -1,7 +1,8 @@
 /**
- * Excel & CSV Consolidator Studio — Full-Feature Clarity Controller
- * Pre-loads 5 realistic sample branch files on launch (auto-replaced on first real upload)
- * so every capability is immediately visible, understandable, and zero-learning.
+ * Excel & CSV Consolidator Studio — Full-Width Preview Controller
+ * Pre-loads 5 realistic sample branch files demonstrating blank rows,
+ * multi-sheet workbooks, banner skipping, repeated headers, extra columns,
+ * and identical duplicate invoices.
  */
 (function () {
   'use strict';
@@ -12,7 +13,7 @@
     files: [],
     isSampleMode: true,
     dataset: null,
-    activeStage: 'preview',
+    activeStage: 'preview', // 'preview' | 'summary'
     importing: false,
     cancelImport: false,
     page: 1,
@@ -31,7 +32,7 @@
       customHeaderRow: 1,
       removeRepeatedHeaders: true,
       smartHeaderMatch: true,
-      sheetMode: 'first',
+      sheetMode: 'first',      // 'first' | 'all'
       skipEmptyRows: true,
       colOverrides: {},
       sortColId: '',
@@ -87,15 +88,43 @@
       'optRemoveRepeated', 'smartMatchWrap', 'optSmartMatch', 'optSheetMode',
       'optSkipBlank', 'optDupKey', 'optDupAction', 'optSummaryGroup',
       'summaryStatMain', 'summaryStatChips', 'exportFilename', 'exportCsvBtn',
-      'exportXlsxBtn', 'tabPreviewBadge', 'tabSchemaBadge', 'tabDupBadge',
-      'previewToolbar', 'sortColSelect', 'sortDirBtn', 'clearSortBtn',
-      'dupFilterLabel', 'optOnlyDups', 'tableSearchInput', 'emptyStage',
-      'sheetScroll', 'previewThead', 'previewTbody', 'sheetFooter', 'pagerInfo',
+      'exportXlsxBtn', 'tabPreviewBadge', 'tabDupBadge', 'previewToolbar',
+      'sortColSelect', 'sortDirBtn', 'clearSortBtn', 'dupFilterLabel',
+      'optOnlyDups', 'tableSearchInput', 'emptyStage', 'sheetScroll',
+      'previewThead', 'previewTbody', 'sheetFooter', 'pagerInfo',
       'pageSizeSelect', 'prevPageBtn', 'nextPageBtn', 'pageNumText',
-      'schemaTbody', 'summaryGroupBadge', 'summaryThead', 'summaryTbody',
-      'dupAuditContent', 'helpPopover', 'helpPopTitle', 'helpPopBody',
-      'privacyBtn', 'privacyModal', 'toast'
+      'summaryGroupBadge', 'summaryThead', 'summaryTbody', 'dupAuditContent',
+      'helpPopover', 'helpPopTitle', 'helpPopBody', 'privacyBtn',
+      'privacyModal', 'toast'
     ].forEach((id) => { els[id] = $(id); });
+  }
+
+  /**
+   * Decide whether a column makes logical sense for "Group branch totals by":
+   * Include Source File, Sheet Name, and categorical dimensions (Branch, Customer Name, Sales Executive);
+   * exclude unique IDs / Invoices / Dates / numeric amount columns.
+   */
+  function isLogicalGroupColumn(col, numericColSet) {
+    if (col.isSystem) return true;
+    if (numericColSet.has(col.id)) return false;
+    const lname = String(col.label || '').toLowerCase();
+    if (/(invoice|inv\b|bill|voucher|vch|doc\b|ref\b|receipt|challan|date|time|sr\.?\s*no|s\.?no|\bid\b|gstin|pan\b|mobile|phone|amount|total|net\s*sales|gst|tax|cgst|sgst|igst|rate|%|percent|qty|quantity)/i.test(lname)) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Exclude pure numeric currency amount columns from "Check duplicates by".
+   */
+  function isLogicalDupKeyColumn(col, numericColSet) {
+    if (col.isSystem) return false;
+    if (numericColSet.has(col.id)) return false;
+    const lname = String(col.label || '').toLowerCase();
+    if (/(net\s*sales|amount|gst|cgst|sgst|igst|discount\s*%|tax|total|rate)/i.test(lname)) {
+      return false;
+    }
+    return true;
   }
 
   function rebuildAndRender() {
@@ -110,6 +139,7 @@
     const ds = state.dataset;
     const cols = ds ? ds.allSchemaCols.filter((c) => !c.hidden) : [];
     const nonSystemCols = ds ? ds.allSchemaCols.filter((c) => !c.isSystem && !c.hidden) : [];
+    const numericSet = new Set((ds && ds.numericCols ? ds.numericCols : []).map((nc) => nc.id));
 
     // Sort Order
     const prevSort = state.options.sortColId;
@@ -127,27 +157,27 @@
     els.sortDirBtn.textContent = state.options.sortDir === 'desc' ? 'Desc ↓' : 'Asc ↑';
     els.clearSortBtn.classList.toggle('hidden', !state.options.sortColId);
 
-    // Duplicate Check
+    // Check Duplicates By (exclude numeric amounts; keep IDs like Invoice No first)
+    const dupCandidates = nonSystemCols.filter((c) => isLogicalDupKeyColumn(c, numericSet));
+    const dupList = dupCandidates.length ? dupCandidates : nonSystemCols;
     const prevDup = state.options.duplicateKeyColId;
     let dupHtml = '<option value="">Off (Keep all)</option>';
-    nonSystemCols.forEach((c) => {
+    dupList.forEach((c) => {
       dupHtml += `<option value="${escapeHtml(c.id)}">${escapeHtml(c.label)}</option>`;
     });
     els.optDupKey.innerHTML = dupHtml;
-    if (nonSystemCols.some((c) => c.id === prevDup)) {
+    if (dupList.some((c) => c.id === prevDup)) {
       els.optDupKey.value = prevDup;
     } else {
       state.options.duplicateKeyColId = '';
       els.optDupKey.value = '';
     }
 
-    // Branch Summary Group
+    // Group Branch Totals By (exclude unique IDs like Invoice No, Dates, and Numeric Amounts)
+    const grpCandidates = cols.filter((c) => isLogicalGroupColumn(c, numericSet));
     const prevGrp = state.options.summaryGroupColId;
     let grpHtml = '';
-    if (state.options.includeSourceFile) {
-      grpHtml += '<option value="__source_file">Source File</option>';
-    }
-    nonSystemCols.forEach((c) => {
+    grpCandidates.forEach((c) => {
       grpHtml += `<option value="${escapeHtml(c.id)}">${escapeHtml(c.label)}</option>`;
     });
     if (!grpHtml) grpHtml = '<option value="__source_file">Source File</option>';
@@ -177,11 +207,15 @@
     if (st.repeatedRemoved > 0) {
       chips += `<span class="mini-pill cleaned">${st.repeatedRemoved} repeated header(s) removed</span>`;
     }
+    if (st.blankSkipped > 0) {
+      chips += `<span class="mini-pill cleaned">${st.blankSkipped} blank row(s) skipped</span>`;
+    }
     if (st.extraColCount > 0) {
       chips += `<span class="mini-pill extra">${st.extraColCount} extra branch column(s) aligned</span>`;
     }
     if (st.duplicateCount > 0) {
-      chips += `<span class="mini-pill extra">${st.duplicateCount} duplicate row(s) flagged</span>`;
+      const verb = state.options.dedupeMode === 'drop' ? 'eliminated' : 'flagged';
+      chips += `<span class="mini-pill extra">${st.duplicateCount} duplicate row(s) ${verb}</span>`;
     }
     const errCount = state.files.filter((f) => f.error).length;
     if (errCount > 0) {
@@ -190,7 +224,6 @@
     els.summaryStatChips.innerHTML = chips;
 
     els.tabPreviewBadge.textContent = formatInt(st.totalRowCount);
-    els.tabSchemaBadge.textContent = formatInt(ds.allSchemaCols.length);
     els.tabDupBadge.textContent = `${st.duplicateCount} dup`;
     els.tabDupBadge.classList.toggle('hidden', st.duplicateCount === 0);
 
@@ -198,7 +231,6 @@
     els.exportXlsxBtn.disabled = !hasRows;
     els.exportCsvBtn.disabled = !hasRows;
 
-    // Mode Badge & Drop hint
     if (!totalFiles) {
       els.modeBadge.textContent = 'Empty';
       els.modeBadge.className = 'panel-tag';
@@ -246,6 +278,9 @@
         badges = `<span class="mini-pill err">${escapeHtml(f.error)}</span>`;
       } else if (fStat) {
         badges += `<span class="mini-pill">${formatInt(fStat.rowCount)} rows</span>`;
+        if (f.sheets && f.sheets.length > 1) {
+          badges += `<span class="mini-pill cleaned">${f.sheets.length} sheets</span>`;
+        }
         if (fStat.detectedHeaderRow > 1) {
           badges += `<span class="mini-pill cleaned">Header R${fStat.detectedHeaderRow}</span>`;
         }
@@ -281,7 +316,6 @@
 
   function renderActiveStage() {
     $('stage-preview').classList.toggle('hidden', state.activeStage !== 'preview');
-    $('stage-schema').classList.toggle('hidden', state.activeStage !== 'schema');
     $('stage-summary').classList.toggle('hidden', state.activeStage !== 'summary');
 
     document.querySelectorAll('.stage-tab').forEach((btn) => {
@@ -289,7 +323,6 @@
     });
 
     if (state.activeStage === 'preview') renderPreviewTable();
-    else if (state.activeStage === 'schema') renderSchemaTable();
     else if (state.activeStage === 'summary') renderSummaryAndDups();
   }
 
@@ -392,60 +425,6 @@
     els.nextPageBtn.disabled = state.page >= totalPages;
   }
 
-  function renderSchemaTable() {
-    const ds = state.dataset;
-    const cols = ds.allSchemaCols;
-    if (!cols.length) {
-      els.schemaTbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--muted);">Load or drop files to reorder, rename, or merge columns.</td></tr>';
-      return;
-    }
-
-    const mergeTargets = cols.filter((c) => !c.isSystem);
-    let html = '';
-
-    cols.forEach((col) => {
-      const covBadge = col.isSystem
-        ? '<span class="mini-pill cleaned">Tracking Col</span>'
-        : (col.isExtra
-          ? `<span class="mini-pill extra">${col.fileCoverage} / ${col.totalFiles} files (Extra)</span>`
-          : `<span class="mini-pill">${col.fileCoverage} / ${col.totalFiles} files</span>`);
-
-      let mergeHtml = '<span style="color:var(--faint);font-size:12px;">—</span>';
-      if (!col.isSystem) {
-        const curMerge = (state.options.colOverrides[col.id] && state.options.colOverrides[col.id].mergeInto) || '';
-        mergeHtml = `<select class="sel schema-merge" data-col-id="${escapeHtml(col.id)}" style="height:30px;font-size:11.5px;">
-          <option value="">Keep separate</option>`;
-        mergeTargets.forEach((t) => {
-          if (t.id === col.id) return;
-          mergeHtml += `<option value="${escapeHtml(t.id)}" ${curMerge === t.id ? 'selected' : ''}>Merge into: ${escapeHtml(t.label)}</option>`;
-        });
-        mergeHtml += '</select>';
-      }
-
-      const nonSysIdx = cols.filter((c) => !c.isSystem).findIndex((c) => c.id === col.id);
-      const nonSysLen = cols.filter((c) => !c.isSystem).length;
-
-      html += `<tr>
-        <td>
-          <input type="checkbox" class="schema-vis toggle-inp" data-col-id="${escapeHtml(col.id)}" ${!col.hidden ? 'checked' : ''} ${col.isSystem ? 'disabled' : ''}>
-        </td>
-        <td>
-          <input type="text" class="inp schema-rename" data-col-id="${escapeHtml(col.id)}" value="${escapeHtml(col.label)}" style="height:30px;font-size:12px;">
-        </td>
-        <td>${covBadge}</td>
-        <td>${mergeHtml}</td>
-        <td>
-          ${!col.isSystem ? `<div class="order-btns">
-            <button type="button" class="btn btn-xs schema-up" data-col-id="${escapeHtml(col.id)}" ${nonSysIdx <= 0 ? 'disabled' : ''}>&uarr;</button>
-            <button type="button" class="btn btn-xs schema-down" data-col-id="${escapeHtml(col.id)}" ${nonSysIdx >= nonSysLen - 1 ? 'disabled' : ''}>&darr;</button>
-          </div>` : '<span class="mini-pill cleaned">Left Fixed</span>'}
-        </td>
-      </tr>`;
-    });
-
-    els.schemaTbody.innerHTML = html;
-  }
-
   function renderSummaryAndDups() {
     const ds = state.dataset;
     const sumColObj = ds.allSchemaCols.find((c) => c.id === ds.summaryColId);
@@ -493,17 +472,26 @@
     }
 
     if (!state.options.duplicateKeyColId) {
-      els.dupAuditContent.innerHTML = 'Pick a column like <strong>Invoice No</strong> under <em>3. Duplicate Check &amp; Totals</em> on the left to check repeated records across branches.';
+      els.dupAuditContent.innerHTML = 'Pick a column like <strong>Invoice No</strong> under <em>3. Checks &amp; totals</em> above to inspect or remove repeated records.';
     } else if (!ds.duplicateGroups.length) {
       els.dupAuditContent.innerHTML = '<span style="color:var(--ok);font-weight:600;">No repeated records found for this column.</span>';
     } else {
-      let dHtml = `<p style="margin-bottom:8px;color:var(--warn);font-weight:600;">Found ${ds.duplicateGroups.length} repeated key value(s):</p>`;
-      dHtml += '<table class="schema-table"><thead><tr><th>Repeated Key</th><th>Count</th><th>Appears In Files</th></tr></thead><tbody>';
+      const verb = state.options.dedupeMode === 'drop'
+        ? 'repeated key value(s) — extra rows eliminated cleanly (first record kept):'
+        : 'repeated key value(s) — switch Action to "Remove Extras" to eliminate double counting:';
+      let dHtml = `<p style="margin-bottom:8px;color:var(--warn);font-weight:600;">Found ${ds.duplicateGroups.length} ${verb}</p>`;
+      dHtml += '<table class="schema-table"><thead><tr><th>Repeated Key</th><th>Count</th><th>Amount / Summary</th><th>Appears In Files</th></tr></thead><tbody>';
       ds.duplicateGroups.slice(0, 100).forEach((grp) => {
         const filesSet = Array.from(new Set(grp.rows.map((r) => r.__source_file)));
+        const firstRow = grp.rows[0];
+        const amtSummary = ds.numericCols.slice(0, 2).map((nc) => {
+          const v = firstRow[nc.id];
+          return v !== undefined && v !== '' ? `${nc.label}: ${formatNum(v)}` : '';
+        }).filter(Boolean).join(' · ') || '—';
         dHtml += `<tr>
           <td><code>${escapeHtml(grp.keyVal)}</code></td>
           <td><span class="dup-badge">&times;${grp.count}</span></td>
+          <td style="font-family:var(--mono);font-size:12px;">${escapeHtml(amtSummary)}</td>
           <td>${escapeHtml(filesSet.join(', '))}</td>
         </tr>`;
       });
@@ -519,7 +507,6 @@
       return;
     }
 
-    // Automatically clear initial sample preview on the user's first real file upload
     if (state.isSampleMode) {
       state.files = [];
       state.isSampleMode = false;
@@ -594,6 +581,8 @@
       state.options.sortDir = 'asc';
       state.options.duplicateKeyColId = '';
       state.options.summaryGroupColId = '__source_file';
+      state.savedNamedDupKey = '';
+      state.savedNamedSummaryKey = '';
       state.searchQuery = '';
       state.onlyDups = false;
       els.tableSearchInput.value = '';
@@ -611,23 +600,6 @@
     } catch (err) {
       showToast('Could not load samples: ' + err.message, true);
     }
-  }
-
-  function moveDataColumnOrder(colId, direction) {
-    if (!state.dataset) return;
-    const dataCols = state.dataset.allSchemaCols.filter((c) => !c.isSystem && !c.mergeInto);
-    const idx = dataCols.findIndex((c) => c.id === colId);
-    const targetIdx = idx + direction;
-    if (idx < 0 || targetIdx < 0 || targetIdx >= dataCols.length) return;
-
-    dataCols.forEach((c, i) => {
-      if (!state.options.colOverrides[c.id]) state.options.colOverrides[c.id] = {};
-      state.options.colOverrides[c.id].order = i * 10;
-    });
-    const tmp = state.options.colOverrides[dataCols[idx].id].order;
-    state.options.colOverrides[dataCols[idx].id].order = state.options.colOverrides[dataCols[targetIdx].id].order;
-    state.options.colOverrides[dataCols[targetIdx].id].order = tmp;
-    rebuildAndRender();
   }
 
   function showHelpPopover(btn) {
@@ -656,7 +628,6 @@
   }
 
   function bindEvents() {
-    // Upload controls
     els.guidePickBtn.addEventListener('click', () => els.fileInput.click());
     els.pickFilesBtn.addEventListener('click', (e) => { e.stopPropagation(); els.fileInput.click(); });
     els.pickFolderBtn.addEventListener('click', (e) => { e.stopPropagation(); els.folderInput.click(); });
@@ -685,11 +656,9 @@
     });
     els.cancelImportBtn.addEventListener('click', () => { state.cancelImport = true; });
 
-    // Samples
     els.loadSampleBtn.addEventListener('click', () => loadSamples(false));
     els.emptySampleBtn.addEventListener('click', () => loadSamples(false));
 
-    // File Inventory
     els.fileSearchInput.addEventListener('input', (e) => {
       state.fileSearch = e.target.value;
       renderFileList();
@@ -709,6 +678,8 @@
       state.options.sortDir = 'asc';
       state.options.duplicateKeyColId = '';
       state.options.summaryGroupColId = '__source_file';
+      state.savedNamedDupKey = '';
+      state.savedNamedSummaryKey = '';
       state.searchQuery = '';
       state.onlyDups = false;
       els.tableSearchInput.value = '';
@@ -735,7 +706,6 @@
       rebuildAndRender();
     });
 
-    // Live Merge & Header Options
     els.optSourceFile.addEventListener('change', () => {
       state.options.includeSourceFile = els.optSourceFile.checked;
       els.sourceSubOpts.classList.toggle('hidden', !state.options.includeSourceFile);
@@ -807,7 +777,6 @@
       rebuildAndRender();
     });
 
-    // Stage Tabs, Sort & Filter
     document.querySelectorAll('.stage-tab').forEach((btn) => {
       btn.addEventListener('click', () => {
         state.activeStage = btn.dataset.stage;
@@ -854,7 +823,6 @@
       renderPreviewTable();
     });
 
-    // Pager
     els.pageSizeSelect.addEventListener('change', () => {
       state.pageSize = parseInt(els.pageSizeSelect.value, 10) || 100;
       state.page = 1;
@@ -868,30 +836,6 @@
       renderPreviewTable();
     });
 
-    // Columns & Order interactions
-    els.schemaTbody.addEventListener('change', (e) => {
-      const colId = e.target.dataset.colId;
-      if (!colId) return;
-      if (!state.options.colOverrides[colId]) state.options.colOverrides[colId] = {};
-      if (e.target.classList.contains('schema-vis')) {
-        state.options.colOverrides[colId].hidden = !e.target.checked;
-        rebuildAndRender();
-      } else if (e.target.classList.contains('schema-rename')) {
-        state.options.colOverrides[colId].rename = e.target.value;
-        rebuildAndRender();
-      } else if (e.target.classList.contains('schema-merge')) {
-        state.options.colOverrides[colId].mergeInto = e.target.value;
-        rebuildAndRender();
-      }
-    });
-    els.schemaTbody.addEventListener('click', (e) => {
-      const colId = e.target.dataset.colId;
-      if (!colId) return;
-      if (e.target.classList.contains('schema-up')) moveDataColumnOrder(colId, -1);
-      else if (e.target.classList.contains('schema-down')) moveDataColumnOrder(colId, 1);
-    });
-
-    // Exports
     els.exportXlsxBtn.addEventListener('click', () => {
       if (!state.dataset || !state.dataset.rows.length) return;
       try {
@@ -911,7 +855,6 @@
       }
     });
 
-    // [?] Help tooltips (hover + click pin, zero race)
     document.querySelectorAll('.help-q').forEach((btn) => {
       btn.addEventListener('mouseenter', () => showHelpPopover(btn));
       btn.addEventListener('mouseleave', () => {
@@ -936,7 +879,6 @@
       }
     });
 
-    // Privacy Modal
     els.privacyBtn.addEventListener('click', () => els.privacyModal.classList.remove('hidden'));
     document.querySelectorAll('[data-close-modal]').forEach((btn) => {
       btn.addEventListener('click', () => $(btn.dataset.closeModal).classList.add('hidden'));
@@ -949,8 +891,6 @@
   document.addEventListener('DOMContentLoaded', () => {
     cacheElements();
     bindEvents();
-    // Pre-load 5 sample branch files (just like Balance Confirmation Studio)
-    // so first-time visitors immediately see how everything works.
     loadSamples(true);
   });
 })();
